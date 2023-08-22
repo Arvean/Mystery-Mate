@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_set>
 #include <vector>
 #include <stdexcept>
 #include "move.h"
@@ -17,7 +18,7 @@ class IPiece {
         virtual ~IPiece() = default;
 
         virtual bool isValidMove(const Move& move) const = 0;
-        virtual std::vector<Move> getPossibleMoves(const Position& from) const = 0;
+        std::unordered_set<Position> getPossiblePositions(const Position& from) const;
         virtual char getSymbol() const = 0;
         virtual Color getColor() const = 0;
 };

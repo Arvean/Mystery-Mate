@@ -5,10 +5,10 @@
 class Bishop : public IPiece {
     public:
         Bishop() {};
-        Bishop(Color color) {color_ = color;}
+        Bishop(Color color);
 
         bool isValidMove(const Move& move) const;
-        std::vector<Move> getPossibleMoves(const Position& from) const;
+        std::unordered_set<Position> getPossiblePositions(const Position& from) const;
         char getSymbol() const {return symbol_;}
         Color getColor() const {return color_;}
 

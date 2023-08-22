@@ -14,7 +14,7 @@ TEST(SquareTest, PlacePiece) {
 };
 
 TEST(SquareTest, PlacePieceWhenOccupied) {
-    Position pos_d4(d, 4);
+    Position pos_d4('d', 4);
     Square d4(pos_d4);
 
     Piece pawn1(Color::BLACK);

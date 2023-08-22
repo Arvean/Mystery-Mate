@@ -5,15 +5,15 @@
 TEST(PawnTest, PossibleMoves) {
     Board board;
     Pawn pawn(Color::WHITE);
-    Position position('d', 4);
+    Position from('d', 4);
 
-    board.placePeice(position, pawn);
+    board.placePeice(from, pawn);
 
     std::vector<Move> expectedMoveVector;
 
     // Vertical
-    expectedMoveVector.push_back(Move(pawn, Position('d', 4)));
-    expectedMoveVector.push_back(Move(pawn, Position('d', 3)));
+    expectedMoveVector.push_back(Move(pawn, from, Position('d', 4)));
+    expectedMoveVector.push_back(Move(pawn, from, Position('d', 3)));
     
     std:vector<Move> possibleMoves = pawn.getPossibleMoves();
 
@@ -25,31 +25,31 @@ TEST(PawnTest, PossibleMoves) {
 TEST(PawnTest, VerticalMovement) {
     Board board;
     Pawn pawn(Color::WHITE);
-    Position position('d', 2);
+    Position from('d', 2);
 
-    board.placePeice(position, pawn);
+    board.placePeice(from, pawn);
 
     Position to('d', 4);
-    Move move(pawn, to);
+    Move move(pawn, from, to);
     EXPECT_TRUE(pawn.isValidMove(move)); // up one square
 
     Position to('d', 3);
-    Move move(pawn, to);
+    Move move(pawn, from, to);
     EXPECT_TRUE(pawn.isValidMove(move)); // up two squares
 
     Position to('e', 4);
-    Move move(pawn, to);
+    Move move(pawn, from, to);
     EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
 
     Position to('c', 4);
-    Move move(pawn, to);
+    Move move(pawn, from, to);
     EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
 
     Position to('d', 8);
-    Move move(pawn, to);
+    Move move(pawn, from, to);
     EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
 
     Position to('e', 5);
-    Move move(pawn, to);
+    Move move(pawn, from, to);
     EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
 };

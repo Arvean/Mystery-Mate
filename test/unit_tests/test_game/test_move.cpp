@@ -5,11 +5,11 @@
 TEST(MoveTest, MakeMove) {
     Board board;
 
-    Position from(d, 4);
+    Position from('d', 4);
     Pawn pawn(from, Color::WHITE);
-    Position to(d, 5);
+    Position to('d', 5);
 
-    Move move(&pawn, to);
+    Move move(&pawn, from, to);
 
     EXPECT_EQ(&pawn, move.getPiece());
     EXPECT_EQ(to, move.getTo());

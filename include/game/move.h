@@ -7,21 +7,16 @@ class Move {
     // Container to hold the chosen move
     public:
         Move() {};
-        Move(const Piece& piece, const Position& to);
+        Move::Move(const Piece* pPiece, const Position& from, const Position& to) 
+            : pPiece_(pPiece), from_(from), to_(to) {};
         virtual ~Move() = default;
 
-        const Piece& getPiece() const;
-        const Position& getTo() const;
+        const Piece* getPiece() const {return pPiece_;}
+        const Position& getFrom() const {return from_;}
+        const Position& getTo() const {return to_;}
 
     private:
-        Piece piece_;
+        Piece* pPiece_;
+        Position from_;
         Position to_;
-}
-/*
-        } else if (dynamic_cast<Pawn*>(move.getPiece()) != nullptr) {
-            if (isPromoted_()) {
-                promotion_()
-                move.getTo().getFile() == GRID_SIZE
-            }
-        }
-*/
+};

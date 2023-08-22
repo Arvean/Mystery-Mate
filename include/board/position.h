@@ -20,7 +20,6 @@ class Position {
         //const std::string getPositionNotation() const;
     
     private:
-        
         const int rank_;
         const char file_;
         //std::string positionNotation_;
