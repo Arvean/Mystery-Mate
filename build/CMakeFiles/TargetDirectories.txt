@@ -1,0 +1,6 @@
+/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles/ChessProject.dir
+/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles/edit_cache.dir
+/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles/rebuild_cache.dir
+/Users/arveanlabib/Documents/Mystery-Mate/build/src/CMakeFiles/chess_srcs.dir
+/Users/arveanlabib/Documents/Mystery-Mate/build/src/CMakeFiles/edit_cache.dir
+/Users/arveanlabib/Documents/Mystery-Mate/build/src/CMakeFiles/rebuild_cache.dir
