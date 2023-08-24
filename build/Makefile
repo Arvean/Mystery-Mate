@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /Users/arveanlabib/Documents/Mystery-Mate/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/local/Cellar/cmake/3.24.2/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
@@ -142,6 +152,19 @@ chess_srcs/fast:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/build
 .PHONY : chess_srcs/fast
 
+#=============================================================================
+# Target rules for targets named ChessProjectTests
+
+# Build rule for target.
+ChessProjectTests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ChessProjectTests
+.PHONY : ChessProjectTests
+
+# fast build rule for target.
+ChessProjectTests/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/build
+.PHONY : ChessProjectTests/fast
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -174,7 +197,9 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... ChessProject"
+	@echo "... ChessProjectTests"
 	@echo "... chess_srcs"
 	@echo "... src/main.o"
 	@echo "... src/main.i"

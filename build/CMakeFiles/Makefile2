@@ -65,15 +65,18 @@ CMAKE_BINARY_DIR = /Users/arveanlabib/Documents/Mystery-Mate/build
 # The main recursive "all" target.
 all: CMakeFiles/ChessProject.dir/all
 all: src/all
+all: tests/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
 preinstall: src/preinstall
+preinstall: tests/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/ChessProject.dir/clean
 clean: src/clean
+clean: tests/clean
 .PHONY : clean
 
 #=============================================================================
@@ -90,6 +93,21 @@ src/preinstall:
 # Recursive "clean" directory target.
 src/clean: src/CMakeFiles/chess_srcs.dir/clean
 .PHONY : src/clean
+
+#=============================================================================
+# Directory level rules for directory tests
+
+# Recursive "all" directory target.
+tests/all: tests/CMakeFiles/ChessProjectTests.dir/all
+.PHONY : tests/all
+
+# Recursive "preinstall" directory target.
+tests/preinstall:
+.PHONY : tests/preinstall
+
+# Recursive "clean" directory target.
+tests/clean: tests/CMakeFiles/ChessProjectTests.dir/clean
+.PHONY : tests/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/ChessProject.dir
@@ -124,7 +142,7 @@ CMakeFiles/ChessProject.dir/clean:
 src/CMakeFiles/chess_srcs.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=3,4,5,6,7,8,9,10,11,12,13,14,15 "Built target chess_srcs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=15,16,17,18,19,20,21,22,23,24,25,26,27 "Built target chess_srcs"
 .PHONY : src/CMakeFiles/chess_srcs.dir/all
 
 # Build rule for subdir invocation for target.
@@ -142,6 +160,32 @@ chess_srcs: src/CMakeFiles/chess_srcs.dir/rule
 src/CMakeFiles/chess_srcs.dir/clean:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/clean
 .PHONY : src/CMakeFiles/chess_srcs.dir/clean
+
+#=============================================================================
+# Target rules for target tests/CMakeFiles/ChessProjectTests.dir
+
+# All Build rule for target.
+tests/CMakeFiles/ChessProjectTests.dir/all: src/CMakeFiles/chess_srcs.dir/all
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/depend
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=3,4,5,6,7,8,9,10,11,12,13,14 "Built target ChessProjectTests"
+.PHONY : tests/CMakeFiles/ChessProjectTests.dir/all
+
+# Build rule for subdir invocation for target.
+tests/CMakeFiles/ChessProjectTests.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles 25
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/ChessProjectTests.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles 0
+.PHONY : tests/CMakeFiles/ChessProjectTests.dir/rule
+
+# Convenience name for target.
+ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/rule
+.PHONY : ChessProjectTests
+
+# clean rule for target.
+tests/CMakeFiles/ChessProjectTests.dir/clean:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/clean
+.PHONY : tests/CMakeFiles/ChessProjectTests.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

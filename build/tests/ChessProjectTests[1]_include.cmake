@@ -1,0 +1,5 @@
+if(EXISTS "/Users/arveanlabib/Documents/Mystery-Mate/build/tests/ChessProjectTests[1]_tests.cmake")
+  include("/Users/arveanlabib/Documents/Mystery-Mate/build/tests/ChessProjectTests[1]_tests.cmake")
+else()
+  add_test(ChessProjectTests_NOT_BUILT ChessProjectTests_NOT_BUILT)
+endif()

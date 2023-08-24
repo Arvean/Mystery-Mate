@@ -4,7 +4,7 @@
 
 class Position {
     public:
-        Position();
+        Position() : file_(0), rank_(0) {};
         Position(char file, int rank)
             : file_(file), rank_(rank) {};
         virtual ~Position() = default;

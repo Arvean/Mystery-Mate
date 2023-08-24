@@ -1,83 +1,40 @@
-#include <gtest/gtest.h>
 #include "knight.h"
-#include "board.h"
+#include <gtest/gtest.h>
 
-TEST(KnightTest, PossibleMoves) {
-    Board board;
-    Knight knight(Color::WHITE);
+TEST(KnightTests, IsValidMove) {
+    Knight knightWhite(Color::WHITE);
     Position from('d', 4);
 
-    board.placePeice(from, knight);
+    // Knight's valid move (L-shape)
+    Move validMove(&knightWhite, from, Position('f', 5));
+    // Invalid move for Knight
+    Move invalidMove(&knightWhite, from, Position('d', 6));
 
-    std::vector<Move> expectedMoveVector;
-    expectedMoveVector.push_back(Move(knight, from, Position('b', 3)));
-    expectedMoveVector.push_back(Move(knight, from, Position('b', 5)));
-    expectedMoveVector.push_back(Move(knight, from, Position('c', 2)));
-    expectedMoveVector.push_back(Move(knight, from, Position('c', 6)));
-    expectedMoveVector.push_back(Move(knight, from, Position('e'. 2)));
-    expectedMoveVector.push_back(Move(knight, from, Position('e', 6)));
-    expectedMoveVector.push_back(Move(knight, from, Position('f', 3)));
-    expectedMoveVector.push_back(Move(knight, from, Position('f', 5)));
-
-    std:vector<Move> possibleMoves = knight.getPossibleMoves();
-
-    for (auto move : expectedMoveVector) {
-        EXPECT_TRUE(possibleMoves.find(move) != possibleMoves.end());
-    }
+    EXPECT_TRUE(knightWhite.isValidMove(validMove));
+    EXPECT_FALSE(knightWhite.isValidMove(invalidMove));
 }
 
-TEST(KnightTest, LShapedMovement) {
-    Board board;
-    Knight knight(Color::WHITE);
+TEST(KnightTests, GetPossiblePositions) {
+    Knight knightWhite(Color::WHITE);
     Position from('d', 4);
 
-    board.placePeice(from, knight);
+    auto positions = knightWhite.getPossiblePositions(from);
 
-    Position to('e', 6);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
+    EXPECT_EQ(positions.size(), 8);
+}
 
-    Position to('f', 5);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
+TEST(KnightTests, GetSymbol) {
+    Knight knightWhite(Color::WHITE);
 
-    Position to('f', 3);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
+    EXPECT_EQ(knightWhite.getSymbol(), 'N');
+}
 
-    Position to('e', 2);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
+TEST(KnightTests, GetColor) {
+    Knight knightWhite(Color::WHITE);
 
-    Position to('c', 2);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
+    EXPECT_EQ(knightWhite.getColor(), Color::WHITE);
 
-    Position to('b', 3);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
+    Knight knightBlack(Color::BLACK);
 
-    Position to('b', 5);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
-
-    Position to('c', 6);
-    Move move(knight, from, to);
-    EXPECT_TRUE(knight.isValidMove(move));
-
-    Position to('e', 4);
-    Move move(knight, from, to);
-    EXPECT_FALSE(knight.isValidMove(move)); // right horizantal
-
-    Position to('c', 4);
-    Move move(knight, from, to);
-    EXPECT_FALSE(knight.isValidMove(move)); // right horizantal
-
-    Position to('d', 3);
-    Move move(knight, from, to);
-    EXPECT_FALSE(knight.isValidMove(move)); // right horizantal
-
-    Position to('d', 8);
-    Move move(knight, from, to);
-    EXPECT_FALSE(knight.isValidMove(move)); // right horizantal
-};
+    EXPECT_EQ(knightBlack.getColor(), Color::BLACK);
+}

@@ -1,78 +1,47 @@
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include "rook.h"
-#include "board.h"
 
-TEST(RookTest, PossibleMoves) {
-    Board board;
-    Rook rook(Color::WHITE);
-    Position from('d', 4);
+TEST(RookTests, IsValidMove) {
+    Rook rook;
+    Position from('a', 1);
+    Position to1('a', 5);
+    Move move1(&rook, from, to1);
+    EXPECT_TRUE(rook.isValidMove(move1));
 
-    board.placePeice(from, rook);
+    Position to2('d', 1);
+    Move move2(&rook, from, to2);
+    EXPECT_TRUE(rook.isValidMove(move2));
 
-    std::vector<Move> expectedMoveVector;
-
-    // Vertical
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 1)));
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 2)));
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 3)));
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 5)));
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 6)));
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 7)));
-    expectedMoveVector.push_back(Move(rook, from, Position('d', 8)));
-
-    // Horizantal
-    expectedMoveVector.push_back(Move(rook, from, Position('a', 4)));
-    expectedMoveVector.push_back(Move(rook, from, Position('b', 4)));
-    expectedMoveVector.push_back(Move(rook, from, Position('c', 4)));
-    expectedMoveVector.push_back(Move(rook, from, Position('e', 4)));
-    expectedMoveVector.push_back(Move(rook, from, Position('f', 4)));
-    expectedMoveVector.push_back(Move(rook, from, Position('g', 4)));
-    expectedMoveVector.push_back(Move(rook, from, Position('h', 4)));
-    
-
-    std:vector<Move> possibleMoves = rook.getPossibleMoves();
-
-    for (auto move : expectedMoveVector) {
-        EXPECT_TRUE(possibleMoves.find(move) != possibleMoves.end());
-    }
+    Position to3('d', 5);
+    Move move3(&rook, from, to3);
+    EXPECT_FALSE(rook.isValidMove(move3)); // Invalid move
 }
 
-TEST(RookTest, HorizantalMovement) {
-    Board board;
-    Position from('d', 4);
-    Rook rook(Color::WHITE);
+TEST(RookTests, GetPossiblePositions) {
+    Rook rook;
+    Position from('a', 1);
+    auto positions = rook.getPossiblePositions(from);
 
-    Position to('h', 4);
-    Move move(rook, from, to);
-    EXPECT_TRUE(rook.isValidMove(move)); // right
+    EXPECT_EQ(positions.size(), 14);
+}
 
-    Position to('a', 4);
-    Move move(rook, from, to);
-    EXPECT_TRUE(rook.isValidMove(move)); // left
+TEST(RookTests, GetSymbol) {
+    Rook rook;
+    EXPECT_EQ(rook.getSymbol(), 'R');
+}
 
-    Position to('e', 5);
-    Move move(rook, from, to);
-    EXPECT_FALSE(rook.isValidMove(move)); // diagnol
-};
+TEST(RookTests, GetColor) {
+    Rook rook1(Color::WHITE);
+    EXPECT_EQ(rook1.getColor(), Color::WHITE);
 
-TEST(RookTest, VerticalMovement) {
-    Board board;
-    Position from('d', 4);
-    Rook rook(Color::WHITE);
+    Rook rook2(Color::BLACK);
+    EXPECT_EQ(rook2.getColor(), Color::BLACK);
+}
 
-    Position to('d', 8);
-    Move move(rook, from, to);
-    EXPECT_TRUE(rook.isValidMove(move)); // up
+TEST(RookTests, HasMoved) {
+    Rook rook;
+    EXPECT_FALSE(rook.getHasMoved()); // Should be false initially
 
-    Position to('d', 1);
-    Move move(rook, from, to);
-    EXPECT_TRUE(rook.isValidMove(move)); // down
-
-    Position to('b', 6);
-    Move move(rook, from, to);
-    EXPECT_FALSE(rook.isValidMove(move)); // diagnol
-
-    Position to('c', 3);
-    Move move(rook, from, to);
-    EXPECT_FALSE(rook.isValidMove(move)); // diagnol
-};
+    rook.setHasMoved();
+    EXPECT_TRUE(rook.getHasMoved()); // Should be true after calling setHasMoved
+}

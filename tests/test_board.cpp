@@ -1,61 +1,38 @@
 #include <gtest/gtest.h>
-#include "pawn.h"
-#include "bishop.h"
 #include "board.h"
+#include "mock_piece.h"
 
-TEST(BoardTest, SetPiece) {
+// Test constructing an empty board
+TEST(Board, ConstructEmptyBoard) {
     Board board;
-    Position from('d', 4);
-
-    board.placePiece(from, Pawn(Color::WHITE));
-    Piece* pPawn = board.getPiece(position);
-
-    EXPECT_EQ(pPawn, &pawn);
-};
-
-TEST(BoardTest, ValidMove) {
-    Board board;
-    Position from('d', 4);
-
-    Pawn pawn(Color::WHITE);
-    board.placePiece(from, pawn);
-
-    Move move(pawn, from, Position('d', 5));
-
-    EXPECT_TRUE(board.isValidMove(move));
-};
-
-TEST(BoardTest, ObstructedMove) {
-    Board board;
-    Position from('d', 4);
-
-    Bishop bishop(Color::WHITE);
-    board.placePiece(from, bishop);
-
-
-    Pawn pawn(Color::BLACK);
-    board.placePiece(Position('f', 6), pawn);
-
-    Move move(bishop, from, Position('g', 7));
-
-    EXPECT_FALSE(board.isValidMove(move));
-};
-
-TEST(BoardTest, MoveToBusySquare) {
-    Board board;
-
-    Position from('d', 4);
-    Position to('e', 5);
-
-    Pawn whitePawn(Color::WHITE);
-    board.placePiece(from, Pawn(Color::WHITE));
-
-    Pawn blackPawn(Color::BLACK);
-    board.placePiece(to, Pawn(Color::BLACK));
-
-    Move move(whitePawn, from, to); //initiate takePiece_
-    
-    Piece* pPawn = board.getPiece(to);
-
-    EXPECT_EQ(pPawn, &whitePawn);
+    // You may want to verify some properties of an empty board here,
+    // depending on your implementation.
+    // For example, you might iterate over all squares and verify that they are all empty.
 }
+
+// Test placing a piece on the board
+TEST(Board, PlacePiece) {
+    Board board;
+    Position pos{'e', 4};
+    MockPiece piece;
+    board.placePiece(pos, &piece);
+    EXPECT_EQ(board.getSquare(pos)->getPiece(), &piece);
+}
+
+// Test taking a piece from a square
+TEST(Board, TakePiece) {
+    Board board;
+    Position pos{'e', 4};
+    MockPiece piece;
+    board.placePiece(pos, &piece);
+    board.takePiece(*board.getSquare(pos));
+    EXPECT_EQ(board.getSquare(pos)->getPiece(), nullptr);
+}
+
+// Test getting a square that does not contain a piece
+TEST(Board, GetEmptySquare) {
+    Board board;
+    Position pos{'e', 4};
+    EXPECT_EQ(board.getSquare(pos)->getPiece(), nullptr);
+}
+

@@ -1,55 +1,60 @@
-#include <gtest/gtest.h>
 #include "pawn.h"
-#include "board.h"
+#include <gtest/gtest.h>
 
-TEST(PawnTest, PossibleMoves) {
-    Board board;
-    Pawn pawn(Color::WHITE);
+TEST(PawnTests, IsValidMove) {
+    Pawn pawnWhite(Color::WHITE);
     Position from('d', 4);
 
-    board.placePeice(from, pawn);
+    // Pawn's valid move (one step forward)
+    Move validMoveOneStep(&pawnWhite, from, Position('d', 5));
+    // Invalid move for Pawn (diagonal without capturing)
+    Move invalidMoveDiagonal(&pawnWhite, from, Position('e', 5));
 
-    std::vector<Move> expectedMoveVector;
-
-    // Vertical
-    expectedMoveVector.push_back(Move(pawn, from, Position('d', 4)));
-    expectedMoveVector.push_back(Move(pawn, from, Position('d', 3)));
-    
-    std:vector<Move> possibleMoves = pawn.getPossibleMoves();
-
-    for (auto move : expectedMoveVector) {
-        EXPECT_TRUE(possibleMoves.find(move) != possibleMoves.end());
-    }
+    EXPECT_TRUE(pawnWhite.isValidMove(validMoveOneStep));
+    EXPECT_FALSE(pawnWhite.isValidMove(invalidMoveDiagonal));
 }
 
-TEST(PawnTest, VerticalMovement) {
-    Board board;
-    Pawn pawn(Color::WHITE);
+TEST(PawnTests, IsValidTwoStepMove) {
+    Pawn pawnWhite(Color::WHITE);
+    Position startingPositionWhite('e', 2);
+
+    // White Pawn's valid two-step move from starting position
+    Move validTwoStepMoveWhite(&pawnWhite, startingPositionWhite, Position('e', 4));
+
+    // Black Pawn's valid two-step move from starting position
+    Pawn pawnBlack(Color::BLACK);
+    Position startingPositionBlack('e', 7);
+    Move validTwoStepMoveBlack(&pawnWhite, startingPositionBlack, Position('e', 5));
+
+    // Invalid two-step move (not from starting position)
+    Move invalidTwoStepMove(&pawnWhite, Position('e', 4), Position('e', 6));
+
+    EXPECT_TRUE(pawnWhite.isValidMove(validTwoStepMoveWhite));
+    EXPECT_TRUE(pawnBlack.isValidMove(validTwoStepMoveBlack));
+    EXPECT_FALSE(pawnWhite.isValidMove(invalidTwoStepMove));
+}
+
+TEST(PawnTests, GetPossiblePositions) {
+    Pawn pawnWhite(Color::WHITE);
     Position from('d', 2);
 
-    board.placePeice(from, pawn);
+    auto positions = pawnWhite.getPossiblePositions(from);
 
-    Position to('d', 4);
-    Move move(pawn, from, to);
-    EXPECT_TRUE(pawn.isValidMove(move)); // up one square
+    EXPECT_EQ(positions.size(), 2);
+}
 
-    Position to('d', 3);
-    Move move(pawn, from, to);
-    EXPECT_TRUE(pawn.isValidMove(move)); // up two squares
+TEST(PawnTests, GetSymbol) {
+    Pawn pawnWhite(Color::WHITE);
 
-    Position to('e', 4);
-    Move move(pawn, from, to);
-    EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
+    EXPECT_EQ(pawnWhite.getSymbol(), 'P');
+}
 
-    Position to('c', 4);
-    Move move(pawn, from, to);
-    EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
+TEST(PawnTests, GetColor) {
+    Pawn pawnWhite(Color::WHITE);
 
-    Position to('d', 8);
-    Move move(pawn, from, to);
-    EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
+    EXPECT_EQ(pawnWhite.getColor(), Color::WHITE);
 
-    Position to('e', 5);
-    Move move(pawn, from, to);
-    EXPECT_FALSE(pawn.isValidMove(move)); // right horizantal
-};
+    Pawn pawnBlack(Color::BLACK);
+
+    EXPECT_EQ(pawnBlack.getColor(), Color::BLACK);
+}

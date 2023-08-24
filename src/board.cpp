@@ -19,7 +19,7 @@ void Board::placePiece(const Position& position, IPiece* piece) {
 };
 
 
-const Square* Board::getSquare(const Position& position) const {
+Square* Board::getSquare(const Position& position) const {
     auto it = squares_.find(position);
     if (it != squares_.end()) {
         return it->second.get();

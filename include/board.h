@@ -13,7 +13,7 @@ class Board {
         virtual ~Board() = default;
 
         void placePiece(const Position& position, IPiece* piece); // Remove?
-        const Square* getSquare(const Position& position) const; // Remove?
+        Square* getSquare(const Position& position) const; // Remove?
         void takePiece(Square& square);
 
         friend class BoardRules;

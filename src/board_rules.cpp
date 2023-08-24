@@ -56,7 +56,7 @@ bool BoardRules::isValidPromotion(const Move& move, IPiece* newPiece) const {
 };
 
 
-bool BoardRules::isValidEnPassant(const Move& previousMove, const Move& move, const Position& capturedPawnPosition) const {
+bool BoardRules::isValidEnPassant(const Move& previousMove, const Move& move) const {
     if (move.getPiece()->getSymbol() != 'P') return false;
 
     if (abs(move.getTo().getFile() - move.getFrom().getFile()) != 1 || 

@@ -12,7 +12,7 @@ add_executable(ChessProject src/main.cpp)
 target_link_libraries(ChessProject PRIVATE chess_srcs)
 target_include_directories(ChessProject PRIVATE include)
 
-# enable_testing()
-# add_subdirectory(tests)
+enable_testing()
+add_subdirectory(tests)
 
 

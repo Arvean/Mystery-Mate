@@ -1,0 +1,1 @@
+set(  ChessProjectTests_TESTS)
