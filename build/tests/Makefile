@@ -140,6 +140,30 @@ ChessProjectTests/fast:
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/build
 .PHONY : ChessProjectTests/fast
 
+main.o: main.cpp.o
+.PHONY : main.o
+
+# target to build an object file
+main.cpp.o:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/main.cpp.o
+.PHONY : main.cpp.o
+
+main.i: main.cpp.i
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/main.cpp.s
+.PHONY : main.cpp.s
+
 test_bishop.o: test_bishop.cpp.o
 .PHONY : test_bishop.o
 
@@ -414,6 +438,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... ChessProjectTests"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 	@echo "... test_bishop.o"
 	@echo "... test_bishop.i"
 	@echo "... test_bishop.s"

@@ -9,6 +9,9 @@ public:
 
     void movePiece(const Move& move, const Board& board);
 
+
+    //bool isCheckmate
+
 private:
     Board board_;
     //std::vector<MoveRecord> moveHistory_;

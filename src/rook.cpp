@@ -11,10 +11,10 @@ std::unordered_set<Position> Rook::getPossiblePositions(const Position& from) co
     // Rank and file movements
     for (const auto& direction : directions) {
         for (int i = 1; i < GRID_SIZE; ++i) {
-            int newFile = from.getFile() + i * direction.first;
+            int newFile = charToFile_(from.getFile()) + i * direction.first;
             int newRank = from.getRank() + i * direction.second;
             if (newFile >= 0 && newFile < GRID_SIZE && newRank >= 0 && newRank < GRID_SIZE) {
-                positions.emplace(newFile, newRank);
+                positions.emplace(fileToChar_(newFile), newRank);
             }
         }
     }

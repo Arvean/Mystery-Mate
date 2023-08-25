@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/arveanlabib/Documents/Mystery-Mate/tests/main.cpp" "tests/CMakeFiles/ChessProjectTests.dir/main.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/main.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_bishop.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_bishop.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_bishop.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_board.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_board.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_board.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_board_rules.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o.d"

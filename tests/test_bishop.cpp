@@ -1,6 +1,15 @@
 #include "bishop.h"
 #include <gtest/gtest.h>
 
+TEST(BishopTests, GetPossiblePositions) {
+    Bishop bishopWhite(Color::WHITE);
+    Position from('d', 4);
+    
+    auto positions = bishopWhite.getPossiblePositions(from);
+    
+    EXPECT_EQ(positions.size(), 12);
+}
+
 TEST(BishopTests, IsValidMove) {
     Bishop bishopWhite(Color::WHITE);
     Position from('d', 4);
@@ -10,15 +19,6 @@ TEST(BishopTests, IsValidMove) {
     
     EXPECT_TRUE(bishopWhite.isValidMove(validMove));
     EXPECT_FALSE(bishopWhite.isValidMove(invalidMove));
-}
-
-TEST(BishopTests, GetPossiblePositions) {
-    Bishop bishopWhite(Color::WHITE);
-    Position from('d', 4);
-    
-    auto positions = bishopWhite.getPossiblePositions(from);
-    
-    EXPECT_EQ(positions.size(), 12);
 }
 
 TEST(BishopTests, GetSymbol) {

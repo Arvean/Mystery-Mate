@@ -11,10 +11,10 @@ std::unordered_set<Position> Knight::getPossiblePositions(const Position& from) 
 
     // Check each move, and add the position if it's within the bounds of the board
     for (const auto& move : moves) {
-        int newFile = from.getFile() + move.first;
+        int newFile = charToFile_(from.getFile()) + move.first;
         int newRank = from.getRank() + move.second;
         if (newFile >= 0 && newFile < GRID_SIZE && newRank >= 0 && newRank < GRID_SIZE) {
-            positions.emplace(newFile, newRank);
+            positions.emplace(fileToChar_(newFile), newRank);
         }
     }
 

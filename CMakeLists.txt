@@ -12,6 +12,8 @@ add_executable(ChessProject src/main.cpp)
 target_link_libraries(ChessProject PRIVATE chess_srcs)
 target_include_directories(ChessProject PRIVATE include)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 enable_testing()
 add_subdirectory(tests)
 
