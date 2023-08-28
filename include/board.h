@@ -25,6 +25,7 @@ class Board {
         bool isObstructedBetweenRank_(const Position& from, const Position& to) const;
         bool isObstructedBetweenFile_(const Position& from, const Position& to) const;
         
+        bool isInsideBoard_(const Position& position) const;
         std::unordered_set<Position> getAttackedPositions_(Color color) const;
         Position findKing_(Color color) const;
 };

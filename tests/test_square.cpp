@@ -68,8 +68,5 @@ TEST(Square, PlacePieceWhenOccupied) {
     MockPiece piece1, piece2;
     Square square(pos);
     square.placePiece(&piece1);
-    square.placePiece(&piece2); // The behavior here may vary based on your implementation
-    // Here, you may want to check if the square contains the first or second piece based on how you've implemented placePiece
-    // For example, if placing a second piece on an occupied square replaces the existing piece:
-    EXPECT_EQ(square.getPiece(), &piece2);
+    EXPECT_THROW(square.placePiece(&piece2), std::logic_error);
 }

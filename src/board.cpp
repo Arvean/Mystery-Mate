@@ -1,9 +1,9 @@
 #include "board.h"
 
 Board::Board() {
-    for(int rank = 0; rank < GRID_SIZE; ++rank) {
+    for(int rank = 1; rank <= GRID_SIZE; ++rank) {
         for(char file = 'a'; file <= 'h'; ++file) {
-            squares_[Position(rank, file)] = std::make_unique<Square>(Position(rank, file));
+            squares_[Position(file, rank)] = std::make_unique<Square>(Position(rank, file));
         }
     }
 };
@@ -35,6 +35,11 @@ void Board::takePiece(Square& square) {
         throw std::logic_error("Invalid. No piece to remove.");
     }
 };
+
+
+bool Board::isInsideBoard_(const Position& position) const {
+    return squares_.find(position) != squares_.end();
+}
 
 
 bool Board::isObstructed_(const Position& position) const {

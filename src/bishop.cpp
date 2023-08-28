@@ -11,10 +11,10 @@ std::unordered_set<Position> Bishop::getPossiblePositions(const Position& from) 
     // Diagonal movements
     for (const auto& direction : directions) {
         for (int i = 1; i < GRID_SIZE; ++i) {
-            int newFileInt = charToFile_(from.getFile()) + i * direction.first;
+            int newFile = charToFile_(from.getFile()) + i * direction.first;
             int newRank = from.getRank() + i * direction.second;
-            if (newFileInt >= 0 && newFileInt < GRID_SIZE && newRank >= 1 && newRank <= GRID_SIZE) {
-                positions.emplace(fileToChar_(newFileInt), newRank);
+            if (newFile >= charToFile_('a') && newFile <= charToFile_('h') && newRank >= 1 && newRank <= GRID_SIZE) {
+                positions.emplace(fileToChar_(newFile), newRank);
             }
         }
     }

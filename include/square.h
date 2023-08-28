@@ -10,9 +10,10 @@ class Square {
         ~Square() = default;
 
         bool const isOccupied() const;
+        const Position& getPosition() const;
+        
         void placePiece(const IPiece* pPiece);
         const IPiece* getPiece() const;
-        const Position& getPosition() const;
         void removePiece();
 
     private:

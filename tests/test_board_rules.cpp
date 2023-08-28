@@ -14,9 +14,12 @@ TEST(BoardRules, IsValidMove_Valid) {
     // You would typically set up a specific state here, e.g., place pieces on the board
     Position from{'e', 2};
     Position to{'e', 4};
-    MockPiece piece;
 
-    Move move(&piece, from, to); // Set up a valid move for the given piece and positions
+    Queen queen;
+    Queen* pQueen = &queen;
+    board.placePiece(from, pQueen);
+
+    Move move(pQueen, from, to); // Set up a valid move for the given piece and positions
     EXPECT_TRUE(rules.isValidMove(board, move));
 }
 
@@ -24,12 +27,19 @@ TEST(BoardRules, IsValidMove_Valid) {
 TEST(BoardRules, IsValidMove_NotValid) {
     Board board;
     BoardRules rules;
-    // Set up specific scenario where the move is not valid
+    // You would typically set up a specific state here, e.g., place pieces on the board
     Position from{'e', 2};
-    Position to{'e', 8}; // Assuming this move is not valid for the piece
-    MockPiece piece;
+    Position to{'e', 4};
 
-    Move move(&piece, from, to); // Set up a valid move for the given piece and positions
+    Queen queen;
+    Queen* pQueen = &queen;
+    board.placePiece(from, pQueen);
+
+    Pawn pawn;
+    Pawn* pPawn = &pawn;
+    board.placePiece(Position('e', 3), pPawn); 
+
+    Move move(pQueen, from, to); // Set up a valid move for the given piece and positions
     EXPECT_FALSE(rules.isValidMove(board, move));
 }
 

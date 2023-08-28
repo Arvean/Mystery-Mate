@@ -3,6 +3,7 @@
 #include "piece.h"
 #include "mock_piece.h"
 
+
 TEST(MoveTests, DefaultConstructor) {
     Move move;
 

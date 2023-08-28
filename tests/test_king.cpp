@@ -19,7 +19,7 @@ TEST(KingTests, IsValidMove) {
 
 TEST(KingTests, GetPossiblePositions) {
     King king;
-    Position from('e', 1);
+    Position from('e', 2);
     auto positions = king.getPossiblePositions(from);
 
     EXPECT_EQ(positions.size(), 8);

@@ -12,7 +12,7 @@ std::unordered_set<Position> King::getPossiblePositions(const Position& from) co
     for (const auto& dir : directions) {
         int newFile = charToFile_(from.getFile()) + dir.first;
         int newRank = from.getRank() + dir.second;
-        if (newFile >= 0 && newFile < GRID_SIZE && newRank >= 0 && newRank < GRID_SIZE) {
+        if (newFile >= charToFile_('a') && newFile <= charToFile_('h') && newRank >= 1 && newRank <= GRID_SIZE) {
             possiblePositions.emplace(fileToChar_(newFile), newRank);
         }
     }

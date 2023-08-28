@@ -1,4 +1,5 @@
 #include "pawn.h"
+#include <iostream>
 
 std::unordered_set<Position> Pawn::getPossiblePositions(const Position& from) const {
     std::unordered_set<Position> possiblePositions;
@@ -13,10 +14,6 @@ std::unordered_set<Position> Pawn::getPossiblePositions(const Position& from) co
         possiblePositions.emplace(doubleForwardPosition);
     }
 
-    for (int fileOffset : {-1, 1}) {
-        Position capturePosition(from.getFile() + fileOffset, from.getRank() + forwardDirection);
-        possiblePositions.emplace(capturePosition);
-    }
     return possiblePositions;
 };
 

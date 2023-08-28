@@ -13,7 +13,7 @@ std::unordered_set<Position> Rook::getPossiblePositions(const Position& from) co
         for (int i = 1; i < GRID_SIZE; ++i) {
             int newFile = charToFile_(from.getFile()) + i * direction.first;
             int newRank = from.getRank() + i * direction.second;
-            if (newFile >= 0 && newFile < GRID_SIZE && newRank >= 0 && newRank < GRID_SIZE) {
+            if (newFile >= charToFile_('a') && newFile <= charToFile_('h') && newRank >= 1 && newRank <= GRID_SIZE) {
                 positions.emplace(fileToChar_(newFile), newRank);
             }
         }

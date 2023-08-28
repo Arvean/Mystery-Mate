@@ -8,7 +8,7 @@ TEST(PawnTests, IsValidMove) {
     // Pawn's valid move (one step forward)
     Move validMoveOneStep(&pawnWhite, from, Position('d', 5));
     // Invalid move for Pawn (diagonal without capturing)
-    Move invalidMoveDiagonal(&pawnWhite, from, Position('e', 5));
+    Move invalidMoveDiagonal(&pawnWhite, from, Position('d', 6));
 
     EXPECT_TRUE(pawnWhite.isValidMove(validMoveOneStep));
     EXPECT_FALSE(pawnWhite.isValidMove(invalidMoveDiagonal));

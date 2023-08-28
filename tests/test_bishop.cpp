@@ -7,7 +7,7 @@ TEST(BishopTests, GetPossiblePositions) {
     
     auto positions = bishopWhite.getPossiblePositions(from);
     
-    EXPECT_EQ(positions.size(), 12);
+    EXPECT_EQ(positions.size(), 13);
 }
 
 TEST(BishopTests, IsValidMove) {

@@ -6,7 +6,7 @@
 #include "move.h"
 #include "position.h"
 
-#define GRID_SIZE 8U
+#define GRID_SIZE 8
 
 enum class Color {
     WHITE,

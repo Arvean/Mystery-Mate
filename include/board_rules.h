@@ -16,4 +16,5 @@ class BoardRules {
         bool isValidEnPassant(const Move& previousMove, const Move& move) const;
         bool isValidPromotion(const Move& move, IPiece* newPiece) const;
 
+        void addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from);
 };
