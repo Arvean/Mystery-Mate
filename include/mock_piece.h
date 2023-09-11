@@ -4,27 +4,34 @@
 
 class MockPiece : public IPiece {
 public:
-    MockPiece() : symbol_(' '), color_(Color::WHITE) {};
-    MockPiece(Color color) : symbol_(' '), color_(color) {};
+    MockPiece() : id_(0), type_(PieceType::MOCK), color_(Color::WHITE) {};
+    MockPiece(int id, Color color) : id_(id), type_(PieceType::MOCK), color_(color) {};
     ~MockPiece() override = default;
 
     bool isValidMove(const Move& move) const override {
-        return false; // Returning a default value
+        return false; 
     }
 
     std::unordered_set<Position> getPossiblePositions(const Position& /*from*/) const override {
-        return {}; // Returning an empty set
+        return {}; 
     }
 
-    char getSymbol() const override {
-        return symbol_; // Returning a mock symbol
+    PieceType getType() const override {
+        return type_; 
     }
 
     Color getColor() const override {
-        return color_; // Returning a default color
+        return color_; 
+    }
+
+     IPiece* clone() const override {return new MockPiece(*this);} // Copy constructor is invoked here}
+
+    int getID() const override {
+        return id_;
     }
 
 private:
-    const char symbol_;
+    const int id_;
+    const PieceType type_;
     const Color color_;
 };

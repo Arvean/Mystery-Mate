@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST(KnightTests, IsValidMove) {
-    Knight knightWhite(Color::WHITE);
+    Knight knightWhite(0, Color::WHITE);
     Position from('d', 4);
 
     // Knight's valid move (L-shape)
@@ -15,7 +15,7 @@ TEST(KnightTests, IsValidMove) {
 }
 
 TEST(KnightTests, GetPossiblePositions) {
-    Knight knightWhite(Color::WHITE);
+    Knight knightWhite(0, Color::WHITE);
     Position from('d', 4);
 
     auto positions = knightWhite.getPossiblePositions(from);
@@ -24,17 +24,17 @@ TEST(KnightTests, GetPossiblePositions) {
 }
 
 TEST(KnightTests, GetSymbol) {
-    Knight knightWhite(Color::WHITE);
+    Knight knightWhite(0, Color::WHITE);
 
-    EXPECT_EQ(knightWhite.getSymbol(), 'N');
+    EXPECT_EQ(knightWhite.getType(), PieceType::KNIGHT);
 }
 
 TEST(KnightTests, GetColor) {
-    Knight knightWhite(Color::WHITE);
+    Knight knightWhite(0, Color::WHITE);
 
     EXPECT_EQ(knightWhite.getColor(), Color::WHITE);
 
-    Knight knightBlack(Color::BLACK);
+    Knight knightBlack(0, Color::BLACK);
 
     EXPECT_EQ(knightBlack.getColor(), Color::BLACK);
 }

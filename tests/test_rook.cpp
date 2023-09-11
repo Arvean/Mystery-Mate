@@ -27,14 +27,14 @@ TEST(RookTests, GetPossiblePositions) {
 
 TEST(RookTests, GetSymbol) {
     Rook rook;
-    EXPECT_EQ(rook.getSymbol(), 'R');
+    EXPECT_EQ(rook.getType(), PieceType::ROOK);
 }
 
 TEST(RookTests, GetColor) {
-    Rook rook1(Color::WHITE);
+    Rook rook1(0, Color::WHITE);
     EXPECT_EQ(rook1.getColor(), Color::WHITE);
 
-    Rook rook2(Color::BLACK);
+    Rook rook2(0, Color::BLACK);
     EXPECT_EQ(rook2.getColor(), Color::BLACK);
 }
 

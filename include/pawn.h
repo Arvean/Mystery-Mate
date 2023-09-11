@@ -4,15 +4,20 @@
 
 class Pawn : public IPiece {
     public:
-        Pawn() : symbol_('P'), color_(Color::WHITE) {};
-        Pawn(Color color) : symbol_('P'), color_(color) {};
-    
+        Pawn() : id_(0), type_(PieceType::PAWN), color_(Color::WHITE) {};
+        Pawn(int id, Color color) : id_(id), type_(PieceType::PAWN), color_(color) {};
+        Pawn(const Pawn& other) : id_(other.id_), type_(other.type_), color_(other.color_) {}
+
+        IPiece* clone() const override {return new Pawn(*this);} // Copy constructor is invoked here}
+        
         bool isValidMove(const Move& move) const;
         std::unordered_set<Position> getPossiblePositions(const Position& from) const;
-        char getSymbol() const {return symbol_;}
+        PieceType getType() const {return type_;}
         Color getColor() const {return color_;}
+        int getID() const {return id_;}
 
     private:
-        const char symbol_;
+        const int id_;
+        const PieceType type_;
         const Color color_;
 };

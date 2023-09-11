@@ -4,14 +4,14 @@
 #include <iostream> 
 
 bool BoardRules::isValidMove(const Board& board, const Move& move) const {
-    if (!move.getPiece()->isValidMove(move)) {
-        return false;
-    }
+    if (!move.getPiece()->isValidMove(move)) {return false;}
 
     Position to = move.getTo();
     std::unordered_set<Position> possiblePositions = move.getPiece()->getPossiblePositions(move.getFrom());
 
-    // Debugging prints can remain the same...
+    if (move.getPiece()->getType() == PieceType::PAWN) {_addPawnCapturePositions(board, possiblePositions, move.getFrom());} // Repeating in range and is occupied checks?}
+    if (move.getPiece()->getType() == PieceType::KING) {_removeKingInCheckMoves(board, possiblePositions, move);} // Repeating in range and is occupied checks?}
+
 
     for (const auto& pos : possiblePositions) {
         if (board.isObstructed_(pos)) {
@@ -45,7 +45,7 @@ bool BoardRules::isValidCastling(const Board& board, const Move& kingMove, const
     if (king == nullptr) {std::logic_error("No king selected for castling");}
     if (rook == nullptr) {std::logic_error("No rook selected for castling");}
 
-    if (king->getSymbol() != 'K' || rook->getSymbol() != 'R') {
+    if (king->getType() != PieceType::KING || rook->getType() != PieceType::ROOK) {
         throw std::logic_error("Invalid parameter. King and rook expected.");
     }
 
@@ -53,60 +53,34 @@ bool BoardRules::isValidCastling(const Board& board, const Move& kingMove, const
 
     if (board.isObstructedBetweenFile_(kingMove.getFrom(), rookMove.getFrom())) {return false;}
 
-    if (isInCheck(board, kingMove.getPiece())) {return false;}
+    if (isInCheck(board, kingMove.getPiece()->getColor())) {return false;}
 
     return true;
 };
 
 
 bool BoardRules::isValidPromotion(const Move& move, IPiece* newPiece) const {
-    if (move.getPiece()->getSymbol() != 'P') return false;
+    if (move.getPiece()->getType() != PieceType::PAWN) return false;
 
     int targetRank = move.getPiece()->getColor() == Color::WHITE ? GRID_SIZE : 0;
     int promotionRank = move.getPiece()->getColor() == Color::BLACK ? 1 : 0;
 
     if (move.getTo().getRank() != targetRank && move.getTo().getRank() != promotionRank) {return false;}
 
-    char newSymbol = newPiece->getSymbol();
+    PieceType newType = newPiece->getType();
 
-    return (newSymbol == 'Q' || newSymbol == 'R' || newSymbol == 'B' || newSymbol == 'N');
+    return (newType == PieceType::QUEEN || newType == PieceType::ROOK || newType == PieceType::BISHOP || newType == PieceType::KNIGHT);
 };
 
 
-void BoardRules::addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) {
-
-    auto it = board.squares_.find(from);
-    if (it != board.squares_.end()) {std::logic_error("Invalid starting position");}
-    if (!it->second->isOccupied()) {std::logic_error("Current square is not occupied");}
-
-    Color pawnColor = it->second->getPiece()->getColor();
-
-    int forwardDirection = (pawnColor == Color::WHITE) ? 1 : -1;
-
-    for (int fileOffset : {-1, 1}) {
-        char newFile = from.getFile() + fileOffset;
-        int newRank = from.getRank() + forwardDirection;
-
-        // Add the capture position if an opponent's piece is present on that square
-        auto it = board.squares_.find(Position(newFile, newRank));
-        if (it != board.squares_.end()) {std::logic_error("Invalid starting position");}
-        if (!it->second->isOccupied()) {std::logic_error("Current square is not occupied");}
-
-        if (it->second->getPiece()->getColor() != pawnColor) {
-            possiblePositions.emplace(it->second->getPosition());
-        }
-    }
-}
-
-
 bool BoardRules::isValidEnPassant(const Move& previousMove, const Move& move) const {
-    if (move.getPiece()->getSymbol() != 'P') return false;
+    if (move.getPiece()->getType() != PieceType::PAWN) return false;
 
     if (abs(move.getTo().getFile() - move.getFrom().getFile()) != 1 || 
         abs(move.getTo().getRank() - move.getFrom().getRank()) != 1) return false;
 
     // Check if pawn double move in a file += 1 was made previously
-    if (previousMove.getPiece()->getSymbol() != 'P') return false;
+    if (previousMove.getPiece()->getType() != PieceType::PAWN) return false;
 
     if (abs(previousMove.getFrom().getRank() - move.getFrom().getRank()) != 2 &&
         abs(previousMove.getFrom().getFile() - move.getFrom().getFile()) != 1) return false;
@@ -118,11 +92,52 @@ bool BoardRules::isValidEnPassant(const Move& previousMove, const Move& move) co
 };
 
 
-bool BoardRules::isInCheck(const Board& board, const IPiece* king) const {
-    Position kingPosition = board.findKing_(king->getColor());
+bool BoardRules::isInCheck(const Board& board, const Color kingColor) const {
+    Position kingPosition = board.findKing_(kingColor);
 
-    Color opponentColor = (king->getColor() == Color::WHITE) ? Color::BLACK : Color::WHITE;
+    Color opponentColor = (kingColor == Color::WHITE) ? Color::BLACK : Color::WHITE;
     std::unordered_set<Position> attackedPositions = board.getAttackedPositions_(opponentColor);
 
     return attackedPositions.find(kingPosition) != attackedPositions.end();
 };
+
+
+void BoardRules::_addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) const {
+
+    auto it = board.squares.find(from);
+    if (it != board.squares.end()) {std::logic_error("Invalid starting position");}
+    if (!it->second->isOccupied()) {std::logic_error("Current square is not occupied");}
+
+    Color pawnColor = it->second->getPiece()->getColor();
+
+    int forwardDirection = (pawnColor == Color::WHITE) ? 1 : -1;
+
+    for (int fileOffset : {-1, 1}) {
+        char newFile = from.getFile() + fileOffset;
+        int newRank = from.getRank() + forwardDirection;
+
+        // Add the capture position if an opponent's piece is present on that square
+        auto it = board.squares.find(Position(newFile, newRank));
+        if (it != board.squares.end()) {std::logic_error("Invalid starting position");}
+        if (!it->second->isOccupied()) {std::logic_error("Current square is not occupied");}
+
+        if (it->second->getPiece()->getColor() != pawnColor) {
+            possiblePositions.emplace(it->second->getPosition());
+        }
+    }
+}
+
+
+void BoardRules::_removeKingInCheckMoves(const Board& board, std::unordered_set<Position>& possiblePositions, const Move& move) const {
+    auto it = possiblePositions.begin();
+    while (it != possiblePositions.end()) {
+        Position pos = *it;
+        Board tempBoard = board;
+        tempBoard.placePiece(move.getTo(), const_cast<IPiece*>(move.getPiece()));
+
+        if (isInCheck(tempBoard, tempBoard.getSquare(move.getFrom())->getPiece()->getColor())) {
+            it = possiblePositions.erase(it);
+        } else {++it;}
+        tempBoard.removePiece(tempBoard.squares.at(move.getTo()).get());
+    }
+}

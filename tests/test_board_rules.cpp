@@ -48,7 +48,7 @@ TEST(BoardRules, IsInCheck) {
     Board board;
     BoardRules rules;
 
-    King king = King(Color::BLACK);
+    King king = King(0, Color::BLACK);
     King* pKing = &king;
 
     Queen queen = Queen();
@@ -57,7 +57,7 @@ TEST(BoardRules, IsInCheck) {
     board.placePiece(Position('e', 4), pQueen);
     board.placePiece(Position('e', 8), pKing);
     // Set up specific scenario where the king is in check
-    EXPECT_TRUE(rules.isInCheck(board, pKing));
+    EXPECT_TRUE(rules.isInCheck(board, pKing->getColor()));
 }
 
 // Test if a castling move is valid
@@ -65,10 +65,10 @@ TEST(BoardRules, IsValidCastling) {
     Board board;
     BoardRules rules;
 
-    King king = King(Color::BLACK);
+    King king = King(0, Color::BLACK);
     King* pKing = &king;
 
-    Rook rook = Rook(Color::BLACK);
+    Rook rook = Rook(0, Color::BLACK);
     Rook* pRook = &rook;
 
     Position kfrom('e', 1);
@@ -91,8 +91,8 @@ TEST(BoardRules, IsValidEnPassant) {
     Board board;
     BoardRules rules;
 
-    Pawn whitePawn(Color::WHITE);
-    Pawn blackPawn(Color::BLACK);
+    Pawn whitePawn(0, Color::WHITE);
+    Pawn blackPawn(0, Color::BLACK);
 
     Move previousMove(&whitePawn, Position('d', 2), Position('d', 4));
     Move move(&blackPawn, Position('c', 3), Position('d', 2));

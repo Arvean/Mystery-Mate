@@ -43,14 +43,14 @@ TEST(QueenTests, GetPossiblePositions) {
 
 TEST(QueenTests, GetSymbol) {
     Queen queen;
-    EXPECT_EQ(queen.getSymbol(), 'Q');
+    EXPECT_EQ(queen.getType(), PieceType::QUEEN);
 }
 
 TEST(QueenTests, GetColor) {
-    Queen queen1(Color::WHITE);
+    Queen queen1(0, Color::WHITE);
     EXPECT_EQ(queen1.getColor(), Color::WHITE);
 
-    Queen queen2(Color::BLACK);
+    Queen queen2(0, Color::BLACK);
     EXPECT_EQ(queen2.getColor(), Color::BLACK);
 };
 

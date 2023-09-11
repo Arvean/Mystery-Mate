@@ -20,12 +20,12 @@ TEST(Board, PlacePiece) {
 }
 
 // Test taking a piece from a square
-TEST(Board, TakePiece) {
+TEST(Board, RemovePiece) {
     Board board;
     Position pos{'e', 4};
     MockPiece piece;
     board.placePiece(pos, &piece);
-    board.takePiece(*board.getSquare(pos));
+    board.removePiece(board.getSquare(pos));
     EXPECT_EQ(board.getSquare(pos)->getPiece(), nullptr);
 }
 

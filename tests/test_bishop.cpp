@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST(BishopTests, GetPossiblePositions) {
-    Bishop bishopWhite(Color::WHITE);
+    Bishop bishopWhite(0, Color::WHITE);
     Position from('d', 4);
     
     auto positions = bishopWhite.getPossiblePositions(from);
@@ -11,7 +11,7 @@ TEST(BishopTests, GetPossiblePositions) {
 }
 
 TEST(BishopTests, IsValidMove) {
-    Bishop bishopWhite(Color::WHITE);
+    Bishop bishopWhite(0, Color::WHITE);
     Position from('d', 4);
     
     Move validMove(&bishopWhite, from, Position('f', 6));
@@ -22,17 +22,17 @@ TEST(BishopTests, IsValidMove) {
 }
 
 TEST(BishopTests, GetSymbol) {
-    Bishop bishopWhite(Color::WHITE);
+    Bishop bishopWhite(0, Color::WHITE);
     
-    EXPECT_EQ(bishopWhite.getSymbol(), 'B');
+    EXPECT_EQ(bishopWhite.getType(), PieceType::BISHOP);
 }
 
 TEST(BishopTests, GetColor) {
-    Bishop bishopWhite(Color::WHITE);
+    Bishop bishopWhite(0, Color::WHITE);
     
     EXPECT_EQ(bishopWhite.getColor(), Color::WHITE);
 
-    Bishop bishopBlack(Color::BLACK);
+    Bishop bishopBlack(0, Color::BLACK);
 
     EXPECT_EQ(bishopBlack.getColor(), Color::BLACK);
 }

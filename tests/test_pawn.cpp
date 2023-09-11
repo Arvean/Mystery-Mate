@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST(PawnTests, IsValidMove) {
-    Pawn pawnWhite(Color::WHITE);
+    Pawn pawnWhite(0, Color::WHITE);
     Position from('d', 4);
 
     // Pawn's valid move (one step forward)
@@ -15,14 +15,14 @@ TEST(PawnTests, IsValidMove) {
 }
 
 TEST(PawnTests, IsValidTwoStepMove) {
-    Pawn pawnWhite(Color::WHITE);
+    Pawn pawnWhite(0, Color::WHITE);
     Position startingPositionWhite('e', 2);
 
     // White Pawn's valid two-step move from starting position
     Move validTwoStepMoveWhite(&pawnWhite, startingPositionWhite, Position('e', 4));
 
     // Black Pawn's valid two-step move from starting position
-    Pawn pawnBlack(Color::BLACK);
+    Pawn pawnBlack(0, Color::BLACK);
     Position startingPositionBlack('e', 7);
     Move validTwoStepMoveBlack(&pawnWhite, startingPositionBlack, Position('e', 5));
 
@@ -35,7 +35,7 @@ TEST(PawnTests, IsValidTwoStepMove) {
 }
 
 TEST(PawnTests, GetPossiblePositions) {
-    Pawn pawnWhite(Color::WHITE);
+    Pawn pawnWhite(0, Color::WHITE);
     Position from('d', 2);
 
     auto positions = pawnWhite.getPossiblePositions(from);
@@ -44,17 +44,17 @@ TEST(PawnTests, GetPossiblePositions) {
 }
 
 TEST(PawnTests, GetSymbol) {
-    Pawn pawnWhite(Color::WHITE);
+    Pawn pawnWhite(0, Color::WHITE);
 
-    EXPECT_EQ(pawnWhite.getSymbol(), 'P');
+    EXPECT_EQ(pawnWhite.getType(), PieceType::PAWN);
 }
 
 TEST(PawnTests, GetColor) {
-    Pawn pawnWhite(Color::WHITE);
+    Pawn pawnWhite(0, Color::WHITE);
 
     EXPECT_EQ(pawnWhite.getColor(), Color::WHITE);
 
-    Pawn pawnBlack(Color::BLACK);
+    Pawn pawnBlack(0, Color::BLACK);
 
     EXPECT_EQ(pawnBlack.getColor(), Color::BLACK);
 }
