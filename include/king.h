@@ -8,16 +8,16 @@ class King : public IPiece {
         King(int id, Color color) : id_(id), hasMoved_(false), type_(PieceType::KING), color_(color) {};
         King(const King& other) : id_(other.id_), type_(other.type_), color_(other.color_) {}
 
-        IPiece* clone() const override {return new King(*this);} // Copy constructor is invoked here}
+        virtual IPiece* clone() const override {return new King(*this);} // Copy constructor is invoked here}
 
-        bool isValidMove(const Move& move) const;
-        std::unordered_set<Position> getPossiblePositions(const Position& from) const;
+        virtual bool isValidMove(const Move& move) const;
+        virtual std::unordered_set<Position> getPossiblePositions(const Position& from) const;
         
-        void setHasMoved() {hasMoved_ = true;};
-        bool getHasMoved() const {return hasMoved_;}
-        PieceType getType() const {return type_;}
-        Color getColor() const {return color_;}
-        int getID() const {return id_;}
+        virtual void setHasMoved() {hasMoved_ = true;};
+        virtual bool getHasMoved() const {return hasMoved_;}
+        virtual PieceType getType() const {return type_;}
+        virtual Color getColor() const {return color_;}
+        virtual int getID() const {return id_;}
 
     private:
         const int id_;

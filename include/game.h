@@ -1,5 +1,6 @@
 #pragma once
 #include "board.h"
+#include "board_rules.h"
 #include "move.h"
 #include "player.h"
 #include <set>
@@ -18,19 +19,19 @@ enum class GameEndType {
 
 class Game {
 public:
-    Game() : whitePlayer(), blackPlayer() {};
+    Game() : whitePlayer(), blackPlayer(), pPreviousMove_(nullptr) {};
     Game(Player& player_1, Player& player_2);
     virtual ~Game() = default;
 
-    void startGame();
-    void endGame();
-    void movePiece(const Move& move);
-    bool isGameOver() const;
-    void switchPlayer();
+    virtual void startGame();
+    virtual void endGame();
+    virtual void movePiece(const Move& move);
+    virtual bool isGameOver() const;
+    virtual void switchPlayer();
 
-    GameState getGameState() const {return gameState_;}
-    Player getCurrentPlayer() const {return currentPlayer_;}
-    Board getBoard() const {return board_;}
+    virtual GameState getGameState() const {return gameState_;}
+    virtual Player getCurrentPlayer() const {return currentPlayer_;}
+    virtual Board getBoard() const {return board_;}
 
 private:
     std::set<IPiece*> pPieces_;
@@ -38,6 +39,8 @@ private:
     Player currentPlayer_;
     Player whitePlayer;
     Player blackPlayer;
+
+    Move* pPreviousMove_;
 
     Board board_;
     BoardRules boardRules_;

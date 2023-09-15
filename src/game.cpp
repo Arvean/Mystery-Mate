@@ -12,7 +12,7 @@
 #define NUMBER_OF_PIECES 32U
 
 
-Game::Game(Player& player_1, Player& player_2) {
+Game::Game(Player& player_1, Player& player_2) : pPreviousMove_(nullptr) {
     if (player_1.getColor() == Color::WHITE && player_2.getColor() == Color::BLACK) {
         whitePlayer = player_1;
         blackPlayer = player_2;
@@ -86,7 +86,7 @@ void Game::movePiece(const Move& move) {
     Square* pSquare = board_.getSquare(move.getTo());
     if (pSquare == nullptr) {throw std::logic_error("Invalid move. Not a valid square");}
 
-    if (boardRules_.isValidMove(board_, move)) {
+    if (boardRules_.isValidMove(board_, move, *pPreviousMove_)) {
         if (pSquare->isOccupied()) {
             IPiece* capturedPiece = const_cast<IPiece*> (pSquare->getPiece());
             if (pPieces_.find(capturedPiece) != pPieces_.end()) {
@@ -95,6 +95,7 @@ void Game::movePiece(const Move& move) {
             } else {throw std::logic_error("Piece does not exit");}
             pSquare->placePiece(const_cast<const IPiece*> (move.getPiece()));
         } else {throw std::logic_error("Invalid move");}
+        pPreviousMove_ = const_cast<Move*> (&move);
     }
 };
 
@@ -143,7 +144,7 @@ bool Game::_isStalemate() const {
                 }
                 auto possiblePos = pPiece->getPossiblePositions(*pPiecePosition);
                 for (const Position& pos : possiblePos) {
-                    if (boardRules_.isValidMove(board_, Move(pPiece, *pPiecePosition, pos))) {return false;}
+                    if (boardRules_.isValidMove(board_, Move(pPiece, *pPiecePosition, pos), *pPreviousMove_)) {return false;}
                 }
             }
         }

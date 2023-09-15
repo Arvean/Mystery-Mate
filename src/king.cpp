@@ -10,10 +10,10 @@ std::unordered_set<Position> King::getPossiblePositions(const Position& from) co
 
     // Check each direction, and add the position if it's within the bounds of the board
     for (const auto& dir : directions) {
-        int newFile = charToFile_(from.getFile()) + dir.first;
+        int newFile = charToFile(from.getFile()) + dir.first;
         int newRank = from.getRank() + dir.second;
-        if (newFile >= charToFile_('a') && newFile <= charToFile_('h') && newRank >= 1 && newRank <= GRID_SIZE) {
-            possiblePositions.emplace(fileToChar_(newFile), newRank);
+        if (newFile >= charToFile('a') && newFile <= charToFile('h') && newRank >= 1 && newRank <= GRID_SIZE) {
+            possiblePositions.emplace(fileToChar(newFile), newRank);
         }
     }
 

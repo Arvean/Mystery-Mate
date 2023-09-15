@@ -104,6 +104,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/FindGTest.cmake"
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/FindPackageMessage.cmake"
+  "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/FindPkgConfig.cmake"
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/FindThreads.cmake"
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/GoogleTest.cmake"
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/Internal/CheckSourceCompiles.cmake"
@@ -119,7 +120,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/UnixPaths.cmake"
   "/usr/local/lib/cmake/GTest/GTestConfig.cmake"
   "/usr/local/lib/cmake/GTest/GTestConfigVersion.cmake"
-  "/usr/local/lib/cmake/GTest/GTestTargets-release.cmake"
+  "/usr/local/lib/cmake/GTest/GTestTargets-noconfig.cmake"
   "/usr/local/lib/cmake/GTest/GTestTargets.cmake"
   )
 

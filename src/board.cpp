@@ -155,10 +155,10 @@ Position Board::findKing_(Color color) const {
 };
 
 
-static bool isLightSquare(const Position& pos) {
+bool Board::isLightSquare(const Position& pos) {
     return (IPiece::charToFile(pos.getFile()) + pos.getRank()) % 2 == 1;
 }
 
-static bool isDarkSquare(const Position& pos) {
+bool Board::isDarkSquare(const Position& pos) {
     return !isLightSquare(pos);
 }

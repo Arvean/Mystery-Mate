@@ -25,16 +25,16 @@ TEST(KingTests, GetPossiblePositions) {
     EXPECT_EQ(positions.size(), 8);
 }
 
-TEST(KingTests, GetSymbol) {
+TEST(KingTests, GetType) {
     King king;
-    EXPECT_EQ(king.getSymbol(), 'K');
+    EXPECT_EQ(king.getType(), PieceType::KING);
 }
 
 TEST(KingTests, GetColor) {
-    King king1(Color::WHITE);
+    King king1(0, Color::WHITE);
     EXPECT_EQ(king1.getColor(), Color::WHITE);
 
-    King king2(Color::BLACK);
+    King king2(0, Color::BLACK);
     EXPECT_EQ(king2.getColor(), Color::BLACK);
 }
 

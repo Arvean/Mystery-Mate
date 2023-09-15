@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_bishop.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_bishop.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_bishop.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_board.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_board.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_board.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_board_rules.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o.d"
+  "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_game.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_king.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_knight.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/tests/test_move.cpp" "tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o" "gcc" "tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o.d"

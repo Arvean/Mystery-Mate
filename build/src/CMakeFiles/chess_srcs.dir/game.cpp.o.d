@@ -189,4 +189,14 @@ src/CMakeFiles/chess_srcs.dir/game.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/board_rules.h
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/player.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__tree \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/king.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/bishop.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/knight.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/queen.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/pawn.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/rook.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/array

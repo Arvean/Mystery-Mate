@@ -1,5 +1,5 @@
 #include "knight.h"
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 TEST(KnightTests, IsValidMove) {
     Knight knightWhite(0, Color::WHITE);

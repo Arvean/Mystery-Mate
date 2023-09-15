@@ -13,9 +13,9 @@ class Move {
             : pPiece_(pPiece), from_(from), to_(to) {};
         virtual ~Move() = default;
 
-        const IPiece* getPiece() const {return pPiece_;}
-        const Position& getFrom() const {return from_;}
-        const Position& getTo() const {return to_;}
+        virtual const IPiece* getPiece() const {return pPiece_;}
+        virtual const Position& getFrom() const {return from_;}
+        virtual const Position& getTo() const {return to_;}
 
     private:
         const IPiece* pPiece_;

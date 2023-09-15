@@ -1,5 +1,5 @@
 #include "pawn.h"
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 TEST(PawnTests, IsValidMove) {
     Pawn pawnWhite(0, Color::WHITE);

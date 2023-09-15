@@ -11,11 +11,11 @@ class BoardRules {
         BoardRules() {};
         virtual ~BoardRules() = default;
 
-        bool isValidMove(const Board& board, const Move& move) const;
-        bool isInCheck(const Board& board, const Color kingColor) const;
-        bool isValidCastling(const Board& board, const Move& kingMove, const Move& rookMove) const;
-        bool isValidEnPassant(const Move& previousMove, const Move& move) const;
-        bool isValidPromotion(const Move& move, IPiece* newPiece) const;
+        virtual bool isValidMove(const Board& board, const Move& move, const Move& previousMove = Move()) const;
+        virtual bool isInCheck(const Board& board, const Color kingColor) const;
+        virtual bool isValidCastling(const Board& board, const Move& kingMove) const;
+        virtual bool isValidEnPassant(const Move& previousMove, const Move& move) const;
+        virtual bool isValidPromotion(const Move& move) const;
 
     private:
         void _addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) const;

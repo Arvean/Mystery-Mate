@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/ChessProjectTests.dir/test_board.cpp.o.d"
   "CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o"
   "CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o.d"
+  "CMakeFiles/ChessProjectTests.dir/test_game.cpp.o"
+  "CMakeFiles/ChessProjectTests.dir/test_game.cpp.o.d"
   "CMakeFiles/ChessProjectTests.dir/test_king.cpp.o"
   "CMakeFiles/ChessProjectTests.dir/test_king.cpp.o.d"
   "CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o"

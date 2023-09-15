@@ -236,6 +236,30 @@ test_board_rules.cpp.s:
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.s
 .PHONY : test_board_rules.cpp.s
 
+test_game.o: test_game.cpp.o
+.PHONY : test_game.o
+
+# target to build an object file
+test_game.cpp.o:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o
+.PHONY : test_game.cpp.o
+
+test_game.i: test_game.cpp.i
+.PHONY : test_game.i
+
+# target to preprocess a source file
+test_game.cpp.i:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.i
+.PHONY : test_game.cpp.i
+
+test_game.s: test_game.cpp.s
+.PHONY : test_game.s
+
+# target to generate assembly for a file
+test_game.cpp.s:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ChessProjectTests.dir/build.make tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.s
+.PHONY : test_game.cpp.s
+
 test_king.o: test_king.cpp.o
 .PHONY : test_king.o
 
@@ -450,6 +474,9 @@ help:
 	@echo "... test_board_rules.o"
 	@echo "... test_board_rules.i"
 	@echo "... test_board_rules.s"
+	@echo "... test_game.o"
+	@echo "... test_game.i"
+	@echo "... test_game.s"
 	@echo "... test_king.o"
 	@echo "... test_king.i"
 	@echo "... test_king.s"

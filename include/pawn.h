@@ -8,13 +8,13 @@ class Pawn : public IPiece {
         Pawn(int id, Color color) : id_(id), type_(PieceType::PAWN), color_(color) {};
         Pawn(const Pawn& other) : id_(other.id_), type_(other.type_), color_(other.color_) {}
 
-        IPiece* clone() const override {return new Pawn(*this);} // Copy constructor is invoked here}
+        virtual IPiece* clone() const override {return new Pawn(*this);} // Copy constructor is invoked here}
         
-        bool isValidMove(const Move& move) const;
-        std::unordered_set<Position> getPossiblePositions(const Position& from) const;
-        PieceType getType() const {return type_;}
-        Color getColor() const {return color_;}
-        int getID() const {return id_;}
+        virtual bool isValidMove(const Move& move) const;
+        virtual std::unordered_set<Position> getPossiblePositions(const Position& from) const;
+        virtual PieceType getType() const {return type_;}
+        virtual Color getColor() const {return color_;}
+        virtual int getID() const {return id_;}
 
     private:
         const int id_;

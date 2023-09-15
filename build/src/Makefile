@@ -332,30 +332,6 @@ pawn.cpp.s:
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/pawn.cpp.s
 .PHONY : pawn.cpp.s
 
-player.o: player.cpp.o
-.PHONY : player.o
-
-# target to build an object file
-player.cpp.o:
-	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/player.cpp.o
-.PHONY : player.cpp.o
-
-player.i: player.cpp.i
-.PHONY : player.i
-
-# target to preprocess a source file
-player.cpp.i:
-	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/player.cpp.i
-.PHONY : player.cpp.i
-
-player.s: player.cpp.s
-.PHONY : player.s
-
-# target to generate assembly for a file
-player.cpp.s:
-	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/player.cpp.s
-.PHONY : player.cpp.s
-
 queen.o: queen.cpp.o
 .PHONY : queen.o
 
@@ -462,9 +438,6 @@ help:
 	@echo "... pawn.o"
 	@echo "... pawn.i"
 	@echo "... pawn.s"
-	@echo "... player.o"
-	@echo "... player.i"
-	@echo "... player.s"
 	@echo "... queen.o"
 	@echo "... queen.i"
 	@echo "... queen.s"

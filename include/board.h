@@ -12,12 +12,14 @@ class Board {
         Board();
         Board(const Board& other);
         virtual ~Board() = default;
-        
+
         friend class BoardRules;
 
-        void placePiece(const Position& position, IPiece* piece);
-        void removePiece(Square* pSquare);
-        Square* getSquare(const Position& position) const;
+        virtual Board& operator=(const Board& other);
+
+        virtual void placePiece(const Position& position, IPiece* piece);
+        virtual void removePiece(Square* pSquare);
+        virtual Square* getSquare(const Position& position) const;
 
         static bool isLightSquare(const Position& pos);
         static bool isDarkSquare(const Position& pos);

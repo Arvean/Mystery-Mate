@@ -125,10 +125,24 @@ tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.s"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/arveanlabib/Documents/Mystery-Mate/tests/test_board_rules.cpp -o CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.s
 
+tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
+tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_game.cpp
+tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o"
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_game.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_game.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_game.cpp
+
+tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChessProjectTests.dir/test_game.cpp.i"
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/arveanlabib/Documents/Mystery-Mate/tests/test_game.cpp > CMakeFiles/ChessProjectTests.dir/test_game.cpp.i
+
+tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChessProjectTests.dir/test_game.cpp.s"
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/arveanlabib/Documents/Mystery-Mate/tests/test_game.cpp -o CMakeFiles/ChessProjectTests.dir/test_game.cpp.s
+
 tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_king.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_king.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_king.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_king.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.i: cmake_force
@@ -142,7 +156,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_knight.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_knight.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.i: cmake_force
@@ -156,7 +170,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_move.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_move.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_move.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_move.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.i: cmake_force
@@ -170,7 +184,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_pawn.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_pawn.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.i: cmake_force
@@ -184,7 +198,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_pawn.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_position.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_position.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_position.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_position.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.i: cmake_force
@@ -198,7 +212,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_position.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_queen.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_queen.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_queen.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.i: cmake_force
@@ -212,7 +226,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_queen.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_rook.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_rook.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_rook.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.i: cmake_force
@@ -226,7 +240,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_rook.cpp.s: cmake_force
 tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/flags.make
 tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/tests/test_square.cpp
 tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.o: tests/CMakeFiles/ChessProjectTests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.o -MF CMakeFiles/ChessProjectTests.dir/test_square.cpp.o.d -o CMakeFiles/ChessProjectTests.dir/test_square.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/tests/test_square.cpp
 
 tests/CMakeFiles/ChessProjectTests.dir/test_square.cpp.i: cmake_force
@@ -243,6 +257,7 @@ ChessProjectTests_OBJECTS = \
 "CMakeFiles/ChessProjectTests.dir/test_bishop.cpp.o" \
 "CMakeFiles/ChessProjectTests.dir/test_board.cpp.o" \
 "CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o" \
+"CMakeFiles/ChessProjectTests.dir/test_game.cpp.o" \
 "CMakeFiles/ChessProjectTests.dir/test_king.cpp.o" \
 "CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o" \
 "CMakeFiles/ChessProjectTests.dir/test_move.cpp.o" \
@@ -259,6 +274,7 @@ tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/main.cpp.o
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_bishop.cpp.o
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_board.cpp.o
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o
+tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_king.cpp.o
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_knight.cpp.o
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/test_move.cpp.o
@@ -272,7 +288,7 @@ tests/ChessProjectTests: src/libchess_srcs.a
 tests/ChessProjectTests: /usr/local/lib/libgtest_main.a
 tests/ChessProjectTests: /usr/local/lib/libgtest.a
 tests/ChessProjectTests: tests/CMakeFiles/ChessProjectTests.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable ChessProjectTests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable ChessProjectTests"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ChessProjectTests.dir/link.txt --verbose=$(VERBOSE)
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/tests && /usr/local/Cellar/cmake/3.24.2/bin/cmake -D TEST_TARGET=ChessProjectTests -D TEST_EXECUTABLE=/Users/arveanlabib/Documents/Mystery-Mate/build/tests/ChessProjectTests -D TEST_EXECUTOR= -D TEST_WORKING_DIR=/Users/arveanlabib/Documents/Mystery-Mate/build/tests -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=ChessProjectTests_TESTS -D CTEST_FILE=/Users/arveanlabib/Documents/Mystery-Mate/build/tests/ChessProjectTests[1]_tests.cmake -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P /usr/local/Cellar/cmake/3.24.2/share/cmake/Modules/GoogleTestAddTests.cmake
 

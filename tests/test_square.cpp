@@ -1,11 +1,10 @@
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include "square.h"
 #include "mock_piece.h"
 
 // Test the default constructor
 TEST(Square, DefaultConstructor) {
     Square square;
-    // Here, you might want to test any default behavior or state
 }
 
 // Test the constructor with a position

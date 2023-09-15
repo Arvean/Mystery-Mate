@@ -9,12 +9,12 @@ class Position {
             : file_(file), rank_(rank) {};
         virtual ~Position() = default;
 
-        bool operator==(const Position& other) const {
+        virtual bool operator==(const Position& other) const {
             return this->file_ == other.file_ && this->rank_ == other.rank_;
         };
 
-        const int getRank() const {return rank_;}
-        const char getFile() const {return file_;}
+        virtual const int getRank() const {return rank_;}
+        virtual const char getFile() const {return file_;}
     
     private:
         const int rank_;

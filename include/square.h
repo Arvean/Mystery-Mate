@@ -9,12 +9,12 @@ class Square {
             : position_(position) {};
         ~Square() = default;
 
-        bool const isOccupied() const;
-        const Position& getPosition() const;
+        virtual bool const isOccupied() const;
+        virtual const Position& getPosition() const;
         
-        void placePiece(const IPiece* pPiece);
-        const IPiece* getPiece() const;
-        void removePiece();
+        virtual void placePiece(const IPiece* pPiece);
+        virtual const IPiece* getPiece() const;
+        virtual void removePiece();
 
     private:
         const Position position_;

@@ -8,13 +8,13 @@ class Knight : public IPiece {
         Knight(int id, Color color) : id_(id), type_(PieceType::KNIGHT), color_(color) {};
         Knight(const Knight& other) : id_(other.id_), type_(other.type_), color_(other.color_) {}
 
-        IPiece* clone() const override {return new Knight(*this);} // Copy constructor is invoked here}
-        bool isValidMove(const Move& move) const;
+        virtual IPiece* clone() const override {return new Knight(*this);} // Copy constructor is invoked here}
+        virtual bool isValidMove(const Move& move) const;
 
-        std::unordered_set<Position> getPossiblePositions(const Position& from) const;
-        PieceType getType() const {return type_;}
-        Color getColor() const {return color_;}
-        int getID() const {return id_;}
+        virtual std::unordered_set<Position> getPossiblePositions(const Position& from) const;
+        virtual PieceType getType() const {return type_;}
+        virtual Color getColor() const {return color_;}
+        virtual int getID() const {return id_;}
 
     private:
         const int id_;

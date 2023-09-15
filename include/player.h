@@ -10,10 +10,10 @@ class Player {
             : horcruxe_id_{horcruxe_id}, color_{color} {};
         virtual ~Player() = default;
 
-        int getHorcruxeID() const {return horcruxe_id_;}
-        Color getColor() const {return color_;}
+        virtual int getHorcruxeID() const {return horcruxe_id_;}
+        virtual Color getColor() const {return color_;}
 
-        Player& operator=(Player& other){
+        virtual Player& operator=(Player& other){
             if (this == &other) {return *this;}
             this->horcruxe_id_ = other.getHorcruxeID();
             this->color_ = other.getColor();

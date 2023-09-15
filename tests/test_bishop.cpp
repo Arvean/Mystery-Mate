@@ -1,5 +1,5 @@
 #include "bishop.h"
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 TEST(BishopTests, GetPossiblePositions) {
     Bishop bishopWhite(0, Color::WHITE);

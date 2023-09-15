@@ -3,7 +3,15 @@
 #include "king.h"
 #include <iostream> 
 
-bool BoardRules::isValidMove(const Board& board, const Move& move) const {
+bool BoardRules::isValidMove(const Board& board, const Move& move, const Move& previousMove) const {
+
+    if (move.getPiece()->getType() == PieceType::KING) {
+        if (isValidCastling(board, move)) { return true; }
+    }
+    if (move.getPiece()->getType() == PieceType::PAWN) {
+        if (isValidEnPassant(previousMove, move)) { return true; }
+        if (isValidPromotion(move)) { return true; }
+    }
     if (!move.getPiece()->isValidMove(move)) {return false;}
 
     Position to = move.getTo();
@@ -38,28 +46,60 @@ bool BoardRules::isValidMove(const Board& board, const Move& move) const {
 };
 
 
-bool BoardRules::isValidCastling(const Board& board, const Move& kingMove, const Move& rookMove) const {
+bool BoardRules::isValidCastling(const Board& board, const Move& kingMove) const {
     const King* king = dynamic_cast<const King*>(kingMove.getPiece());
-    const Rook* rook = dynamic_cast<const Rook*>(rookMove.getPiece());
-
-    if (king == nullptr) {std::logic_error("No king selected for castling");}
-    if (rook == nullptr) {std::logic_error("No rook selected for castling");}
-
-    if (king->getType() != PieceType::KING || rook->getType() != PieceType::ROOK) {
-        throw std::logic_error("Invalid parameter. King and rook expected.");
+    
+    if (king == nullptr) {
+        throw std::logic_error("No king selected for castling");
     }
 
-    if (king->getHasMoved() || rook->getHasMoved()) {return false;}
+    if (king->getType() != PieceType::KING) {
+        throw std::logic_error("Invalid parameter. King expected.");
+    }
 
-    if (board.isObstructedBetweenFile_(kingMove.getFrom(), rookMove.getFrom())) {return false;}
+    if (king->getHasMoved()) {
+        return false;
+    }
 
+    if (isInCheck(board, kingMove.getPiece()->getColor())) {
+        return false;
+    }
+
+    Position kingTo = kingMove.getTo();
+    Square* rookSquare = nullptr;
+
+    // Check if it's a king's side castle
+    if (king->getColor() == Color::WHITE && kingTo == Position('g', 1)) {
+        rookSquare = board.getSquare(Position('h', 1));
+    } else if (king->getColor() == Color::BLACK && kingTo == Position('g', 8)) {
+        rookSquare = board.getSquare(Position('h', 8));
+    }
+    // Check if it's a queen's side castle
+    else if (king->getColor() == Color::WHITE && kingTo == Position('c', 1)) {
+        rookSquare = board.getSquare(Position('a', 1));
+    } else if (king->getColor() == Color::BLACK && kingTo == Position('c', 8)) {
+        rookSquare = board.getSquare(Position('a', 8));
+    } else {return false;}
+
+    // Verify the rook's status
+    if (rookSquare == nullptr || rookSquare->getPiece() == nullptr || rookSquare->getPiece()->getType() != PieceType::ROOK) {
+        return false;
+    }
+    
+    const Rook* rook = dynamic_cast<const Rook*>(rookSquare->getPiece());
+    if (rook == nullptr || rook->getHasMoved()) {return false;}
+
+    // Ensure no pieces are obstructing the path between the king and rook
+    if (board.isObstructedBetweenFile_(kingMove.getFrom(), rookSquare->getPosition())) {
+        return false;
+    }
     if (isInCheck(board, kingMove.getPiece()->getColor())) {return false;}
 
     return true;
 };
 
 
-bool BoardRules::isValidPromotion(const Move& move, IPiece* newPiece) const {
+bool BoardRules::isValidPromotion(const Move& move) const {
     if (move.getPiece()->getType() != PieceType::PAWN) return false;
 
     int targetRank = move.getPiece()->getColor() == Color::WHITE ? GRID_SIZE : 0;
@@ -67,9 +107,7 @@ bool BoardRules::isValidPromotion(const Move& move, IPiece* newPiece) const {
 
     if (move.getTo().getRank() != targetRank && move.getTo().getRank() != promotionRank) {return false;}
 
-    PieceType newType = newPiece->getType();
-
-    return (newType == PieceType::QUEEN || newType == PieceType::ROOK || newType == PieceType::BISHOP || newType == PieceType::KNIGHT);
+    return true;
 };
 
 

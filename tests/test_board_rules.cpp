@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include "board.h"
 #include "board_rules.h"
 #include "mock_piece.h"
@@ -83,7 +83,7 @@ TEST(BoardRules, IsValidCastling) {
     Move kingMove(pKing, kfrom, kto);
     Move rookMove(pRook, rfrom, rto);
 
-    EXPECT_TRUE(rules.isValidCastling(board, kingMove, rookMove));
+    EXPECT_TRUE(rules.isValidCastling(board, kingMove));
 }
 
 // Test if an en passant move is valid
@@ -114,8 +114,5 @@ TEST(BoardRules, IsValidPromotion) {
     board.placePiece(from, pPawn);
     Move move(pPawn, from, to);
 
-    Queen newQueen = Queen();
-    Queen* pNewQueen = &newQueen;
-
-    EXPECT_TRUE(rules.isValidPromotion(move, pNewQueen));
+    EXPECT_TRUE(rules.isValidPromotion(move));
 }

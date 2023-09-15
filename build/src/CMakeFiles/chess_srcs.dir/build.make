@@ -181,24 +181,10 @@ src/CMakeFiles/chess_srcs.dir/pawn.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess_srcs.dir/pawn.cpp.s"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/arveanlabib/Documents/Mystery-Mate/src/pawn.cpp -o CMakeFiles/chess_srcs.dir/pawn.cpp.s
 
-src/CMakeFiles/chess_srcs.dir/player.cpp.o: src/CMakeFiles/chess_srcs.dir/flags.make
-src/CMakeFiles/chess_srcs.dir/player.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/src/player.cpp
-src/CMakeFiles/chess_srcs.dir/player.cpp.o: src/CMakeFiles/chess_srcs.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object src/CMakeFiles/chess_srcs.dir/player.cpp.o"
-	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/chess_srcs.dir/player.cpp.o -MF CMakeFiles/chess_srcs.dir/player.cpp.o.d -o CMakeFiles/chess_srcs.dir/player.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/src/player.cpp
-
-src/CMakeFiles/chess_srcs.dir/player.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess_srcs.dir/player.cpp.i"
-	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/arveanlabib/Documents/Mystery-Mate/src/player.cpp > CMakeFiles/chess_srcs.dir/player.cpp.i
-
-src/CMakeFiles/chess_srcs.dir/player.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess_srcs.dir/player.cpp.s"
-	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/arveanlabib/Documents/Mystery-Mate/src/player.cpp -o CMakeFiles/chess_srcs.dir/player.cpp.s
-
 src/CMakeFiles/chess_srcs.dir/queen.cpp.o: src/CMakeFiles/chess_srcs.dir/flags.make
 src/CMakeFiles/chess_srcs.dir/queen.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/src/queen.cpp
 src/CMakeFiles/chess_srcs.dir/queen.cpp.o: src/CMakeFiles/chess_srcs.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object src/CMakeFiles/chess_srcs.dir/queen.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object src/CMakeFiles/chess_srcs.dir/queen.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/chess_srcs.dir/queen.cpp.o -MF CMakeFiles/chess_srcs.dir/queen.cpp.o.d -o CMakeFiles/chess_srcs.dir/queen.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/src/queen.cpp
 
 src/CMakeFiles/chess_srcs.dir/queen.cpp.i: cmake_force
@@ -212,7 +198,7 @@ src/CMakeFiles/chess_srcs.dir/queen.cpp.s: cmake_force
 src/CMakeFiles/chess_srcs.dir/rook.cpp.o: src/CMakeFiles/chess_srcs.dir/flags.make
 src/CMakeFiles/chess_srcs.dir/rook.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/src/rook.cpp
 src/CMakeFiles/chess_srcs.dir/rook.cpp.o: src/CMakeFiles/chess_srcs.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object src/CMakeFiles/chess_srcs.dir/rook.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object src/CMakeFiles/chess_srcs.dir/rook.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/chess_srcs.dir/rook.cpp.o -MF CMakeFiles/chess_srcs.dir/rook.cpp.o.d -o CMakeFiles/chess_srcs.dir/rook.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/src/rook.cpp
 
 src/CMakeFiles/chess_srcs.dir/rook.cpp.i: cmake_force
@@ -226,7 +212,7 @@ src/CMakeFiles/chess_srcs.dir/rook.cpp.s: cmake_force
 src/CMakeFiles/chess_srcs.dir/square.cpp.o: src/CMakeFiles/chess_srcs.dir/flags.make
 src/CMakeFiles/chess_srcs.dir/square.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/src/square.cpp
 src/CMakeFiles/chess_srcs.dir/square.cpp.o: src/CMakeFiles/chess_srcs.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object src/CMakeFiles/chess_srcs.dir/square.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object src/CMakeFiles/chess_srcs.dir/square.cpp.o"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/chess_srcs.dir/square.cpp.o -MF CMakeFiles/chess_srcs.dir/square.cpp.o.d -o CMakeFiles/chess_srcs.dir/square.cpp.o -c /Users/arveanlabib/Documents/Mystery-Mate/src/square.cpp
 
 src/CMakeFiles/chess_srcs.dir/square.cpp.i: cmake_force
@@ -247,7 +233,6 @@ chess_srcs_OBJECTS = \
 "CMakeFiles/chess_srcs.dir/knight.cpp.o" \
 "CMakeFiles/chess_srcs.dir/main.cpp.o" \
 "CMakeFiles/chess_srcs.dir/pawn.cpp.o" \
-"CMakeFiles/chess_srcs.dir/player.cpp.o" \
 "CMakeFiles/chess_srcs.dir/queen.cpp.o" \
 "CMakeFiles/chess_srcs.dir/rook.cpp.o" \
 "CMakeFiles/chess_srcs.dir/square.cpp.o"
@@ -263,13 +248,12 @@ src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/king.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/knight.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/main.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/pawn.cpp.o
-src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/player.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/queen.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/rook.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/square.cpp.o
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/build.make
 src/libchess_srcs.a: src/CMakeFiles/chess_srcs.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX static library libchess_srcs.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX static library libchess_srcs.a"
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && $(CMAKE_COMMAND) -P CMakeFiles/chess_srcs.dir/cmake_clean_target.cmake
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/chess_srcs.dir/link.txt --verbose=$(VERBOSE)
 

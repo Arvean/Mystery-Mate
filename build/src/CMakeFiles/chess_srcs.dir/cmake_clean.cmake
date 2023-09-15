@@ -15,8 +15,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/chess_srcs.dir/main.cpp.o.d"
   "CMakeFiles/chess_srcs.dir/pawn.cpp.o"
   "CMakeFiles/chess_srcs.dir/pawn.cpp.o.d"
-  "CMakeFiles/chess_srcs.dir/player.cpp.o"
-  "CMakeFiles/chess_srcs.dir/player.cpp.o.d"
   "CMakeFiles/chess_srcs.dir/queen.cpp.o"
   "CMakeFiles/chess_srcs.dir/queen.cpp.o.d"
   "CMakeFiles/chess_srcs.dir/rook.cpp.o"
