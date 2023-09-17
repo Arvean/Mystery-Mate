@@ -317,4 +317,6 @@ tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o: \
   /usr/local/include/gmock/gmock-nice-strict.h \
   /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_board_rules.h \
   /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_player.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_piece.h
+  /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_piece.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_square.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_game.h
