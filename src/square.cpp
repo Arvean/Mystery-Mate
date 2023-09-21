@@ -1,6 +1,6 @@
 #include "square.h"
 
-bool const Square::isOccupied() const {
+bool Square::isOccupied() const {
     return pPiece_ != nullptr;
 }
 

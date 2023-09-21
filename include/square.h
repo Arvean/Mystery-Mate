@@ -9,7 +9,7 @@ class Square {
             : position_(position) {};
         ~Square() = default;
 
-        virtual bool const isOccupied() const;
+        virtual bool isOccupied() const;
         virtual const Position& getPosition() const;
         
         virtual void placePiece(const IPiece* pPiece);

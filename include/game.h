@@ -6,7 +6,9 @@
 #include <set>
 
 enum class GameState {
-    IN_PROGRESS, 
+    WAITING_FOR_OPPONENT,
+    WHITE_MOVE,
+    BLACK_MOVE,
     ENDED
 };
 
@@ -19,37 +21,41 @@ enum class GameEndType {
 
 class Game {
 public:
-    Game() : whitePlayer(), blackPlayer(), pPreviousMove_(nullptr) {};
-    Game(Player& player_1, Player& player_2);
+    Game() : whitePlayer(), blackPlayer(), pPreviousMove_(nullptr),
+             board_(new Board()), boardRules_(new BoardRules()) {};
+    Game(Player& player_1, Player& player_2, Board* board, BoardRules* boardRules);
     virtual ~Game() = default;
 
     virtual void startGame();
-    virtual void endGame();
     virtual void movePiece(const Move& move);
-    virtual bool isGameOver() const;
-    virtual void switchPlayer();
+    virtual bool isGameOver();
 
     virtual GameState getGameState() const {return gameState_;}
-    virtual Player getCurrentPlayer() const {return currentPlayer_;}
-    virtual Board getBoard() const {return board_;}
+    virtual const Player* getCurrentPlayer() const {return pCurrentPlayer_;}
+    virtual Board* getBoard() const {return board_;}
+    virtual GameEndType getGameResult();
 
 private:
     std::set<IPiece*> pPieces_;
 
-    Player currentPlayer_;
+    const Player* pCurrentPlayer_;
     Player whitePlayer;
     Player blackPlayer;
 
     Move* pPreviousMove_;
 
-    Board board_;
-    BoardRules boardRules_;
+    Board* board_;
+    BoardRules* boardRules_;
     GameState gameState_;
+    GameEndType gameEndType_;
 
+    void _endGame();
+    void _switchPlayer();
     void _setupBoard();
-    bool _isHorcruxeCaptured(const int horcruxeID) const;
-    bool _isStalemate() const;
-    bool _hasInsufficientMaterial() const;
+    void _updateGameState();
+    virtual bool _isHorcruxeCaptured(const int horcruxeID) const;
+    virtual bool _isStalemate() const;
+    virtual bool _hasInsufficientMaterial() const;
     //void _isThreefoldRepetition() const;
     //void _isFifyMoveRule() const;
     //std::vector<MoveRecord> moveHistory_;

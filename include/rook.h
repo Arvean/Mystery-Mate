@@ -4,7 +4,7 @@
 
 class Rook : public IPiece {
     public:
-        Rook() : id_(0), type_(PieceType::ROOK), color_(Color::WHITE) {};
+        Rook() : id_(0), type_(PieceType::ROOK), hasMoved_(false), color_(Color::WHITE) {};
         Rook(int id, Color color) : id_(id), hasMoved_(false), type_(PieceType::ROOK), color_(color) {};
         Rook(const Rook& other) : id_(other.id_), type_(other.type_), color_(other.color_) {}
 

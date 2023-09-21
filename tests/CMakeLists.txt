@@ -3,6 +3,8 @@ find_package(GTest 1.10 REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GMOCK REQUIRED gmock)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 # Glob all the test files
 file(GLOB TEST_SOURCES "*.cpp")
 

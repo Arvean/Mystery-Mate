@@ -8,11 +8,15 @@
 #include "pawn.h"
 #include "rook.h"
 #include <array>
+#include <iostream>
 
-#define NUMBER_OF_PIECES 32U
 
-
-Game::Game(Player& player_1, Player& player_2) : pPreviousMove_(nullptr) {
+Game::Game(Player& player_1, Player& player_2, 
+           Board* board, BoardRules* boardRules)
+    : whitePlayer(player_1), blackPlayer(player_2), 
+      board_(board), boardRules_(boardRules), 
+      pPreviousMove_(nullptr) 
+{
     if (player_1.getColor() == Color::WHITE && player_2.getColor() == Color::BLACK) {
         whitePlayer = player_1;
         blackPlayer = player_2;
@@ -26,11 +30,11 @@ Game::Game(Player& player_1, Player& player_2) : pPreviousMove_(nullptr) {
 
 
 void Game::_setupBoard() {
-    int whiteID = 1;
-    int blackID = 17;
+    int whiteID = MIN_WHITE_HORCRUXE_ID;
+    int blackID = MIN_BLACK_HORCRUXE_ID;
 
     auto placeAndStore = [this](const Position& pos, IPiece* piece) {
-        board_.placePiece(pos, piece);
+        board_->placePiece(pos, piece);
         pPieces_.insert(piece);
     };
 
@@ -70,55 +74,81 @@ void Game::_setupBoard() {
 
 
 void Game::startGame() {
-    currentPlayer_ = whitePlayer; // Current player white
-    gameState_ = GameState::IN_PROGRESS;
+    pCurrentPlayer_ = &whitePlayer; // Current player white
+    gameState_ = GameState::WHITE_MOVE;
 
     _setupBoard();
 };
 
 
-void Game::endGame() {
-    gameState_ = GameState::ENDED;
-}; // Note to handle edge case of game never ending
-
-
 void Game::movePiece(const Move& move) {
-    Square* pSquare = board_.getSquare(move.getTo());
+    Square* pSquare = board_->getSquare(move.getTo());
+    std::cout << "Returned Square pointer: " << pSquare << std::endl;
+
     if (pSquare == nullptr) {throw std::logic_error("Invalid move. Not a valid square");}
 
-    if (boardRules_.isValidMove(board_, move, *pPreviousMove_)) {
+    if (boardRules_->isValidMove(*board_, move, pPreviousMove_)) {
         if (pSquare->isOccupied()) {
             IPiece* capturedPiece = const_cast<IPiece*> (pSquare->getPiece());
             if (pPieces_.find(capturedPiece) != pPieces_.end()) {
                 pPieces_.erase(capturedPiece);
                 delete capturedPiece; // Due to object being dynamically allocated
             } else {throw std::logic_error("Piece does not exit");}
-            pSquare->placePiece(const_cast<const IPiece*> (move.getPiece()));
-        } else {throw std::logic_error("Invalid move");}
-        pPreviousMove_ = const_cast<Move*> (&move);
-    }
+        } else {pSquare->placePiece(const_cast<const IPiece*> (move.getPiece()));};
+        if (isGameOver()) {
+            _endGame();
+        } else {
+            pPreviousMove_ = const_cast<Move*> (&move);
+            _switchPlayer();
+        }
+    } else {throw std::logic_error("Invalid Move. Please try another move.");}
 };
 
 
-bool Game::isGameOver() const {
-    if (_isHorcruxeCaptured(whitePlayer.getHorcruxeID()) || 
-        _isHorcruxeCaptured(blackPlayer.getHorcruxeID()) || 
-        _isStalemate() || 
-        _hasInsufficientMaterial()) {
+bool Game::isGameOver() {
+    if (_isHorcruxeCaptured(whitePlayer.getHorcruxeID())) {
+        gameEndType_ = GameEndType::BLACK_WIN;
+        return true;
+    }
+    if (_isHorcruxeCaptured(blackPlayer.getHorcruxeID())) {
+        gameEndType_ = GameEndType::WHITE_WIN;
+        return true;
+    }
+    if (_isStalemate()) {
+        gameEndType_ = GameEndType::STALEMATE;
+        return true;
+    }
+    if (_hasInsufficientMaterial()) {
+        gameEndType_ = GameEndType::DRAW;
         return true;
     }
     return false;
 };
 
 
-void Game::switchPlayer() {
-    if (currentPlayer_.getColor() == Color::WHITE) {currentPlayer_ = blackPlayer;}
-    else {currentPlayer_ = whitePlayer;}
+GameEndType Game::getGameResult() {
+    if (gameState_ == GameState::ENDED) {return gameEndType_;}
+}; 
+
+
+void Game::_endGame() {
+    gameState_ = GameState::ENDED;
+}; 
+
+
+void Game::_switchPlayer() {
+    pCurrentPlayer_->getColor() == Color::WHITE ? pCurrentPlayer_ = &blackPlayer : pCurrentPlayer_ = &whitePlayer;
+    _updateGameState();
+}
+
+
+void Game::_updateGameState() {
+    pCurrentPlayer_->getColor() == Color::WHITE ? gameState_ = GameState::WHITE_MOVE : gameState_ = GameState::BLACK_MOVE;
 }
 
 
 bool Game::_isHorcruxeCaptured(const int horcruxeID) const {
-    for (const auto& pair : board_.squares) {
+    for (const auto& pair : board_->squares) {
         const Square* currentSquare = pair.second.get();
 
         if (currentSquare && currentSquare->getPiece() && currentSquare->getPiece()->getID() == horcruxeID) {return false;}
@@ -131,12 +161,12 @@ bool Game::_isStalemate() const {
     std::array<Color, 2> colors = { Color::WHITE, Color::BLACK };
 
     for (const auto& playerColor : colors) {
-        if (boardRules_.isInCheck(board_, playerColor)) {return false;}
+        if (boardRules_->isInCheck(*board_, playerColor)) {return false;}
 
         for (const auto& pPiece : pPieces_) {
             if (pPiece->getColor() == playerColor) {
                 Position* pPiecePosition;
-                for (const auto& pair : board_.squares) {
+                for (const auto& pair : board_->squares) {
                     if (pair.second->getPiece() == pPiece) {
                         pPiecePosition = const_cast<Position*> (&pair.first);
                         break;
@@ -144,7 +174,7 @@ bool Game::_isStalemate() const {
                 }
                 auto possiblePos = pPiece->getPossiblePositions(*pPiecePosition);
                 for (const Position& pos : possiblePos) {
-                    if (boardRules_.isValidMove(board_, Move(pPiece, *pPiecePosition, pos), *pPreviousMove_)) {return false;}
+                    if (boardRules_->isValidMove(*board_, Move(pPiece, *pPiecePosition, pos), pPreviousMove_)) {return false;}
                 }
             }
         }
@@ -162,7 +192,7 @@ bool Game::_hasInsufficientMaterial() const {
     int numQueens = 0;
 
     // Loop through all squares on the board to count the pieces.
-    for (const auto& pair : board_.squares) {
+    for (const auto& pair : board_->squares) {
         const Square* square = pair.second.get();
         if (square && square->getPiece()) {
             switch (square->getPiece()->getType()) {

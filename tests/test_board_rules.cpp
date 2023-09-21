@@ -65,23 +65,21 @@ TEST(BoardRules, IsValidCastling) {
     Board board;
     BoardRules rules;
 
-    King king = King(0, Color::BLACK);
+    King king = King(0, Color::WHITE);
     King* pKing = &king;
 
-    Rook rook = Rook(0, Color::BLACK);
+    Rook rook = Rook(0, Color::WHITE);
     Rook* pRook = &rook;
 
     Position kfrom('e', 1);
     Position kto('g', 1);
 
     Position rfrom('h', 1);
-    Position rto('f', 1);
 
     board.placePiece(kfrom, pKing);
     board.placePiece(rfrom, pRook);
     // Set up specific scenario for castling
     Move kingMove(pKing, kfrom, kto);
-    Move rookMove(pRook, rfrom, rto);
 
     EXPECT_TRUE(rules.isValidCastling(board, kingMove));
 }

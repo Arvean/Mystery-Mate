@@ -24,7 +24,7 @@ public:
         return color_; 
     }
 
-     IPiece* clone() const override {return new MockPiece(*this);} // Copy constructor is invoked here}
+    IPiece* clone() const override {return new MockPiece(*this);} // Copy constructor is invoked here}
 
     int getID() const override {
         return id_;

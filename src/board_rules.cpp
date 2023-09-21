@@ -3,13 +3,15 @@
 #include "king.h"
 #include <iostream> 
 
-bool BoardRules::isValidMove(const Board& board, const Move& move, const Move& previousMove) const {
+bool BoardRules::isValidMove(const Board& board, const Move& move, const Move* pPreviousMove) const {
 
     if (move.getPiece()->getType() == PieceType::KING) {
         if (isValidCastling(board, move)) { return true; }
     }
     if (move.getPiece()->getType() == PieceType::PAWN) {
-        if (isValidEnPassant(previousMove, move)) { return true; }
+        if (pPreviousMove) {
+            if (isValidEnPassant(*pPreviousMove, move)) { return true; }
+        }
         if (isValidPromotion(move)) { return true; }
     }
     if (!move.getPiece()->isValidMove(move)) {return false;}
@@ -85,7 +87,7 @@ bool BoardRules::isValidCastling(const Board& board, const Move& kingMove) const
     if (rookSquare == nullptr || rookSquare->getPiece() == nullptr || rookSquare->getPiece()->getType() != PieceType::ROOK) {
         return false;
     }
-    
+
     const Rook* rook = dynamic_cast<const Rook*>(rookSquare->getPiece());
     if (rook == nullptr || rook->getHasMoved()) {return false;}
 

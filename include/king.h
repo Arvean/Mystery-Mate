@@ -4,7 +4,7 @@
 
 class King : public IPiece {
     public:
-        King() : id_(0), type_(PieceType::KING), color_(Color::WHITE) {};
+        King() : id_(0), type_(PieceType::KING), hasMoved_(false), color_(Color::WHITE) {};
         King(int id, Color color) : id_(id), hasMoved_(false), type_(PieceType::KING), color_(color) {};
         King(const King& other) : id_(other.id_), type_(other.type_), color_(other.color_) {}
 

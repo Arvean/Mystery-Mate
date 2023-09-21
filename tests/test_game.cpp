@@ -4,6 +4,8 @@
 #include "mock_board_rules.h"
 #include "mock_player.h"
 #include "mock_piece.h"
+#include "mock_square.h"
+#include "mock_game.h"
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -13,30 +15,48 @@ class GameTest : public ::testing::Test {
 protected:
     std::unique_ptr<MockBoard> mockBoard;
     std::unique_ptr<MockBoardRules> mockRules;
-    std::unique_ptr<Player> player1;
-    std::unique_ptr<Player> player2;
-    std::unique_ptr<Game> game;
+    std::unique_ptr<MockPlayer> mockPlayer1;
+    std::unique_ptr<MockPlayer> mockPlayer2;
+    std::unique_ptr<MockSquare> mockSquare;
+    std::unique_ptr<MockPiece> mockPiece;
+    std::unique_ptr<Game> game; // Notice the type change to MockGame
+
 
     void SetUp() override {
+        mockPiece = std::make_unique<MockPiece>();
         mockBoard = std::make_unique<MockBoard>();
         mockRules = std::make_unique<MockBoardRules>();
-        player1 = std::make_unique<MockPlayer>();
-        player2 = std::make_unique<MockPlayer>();
-        game = std::make_unique<Game>(*player1, *player2);
+        mockSquare = std::make_unique<MockSquare>();
+        mockPlayer1 = std::make_unique<MockPlayer>(MIN_WHITE_HORCRUXE_ID, Color::WHITE);
+        mockPlayer2 = std::make_unique<MockPlayer>(MIN_BLACK_HORCRUXE_ID, Color::BLACK);
+
+        ON_CALL(*mockBoard, getSquare(_))
+        .WillByDefault(Return(mockSquare.get()));
+
+        ON_CALL(*mockSquare, getPiece())
+        .WillByDefault(Return(mockPiece.get()));
+
+        ON_CALL(*mockPlayer1, getColor())
+        .WillByDefault(Return(Color::WHITE));
+
+        ON_CALL(*mockPlayer2, getColor())
+        .WillByDefault(Return(Color::BLACK));
+
+        ON_CALL(*mockPlayer1, getHorcruxeID())
+        .WillByDefault(Return(MIN_WHITE_HORCRUXE_ID));
+
+        ON_CALL(*mockPlayer2, getHorcruxeID())
+        .WillByDefault(Return(MIN_BLACK_HORCRUXE_ID));
+
+        game = std::make_unique<Game>(*mockPlayer1, *mockPlayer2, mockBoard.get(), mockRules.get());
     }
 };
 
 
 TEST_F(GameTest, StartGameInitializesProperly) {
-    EXPECT_EQ(game->getGameState(), GameState::IN_PROGRESS);
-    EXPECT_EQ(game->getCurrentPlayer().getColor(), Color::WHITE);
     game->startGame();
-}
-
-
-TEST_F(GameTest, EndGameChangesState) {
-    game->endGame();
-    EXPECT_EQ(game->getGameState(), GameState::ENDED);
+    EXPECT_EQ(game->getGameState(), GameState::WHITE_MOVE);
+    EXPECT_EQ(game->getCurrentPlayer()->getColor(), Color::WHITE);
 }
 
 
@@ -47,20 +67,14 @@ TEST_F(GameTest, MovePieceMakesAValidMove) {
     Move someMove(&mockPiece, from, Position('f', 6));
 
     EXPECT_CALL(*mockRules, isValidMove(_, _, _)).WillOnce(Return(true));
-    EXPECT_CALL(*mockBoard, placePiece(_, _)).Times(AtLeast(1));
+    EXPECT_CALL(*mockSquare, placePiece(_)).Times(AtLeast(1));
+
     game->movePiece(someMove);
 }
 
 
 TEST_F(GameTest, GameOverCheck) {
-    EXPECT_CALL(*mockRules, isInCheck(_, _)).WillOnce(Return(false));
     bool isOver = game->isGameOver();
-    EXPECT_FALSE(isOver);  // Assuming game is not over if not in check, for simplicity
-}
 
-
-TEST_F(GameTest, SwitchPlayerChangesPlayer) {
-    Player initialPlayer = game->getCurrentPlayer();
-    game->switchPlayer();
-    EXPECT_NE(game->getCurrentPlayer().getColor(), initialPlayer.getColor());
+    EXPECT_TRUE(isOver);
 }
