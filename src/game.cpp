@@ -35,7 +35,7 @@ void Game::_setupBoard() {
 
     auto placeAndStore = [this](const Position& pos, IPiece* piece) {
         board_->placePiece(pos, piece);
-        pPieces_.insert(piece);
+        pieceMap[piece->getID()] = piece;
     };
 
     // Pawns
@@ -90,8 +90,8 @@ void Game::movePiece(const Move& move) {
     if (boardRules_->isValidMove(*board_, move, pPreviousMove_)) {
         if (pSquare->isOccupied()) {
             IPiece* capturedPiece = const_cast<IPiece*> (pSquare->getPiece());
-            if (pPieces_.find(capturedPiece) != pPieces_.end()) {
-                pPieces_.erase(capturedPiece);
+            if (pieceMap.find(capturedPiece->getID()) != pieceMap.end()) {
+                pieceMap.erase(capturedPiece->getID());
                 delete capturedPiece; // Due to object being dynamically allocated
             } else {throw std::logic_error("Piece does not exit");}
         } else {pSquare->placePiece(const_cast<const IPiece*> (move.getPiece()));};
@@ -103,6 +103,13 @@ void Game::movePiece(const Move& move) {
         }
     } else {throw std::logic_error("Invalid Move. Please try another move.");}
 };
+
+
+std::unordered_set<Position> Game::getAvailablePositions(IPiece* piece) {
+    if (piece) {
+        boardRules_->generateValidPositions(*board_, piece);
+    } else {throw std::logic_error("Piece is nullptr. No available moves.");}
+}
 
 
 bool Game::isGameOver() {
@@ -163,18 +170,18 @@ bool Game::_isStalemate() const {
     for (const auto& playerColor : colors) {
         if (boardRules_->isInCheck(*board_, playerColor)) {return false;}
 
-        for (const auto& pPiece : pPieces_) {
-            if (pPiece->getColor() == playerColor) {
+        for (const auto& it : pieceMap) {
+            if (it.second->getColor() == playerColor) {
                 Position* pPiecePosition;
                 for (const auto& pair : board_->squares) {
-                    if (pair.second->getPiece() == pPiece) {
+                    if (pair.second->getPiece()->getID() == it.first) {
                         pPiecePosition = const_cast<Position*> (&pair.first);
                         break;
                     }
                 }
-                auto possiblePos = pPiece->getPossiblePositions(*pPiecePosition);
+                auto possiblePos = it.second->getPossiblePositions(*pPiecePosition);
                 for (const Position& pos : possiblePos) {
-                    if (boardRules_->isValidMove(*board_, Move(pPiece, *pPiecePosition, pos), pPreviousMove_)) {return false;}
+                    if (boardRules_->isValidMove(*board_, Move(it.second, *pPiecePosition, pos), pPreviousMove_)) {return false;}
                 }
             }
         }

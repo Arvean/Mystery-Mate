@@ -11,13 +11,16 @@ class BoardRules {
         BoardRules() {};
         virtual ~BoardRules() = default;
 
-        virtual bool isValidMove(const Board& board, const Move& move, const Move* previousMove = nullptr) const;
+        virtual bool isValidMove(const Board& board, const Move& move, const Move* previousMove = nullptr);
         virtual bool isInCheck(const Board& board, const Color kingColor) const;
         virtual bool isValidCastling(const Board& board, const Move& kingMove) const;
         virtual bool isValidEnPassant(const Move& previousMove, const Move& move) const;
         virtual bool isValidPromotion(const Move& move) const;
+        
+        virtual std::unordered_set<Position> generateValidPositions(const Board& board, const IPiece* piece);
 
     private:
+        void _availablePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& position);
         void _addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) const;
-        void _removeKingInCheckMoves(const Board& board, std::unordered_set<Position>& possiblePositions, const Move& move) const; 
+        void _removeKingInCheckPositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from); 
 };

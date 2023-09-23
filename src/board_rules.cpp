@@ -3,7 +3,8 @@
 #include "king.h"
 #include <iostream> 
 
-bool BoardRules::isValidMove(const Board& board, const Move& move, const Move* pPreviousMove) const {
+
+bool BoardRules::isValidMove(const Board& board, const Move& move, const Move* pPreviousMove) {
 
     if (move.getPiece()->getType() == PieceType::KING) {
         if (isValidCastling(board, move)) { return true; }
@@ -18,31 +19,7 @@ bool BoardRules::isValidMove(const Board& board, const Move& move, const Move* p
 
     Position to = move.getTo();
     std::unordered_set<Position> possiblePositions = move.getPiece()->getPossiblePositions(move.getFrom());
-
-    if (move.getPiece()->getType() == PieceType::PAWN) {_addPawnCapturePositions(board, possiblePositions, move.getFrom());} // Repeating in range and is occupied checks?}
-    if (move.getPiece()->getType() == PieceType::KING) {_removeKingInCheckMoves(board, possiblePositions, move);} // Repeating in range and is occupied checks?}
-
-
-    for (const auto& pos : possiblePositions) {
-        if (board.isObstructed_(pos)) {
-            // Find direction from `move.getFrom()` to `pos`
-            int deltaX = pos.getFile() - move.getFrom().getFile();
-            int deltaY = pos.getRank() - move.getFrom().getRank();
-
-            int stepSizeX = (deltaX != 0) ? (deltaX / abs(deltaX)) : 0; // if deltaX is 0, stepSizeX will also be 0
-            int stepSizeY = (deltaY != 0) ? (deltaY / abs(deltaY)) : 0; // if deltaY is 0, stepSizeY will also be 0
-
-            int currFile = pos.getFile() + stepSizeX;
-            int currRank = pos.getRank() + stepSizeY;
-
-            // Remove positions in the direction of the obstruction
-            while (board.isInsideBoard_(Position(currFile, currRank))) {
-                possiblePositions.erase(Position(currFile, currRank));
-                currFile += stepSizeX;
-                currRank += stepSizeY;
-            }
-        }
-    }
+    _availablePositions(board, possiblePositions, move.getFrom());
 
     return possiblePositions.find(to) != possiblePositions.end();
 };
@@ -142,11 +119,60 @@ bool BoardRules::isInCheck(const Board& board, const Color kingColor) const {
 };
 
 
-void BoardRules::_addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) const {
+std::unordered_set<Position> BoardRules::generateValidPositions(const Board& board, const IPiece* piece) {
+    auto it = board.squares.begin();
+    for (it; it != board.squares.end(); it++) {
+        if (piece->getID() == it->second->getPiece()->getID());
+        break;
+    }
+    if (it == board.squares.end()) {throw std::logic_error("Invalid starting position");}
+    if (!it->second->isOccupied()) {throw std::logic_error("Current square is not occupied");}
+    if (it->second->getPiece()->getType() != PieceType::PAWN) {throw std::logic_error("_addPawnCapturePositions is only valid for Pawns");}
+
+    std::unordered_set<Position> pos = piece->getPossiblePositions(it->first);
+    _availablePositions(board, pos, it->first);
+}
+
+
+void BoardRules::_availablePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) {
+    // Have to add castling, en passant to possible available moves set
 
     auto it = board.squares.find(from);
-    if (it != board.squares.end()) {std::logic_error("Invalid starting position");}
-    if (!it->second->isOccupied()) {std::logic_error("Current square is not occupied");}
+    if (it == board.squares.end()) {throw std::logic_error("Invalid starting position");}
+    if (!it->second->isOccupied()) {throw std::logic_error("Current square is not occupied");}
+
+    if (it->second->getPiece()->getType() == PieceType::PAWN) {_addPawnCapturePositions(board, possiblePositions, from);} // Repeating in range and is occupied checks?}
+    if (it->second->getPiece()->getType() == PieceType::KING) {_removeKingInCheckPositions(board, possiblePositions, from);} // Repeating in range and is occupied checks?}
+
+
+    for (const auto& pos : possiblePositions) {
+        if (board.isObstructed_(pos)) {
+            // Find direction from `move.getFrom()` to `pos`
+            int deltaX = pos.getFile() - from.getFile();
+            int deltaY = pos.getRank() - from.getRank();
+
+            int stepSizeX = (deltaX != 0) ? (deltaX / abs(deltaX)) : 0; // if deltaX is 0, stepSizeX will also be 0
+            int stepSizeY = (deltaY != 0) ? (deltaY / abs(deltaY)) : 0; // if deltaY is 0, stepSizeY will also be 0
+
+            int currFile = pos.getFile() + stepSizeX;
+            int currRank = pos.getRank() + stepSizeY;
+
+            // Remove positions in the direction of the obstruction
+            while (board.isInsideBoard_(Position(currFile, currRank))) {
+                possiblePositions.erase(Position(currFile, currRank));
+                currFile += stepSizeX;
+                currRank += stepSizeY;
+            }
+        }
+    }
+}
+
+
+void BoardRules::_addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) const {
+    auto it = board.squares.find(from);
+    if (it == board.squares.end()) {throw std::logic_error("Invalid starting position");}
+    if (!it->second->isOccupied()) {throw std::logic_error("Current square is not occupied");}
+    if (it->second->getPiece()->getType() != PieceType::PAWN) {throw std::logic_error("_addPawnCapturePositions is only valid for Pawns");}
 
     Color pawnColor = it->second->getPiece()->getColor();
 
@@ -158,8 +184,8 @@ void BoardRules::_addPawnCapturePositions(const Board& board, std::unordered_set
 
         // Add the capture position if an opponent's piece is present on that square
         auto it = board.squares.find(Position(newFile, newRank));
-        if (it != board.squares.end()) {std::logic_error("Invalid starting position");}
-        if (!it->second->isOccupied()) {std::logic_error("Current square is not occupied");}
+        if (it != board.squares.end()) {throw std::logic_error("Invalid starting position");}
+        if (!it->second->isOccupied()) {throw std::logic_error("Current square is not occupied");}
 
         if (it->second->getPiece()->getColor() != pawnColor) {
             possiblePositions.emplace(it->second->getPosition());
@@ -168,16 +194,24 @@ void BoardRules::_addPawnCapturePositions(const Board& board, std::unordered_set
 }
 
 
-void BoardRules::_removeKingInCheckMoves(const Board& board, std::unordered_set<Position>& possiblePositions, const Move& move) const {
-    auto it = possiblePositions.begin();
-    while (it != possiblePositions.end()) {
-        Position pos = *it;
-        Board tempBoard = board;
-        tempBoard.placePiece(move.getTo(), const_cast<IPiece*>(move.getPiece()));
+void BoardRules::_removeKingInCheckPositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from) {
+    auto it = board.squares.find(from);
+    if (it == board.squares.end()) {throw std::logic_error("Invalid starting position");}
+    if (!it->second->isOccupied()) {throw std::logic_error("Current square is not occupied");}
+    if (it->second->getPiece()->getType() != PieceType::KING) {throw std::logic_error("_addPawnCapturePositions is only valid for King");}
+    IPiece* pKing = const_cast<IPiece*> (it->second->getPiece());
 
-        if (isInCheck(tempBoard, tempBoard.getSquare(move.getFrom())->getPiece()->getColor())) {
-            it = possiblePositions.erase(it);
-        } else {++it;}
-        tempBoard.removePiece(tempBoard.squares.at(move.getTo()).get());
-    }
+    if (it->second->getPiece()->getType() == PieceType::KING) {
+        auto it = possiblePositions.begin();
+        while (it != possiblePositions.end()) {
+            Position pos = *it;
+            Board tempBoard = board;
+            tempBoard.placePiece(pos, pKing);
+
+            if (isInCheck(tempBoard, pKing->getColor())) {
+                it = possiblePositions.erase(it);
+            } else {++it;}
+            tempBoard.removePiece(tempBoard.squares.at(pos).get());
+        }
+    } else {throw std::logic_error("removeKingInCheckMoves is only valid for King moves");}
 }

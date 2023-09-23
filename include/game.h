@@ -34,16 +34,17 @@ public:
     virtual const Player* getCurrentPlayer() const {return pCurrentPlayer_;}
     virtual Board* getBoard() const {return board_;}
     virtual GameEndType getGameResult();
+    virtual std::unordered_set<Position> getAvailablePositions(IPiece* piece);
+    virtual const IPiece* getPieceFromID(int id) {return pieceMap.at(id);}
 
 private:
-    std::set<IPiece*> pPieces_;
+    std::unordered_map<int, IPiece*> pieceMap;
 
     const Player* pCurrentPlayer_;
     Player whitePlayer;
     Player blackPlayer;
 
     Move* pPreviousMove_;
-
     Board* board_;
     BoardRules* boardRules_;
     GameState gameState_;
