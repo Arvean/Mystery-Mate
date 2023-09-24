@@ -229,6 +229,9 @@ PKG_CONFIG_ARGN:STRING=
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/local/bin/pkg-config
 
 //Path to a library.
+UUID_LIBRARY:FILEPATH=/usr/local/lib/libuuid.dylib
+
+//Path to a library.
 pkgcfg_lib_GMOCK_gmock:FILEPATH=/usr/local/lib/libgmock.a
 
 //Path to a library.

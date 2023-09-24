@@ -93,6 +93,7 @@ ChessProject_EXTERNAL_OBJECTS =
 ChessProject: CMakeFiles/ChessProject.dir/src/main.cpp.o
 ChessProject: CMakeFiles/ChessProject.dir/build.make
 ChessProject: src/libchess_srcs.a
+ChessProject: /usr/local/lib/libuuid.dylib
 ChessProject: CMakeFiles/ChessProject.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/arveanlabib/Documents/Mystery-Mate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ChessProject"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ChessProject.dir/link.txt --verbose=$(VERBOSE)

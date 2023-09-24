@@ -378,4 +378,14 @@ int main(int argc, char* argv[]) {
         response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
         return response;
     });
+
+    const char* port_str = std::getenv("PORT");
+    if (!port_str) {
+        std::runtime_error("Failed to bind to Heroku port.");
+    }
+    int port = std::stoi(port_str);
+    
+    app.port(port)
+       .multithreaded()
+       .run();
 };

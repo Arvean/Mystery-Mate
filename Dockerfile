@@ -22,8 +22,8 @@ WORKDIR /usr/src/googletest/googlemock
 RUN cmake . && make && cp lib/*.a /usr/lib
 
 # Copy your project's source code to the container
-COPY . /my_project
-WORKDIR /my_project
+COPY . /build/ChessProject
+WORKDIR /build/ChessProject
 
 # Build your project
 RUN cmake . && make
