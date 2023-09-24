@@ -9,7 +9,7 @@ add_subdirectory(src)
 
 # Assuming your main.cpp is in the src directory
 add_executable(ChessProject src/main.cpp)
-target_link_libraries(ChessProject PRIVATE chess_srcs)
+target_link_libraries(ChessProject PRIVATE chess_srcs uuid)
 target_include_directories(ChessProject PRIVATE include)
 
 set(CMAKE_BUILD_TYPE Debug)
