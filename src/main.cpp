@@ -53,7 +53,7 @@ static void generateUUID(uuid_t& uuid) {
 
 static void StrToUUID(std::string str, uuid_t gameID) {
     if (uuid_parse(str.c_str(), gameID) != 0) {
-        std::runtime_error("Invalid UUID. Could not convert str to UUID");
+        throw std::runtime_error("Invalid UUID. Could not convert str to UUID");
     }
 }
 
@@ -69,44 +69,45 @@ int main(int argc, char* argv[]) {
 
     crow::SimpleApp app;
 
-    std::map<std::string, std::unique_ptr<Game>> gamesDatabase;
+    std::unordered_map<std::string, std::unique_ptr<Game>> gamesDatabase;
+    std::unordered_map<std::string, std::unique_ptr<Player>> players; 
     std::unique_ptr<Game> pGame;
     std::unique_ptr<Board> pBoard;
     std::unique_ptr<BoardRules> pBoardRules;
-    std::unique_ptr<Player> pPlayer1;
-    std::unique_ptr<Player> pPlayer2;
+    std::unique_ptr<Player> pWhitePlayer;
+    std::unique_ptr<Player> pBlackPlayer;
 
     CROW_ROUTE(app, "/game/startNew")
     .methods("POST"_method)
-    ([&gamesDatabase, &pPlayer1](const crow::request& req) {
+    ([&gamesDatabase, &players, &pWhitePlayer](const crow::request& req) {
         json status;
 
         try {
             auto jsonBody = json::parse(req.body);
 
-            if(!jsonBody.contains("horcruxeID") || !jsonBody.contains("color")) {
-                // Missing fields
-                return crow::response(400, "Missing fields in request.");
-            }
+            uuid_t cookie;
+            generateUUID(cookie);
+            std::string cookieStr = uuidToString(cookie); 
 
-            int horcruxeID = jsonBody["horcruxeID"];
-            Color color = static_cast<Color>(jsonBody["color"]);
+            pWhitePlayer = std::make_unique<Player>(Color::WHITE);
 
-            pPlayer1 = std::make_unique<Player>(horcruxeID, color);
+            if (players.find(cookieStr) == players.end()) {
+                players[cookieStr] = std::move(pWhitePlayer);
+            } else {throw std::runtime_error("Error UUID. Player exists");}
 
-            // Generate UUID and store in gamesDatabase
             uuid_t gameID;
             generateUUID(gameID);
             std::string gameIDStr = uuidToString(gameID);
 
             if (gamesDatabase.find(gameIDStr) == gamesDatabase.end()) {
                 gamesDatabase[gameIDStr] = nullptr;
-            } else {std::runtime_error("Error UUID. Game exists");}
+            } else {throw std::runtime_error("Error UUID. Game exists");}
 
             status["status"] = GameStateToInt(GameState::WAITING_FOR_OPPONENT);
 
             crow::response response(200, status.dump());
             response.set_header("Set-Cookie", "gameID=" + gameIDStr + "; Path=/; HttpOnly");
+            response.add_header("Set-Cookie", "PlayerToken=" + cookieStr + "; Path=/; HttpOnly");
             return response;
             
         } catch(const json::exception& e) {
@@ -122,32 +123,36 @@ int main(int argc, char* argv[]) {
 
     CROW_ROUTE(app, "/game/join")
     .methods("POST"_method)
-    ([&gamesDatabase, &pGame, &pBoard, &pBoardRules, &pPlayer1, &pPlayer2](const crow::request& req) {
+    ([&gamesDatabase, &pGame, &pBoard, &pBoardRules, &players, &pWhitePlayer, &pBlackPlayer](const crow::request& req) {
         json status;
 
         try {
             auto jsonBody = json::parse(req.body);
 
-            // Validate required fields
-            if (!jsonBody.contains("horcruxeID") || !jsonBody.contains("color") || !jsonBody.contains("gameID")) {
+            if (!jsonBody.contains("gameID")) {
                 return crow::response(400, "Missing fields in request.");
             }
-
-            int horcruxeID = jsonBody["horcruxeID"];
-            Color color = static_cast<Color>(jsonBody["color"]);
-
-            std::string gameID = jsonBody["gameID"];
+            const std::string gameID = jsonBody["gameID"];
 
             auto it = gamesDatabase.find(gameID);
             if (it == gamesDatabase.end() || it->second != nullptr) {
                 return crow::response(400, "Game not found or game is not waiting for an opponent.");
             }
 
-            // Create game
-            pPlayer2 = std::make_unique<Player>(horcruxeID, color);
+            pBlackPlayer = std::make_unique<Player>(Color::BLACK);
+
+            uuid_t cookie;
+            generateUUID(cookie);
+            std::string cookieStr = uuidToString(cookie); 
+
+            if (players.find(cookieStr) == players.end()) {
+                players[cookieStr] = std::move(pBlackPlayer);
+            } else {throw std::runtime_error("Error UUID. Player exists");}
+
+
             pBoard = std::make_unique<Board>();
             pBoardRules = std::make_unique<BoardRules>();
-            pGame = std::make_unique<Game>(*pPlayer1, *pPlayer2, pBoard.get(), pBoardRules.get());
+            pGame = std::make_unique<Game>(pWhitePlayer.get(), pBlackPlayer.get(), pBoard.get(), pBoardRules.get());
 
             it->second = std::move(pGame);
 
@@ -155,6 +160,7 @@ int main(int argc, char* argv[]) {
 
             crow::response response(200, status.dump());
             response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
+            response.add_header("Set-Cookie", "PlayerToken=" + cookieStr + "; Path=/; HttpOnly");
             return response;
             
         } catch(const json::exception& e) {
@@ -166,16 +172,135 @@ int main(int argc, char* argv[]) {
         }
     });
 
+    CROW_ROUTE(app, "/game/select/horcruxe")
+    .methods("POST"_method)
+    ([&gamesDatabase, &players](const crow::request& req) {
+        // Need to consider edge case if horcruxe ID is never received
+        json status;
+
+        try {
+            auto jsonBody = json::parse(req.body);
+
+            // Validate required fields
+            if (!jsonBody.contains("horcruxeID") 
+            || !jsonBody.contains("cookie")
+            || !jsonBody.contains("gameID")) {
+                return crow::response(400, "Missing fields in request.");
+            }
+
+            const int horcruxeID = jsonBody["horcruxeID"];
+            const std::string cookie = jsonBody["cookie"];
+            const std::string gameID = jsonBody["gameID"];
+
+            auto p_it = players.find(cookie);
+            if (p_it == players.end()) {
+                return crow::response(400, "Player not found.");
+            }
+
+            Player* pPlayer = p_it->second.get();
+
+            auto it = gamesDatabase.find(gameID);
+            if (it == gamesDatabase.end() || it->second != nullptr) {
+                return crow::response(400, "Game not found or game is not waiting for an opponent.");
+            }
+
+            pPlayer->setHorcruxeID(horcruxeID);
+
+            status["status"] = GameStateToInt(it->second->getGameState());
+
+            crow::response response(200, status.dump());
+            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
+            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
+
+            return response;
+            
+        } catch(const json::exception& e) {
+            // Error during JSON parsing
+            return crow::response(400, "Invalid JSON format.");
+        } catch(const std::exception& e) {
+            status["status"] = "Internal server error";
+            status["message"] = e.what();
+            return crow::response(500, status.dump());
+        }
+    });
+
+
+    CROW_ROUTE(app, "/game/guess/horcruxe")
+    .methods("POST"_method)
+    ([&gamesDatabase, &pGame, &players](const crow::request& req) {
+        // Need to consider edge case if horcruxe ID is never received
+        json status;
+
+        try {
+            auto jsonBody = json::parse(req.body);
+
+            // Validate required fields
+            if (!jsonBody.contains("horcruxeID") 
+            || !jsonBody.contains("cookie")
+            || !jsonBody.contains("gameID")) {
+                return crow::response(400, "Missing fields in request.");
+            }
+
+            const int horcruxeID = jsonBody["horcruxeID"];
+            const std::string cookie = jsonBody["cookie"];
+            const std::string gameID = jsonBody["gameID"];
+
+            auto p_it = players.find(cookie);
+            if (p_it == players.end()) {
+                return crow::response(400, "Player not found.");
+            }
+
+            Player* pPlayer = p_it->second.get();
+
+            auto it = gamesDatabase.find(gameID);
+            if (it == gamesDatabase.end() || it->second != nullptr) {
+                return crow::response(400, "Game not found or game is not waiting for an opponent.");
+            }
+
+            pGame->horcruxeGuess(horcruxeID, pPlayer);
+            
+            status["status"] = GameStateToInt(it->second->getGameState());
+
+            crow::response response(200, status.dump());
+            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
+            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
+
+            return response;
+            
+        } catch(const json::exception& e) {
+            // Error during JSON parsing
+            return crow::response(400, "Invalid JSON format.");
+        } catch(const std::exception& e) {
+            status["status"] = "Internal server error";
+            status["message"] = e.what();
+            return crow::response(500, status.dump());
+        }
+    });
+
+
 
     CROW_ROUTE(app, "/game/move")
     .methods("POST"_method)
-    ([&gamesDatabase](const crow::request& req) {
+    ([&gamesDatabase, &players](const crow::request& req) {
         json status; 
 
         try {
             auto jsonBody = json::parse(req.body);
 
-            std::string gameID = jsonBody["gameID"];
+            if ((!jsonBody.contains("gameID") 
+            || !jsonBody.contains("cookie"))) {
+                return crow::response(400, "Missing fields in request.");
+            }
+
+            const std::string cookie = jsonBody["cookie"];
+            const std::string gameID = jsonBody["gameID"];
+
+            auto p_it = players.find(cookie);
+            if (p_it == players.end()) {
+                return crow::response(400, "Player not found.");
+            }
+
+            Player* pPlayer = p_it->second.get();
 
             Position from(
                 jsonBody["from"]["file"].get<std::string>()[0],
@@ -194,12 +319,13 @@ int main(int argc, char* argv[]) {
             Game* game = it->second.get();
 
             const IPiece* pPiece = game->getBoard()->getSquare(from)->getPiece();
-            game->movePiece(Move(pPiece, from, to));
+            game->movePiece(Move(pPiece, from, to), pPlayer);
 
             status["status"] = GameStateToInt(it->second->getGameState());
 
             crow::response response(200, status.dump());
             response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
+            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
             return response;
 
         } catch(const json::exception& e) {
@@ -248,7 +374,6 @@ int main(int argc, char* argv[]) {
             if(square->getPiece()) {
                 squareJson["piece_id"] = square->getPiece()->getID();
             }
-
             squaresJson.push_back(squareJson);
         }
 
@@ -262,13 +387,26 @@ int main(int argc, char* argv[]) {
 
     CROW_ROUTE(app, "/game/positions")
     .methods("POST"_method)
-    ([&gamesDatabase, &pGame](const crow::request& req) {
+    ([&gamesDatabase, &pGame, &players](const crow::request& req) {
         json status;
 
         try {
             auto jsonBody = json::parse(req.body);
 
-            std::string gameID = jsonBody["gameID"];
+            if (!jsonBody.contains("gameID") 
+            || !jsonBody.contains("cookie")) {
+                return crow::response(400, "Missing fields in request.");
+            }
+
+            const std::string gameID = jsonBody["gameID"];
+            const std::string cookie = jsonBody["cookie"];
+
+            auto p_it = players.find(cookie);
+            if (p_it == players.end()) {
+                return crow::response(400, "Player not found.");
+            }
+
+            Player* pPlayer = p_it->second.get();
 
             auto it = gamesDatabase.find(gameID);
             if (it == gamesDatabase.end() || !it->second) {
@@ -277,6 +415,10 @@ int main(int argc, char* argv[]) {
 
             int pieceID = jsonBody["pieceID"];
             const IPiece* pPiece {pGame->getPieceFromID(pieceID)};
+
+            if (pPiece->getColor() != pPlayer->getColor()) {
+                throw std::runtime_error("Player color does not match piece color");
+            }
             
             std::unordered_set<Position> position = it->second->getAvailablePositions(const_cast<IPiece*>(pPiece));
             
@@ -292,6 +434,7 @@ int main(int argc, char* argv[]) {
 
             crow::response response(200, status.dump());
             response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
+            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
             return response;
 
         } catch(const json::exception& e) {
@@ -301,24 +444,6 @@ int main(int argc, char* argv[]) {
             status["message"] = e.what();
             return crow::response(500, status.dump());
         }
-    });
-
-
-    CROW_ROUTE(app, "/game/state/<string>")
-    .methods("GET"_method)
-    ([&gamesDatabase](std::string gameID) {
-        json status;
-
-        auto it = gamesDatabase.find(gameID);
-        if (it == gamesDatabase.end() || !it->second) {
-            return crow::response(400, "Game not found or game is not waiting for an opponent.");
-        }
-
-        status["status"] = GameStateToInt(it->second->getGameState());
-
-        crow::response response(200, status.dump());
-        response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-        return response;
     });
 
 
@@ -380,10 +505,7 @@ int main(int argc, char* argv[]) {
     });
 
     const char* port_str = std::getenv("PORT");
-    if (!port_str) {
-        std::runtime_error("Failed to bind to Heroku port.");
-    }
-    int port = std::stoi(port_str);
+    int port = port_str ? std::stoi(port_str) : 8080;
     
     app.port(port)
        .multithreaded()

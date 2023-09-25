@@ -11,16 +11,16 @@
 #include <iostream>
 
 
-Game::Game(Player& player_1, Player& player_2, 
+Game::Game(Player* player_1, Player* player_2, 
            Board* board, BoardRules* boardRules)
     : whitePlayer(player_1), blackPlayer(player_2), 
       board_(board), boardRules_(boardRules), 
       pPreviousMove_(nullptr) 
 {
-    if (player_1.getColor() == Color::WHITE && player_2.getColor() == Color::BLACK) {
+    if (player_1->getColor() == Color::WHITE && player_2->getColor() == Color::BLACK) {
         whitePlayer = player_1;
         blackPlayer = player_2;
-    } else if ((player_1.getColor() == Color::BLACK && player_2.getColor() == Color::WHITE)) {
+    } else if ((player_1->getColor() == Color::BLACK && player_2->getColor() == Color::WHITE)) {
         whitePlayer = player_2;
         blackPlayer = player_1;
     } else {
@@ -74,28 +74,35 @@ void Game::_setupBoard() {
 
 
 void Game::startGame() {
-    pCurrentPlayer_ = &whitePlayer; // Current player white
+    pCurrentPlayer_ = whitePlayer; // Current player white
     gameState_ = GameState::WHITE_MOVE;
 
     _setupBoard();
 };
 
 
-void Game::movePiece(const Move& move) {
-    Square* pSquare = board_->getSquare(move.getTo());
-    std::cout << "Returned Square pointer: " << pSquare << std::endl;
+void Game::movePiece(const Move& move, const Player* pPlayer) {
+    Square* pSquareFrom = board_->getSquare(move.getFrom());
+    if (pSquareFrom->isOccupied()) {
+        if (pPlayer->getColor() != pSquareFrom->getPiece()->getColor()) {
+            throw std::logic_error("Invalid move. Player color does not match piece color");
+        }
+    } else {throw std::logic_error("The current move is not valid. From Square not occupied.");}
 
-    if (pSquare == nullptr) {throw std::logic_error("Invalid move. Not a valid square");}
+    Square* pSquareTo = board_->getSquare(move.getTo());
+    std::cout << "Returned Square pointer: " << pSquareTo << std::endl;
+
+    if (pSquareTo == nullptr) {throw std::logic_error("Invalid move. Not a valid square");}
 
     if (boardRules_->isValidMove(*board_, move, pPreviousMove_)) {
-        if (pSquare->isOccupied()) {
-            IPiece* capturedPiece = const_cast<IPiece*> (pSquare->getPiece());
+        if (pSquareTo->isOccupied()) {
+            IPiece* capturedPiece = const_cast<IPiece*> (pSquareTo->getPiece());
             if (pieceMap.find(capturedPiece->getID()) != pieceMap.end()) {
                 pieceMap.erase(capturedPiece->getID());
                 delete capturedPiece; // Due to object being dynamically allocated
             } else {throw std::logic_error("Piece does not exit");}
-        } else {pSquare->placePiece(const_cast<const IPiece*> (move.getPiece()));};
-        if (isGameOver()) {
+        } else {pSquareTo->placePiece(const_cast<const IPiece*> (move.getPiece()));};
+        if (checkGameOver()) {
             _endGame();
         } else {
             pPreviousMove_ = const_cast<Move*> (&move);
@@ -112,20 +119,37 @@ std::unordered_set<Position> Game::getAvailablePositions(IPiece* piece) {
 }
 
 
-bool Game::isGameOver() {
-    if (_isHorcruxeCaptured(whitePlayer.getHorcruxeID())) {
+void Game::horcruxeGuess(const int horcruxeID, const Player* pPlayer) {
+    if (_isHorcruxeGuessed(horcruxeID, pPlayer)) {
+        if (pPlayer->getColor() == Color::WHITE) {gameEndType_ = GameEndType::BLACK_WIN;}
+        else {gameEndType_ = GameEndType::WHITE_WIN;}
+        _endGame();
+    }
+}
+
+
+bool Game::checkGameOver() {
+    if (gameState_ == GameState::ENDED) {
+        return true;
+    }
+
+    if (_isHorcruxeCaptured(whitePlayer->getHorcruxeID())) {
+        _endGame();
         gameEndType_ = GameEndType::BLACK_WIN;
         return true;
     }
-    if (_isHorcruxeCaptured(blackPlayer.getHorcruxeID())) {
+    if (_isHorcruxeCaptured(blackPlayer->getHorcruxeID())) {
+        _endGame();
         gameEndType_ = GameEndType::WHITE_WIN;
         return true;
     }
     if (_isStalemate()) {
+        _endGame();
         gameEndType_ = GameEndType::STALEMATE;
         return true;
     }
     if (_hasInsufficientMaterial()) {
+        _endGame();
         gameEndType_ = GameEndType::DRAW;
         return true;
     }
@@ -144,7 +168,7 @@ void Game::_endGame() {
 
 
 void Game::_switchPlayer() {
-    pCurrentPlayer_->getColor() == Color::WHITE ? pCurrentPlayer_ = &blackPlayer : pCurrentPlayer_ = &whitePlayer;
+    pCurrentPlayer_->getColor() == Color::WHITE ? pCurrentPlayer_ = blackPlayer : pCurrentPlayer_ = whitePlayer;
     _updateGameState();
 }
 
@@ -152,6 +176,17 @@ void Game::_switchPlayer() {
 void Game::_updateGameState() {
     pCurrentPlayer_->getColor() == Color::WHITE ? gameState_ = GameState::WHITE_MOVE : gameState_ = GameState::BLACK_MOVE;
 }
+
+
+bool Game::_isHorcruxeGuessed(const int horcruxeID, const Player* pPlayer) const {
+    if (pieceMap.find(horcruxeID) == pieceMap.end()) {
+        throw std::logic_error("Invalid horcruxe ID");
+    }
+    if (pPlayer->getHorcruxeID() == horcruxeID) {
+        return true;
+    }
+    return false;
+};
 
 
 bool Game::_isHorcruxeCaptured(const int horcruxeID) const {

@@ -27,8 +27,9 @@ protected:
         mockBoard = std::make_unique<MockBoard>();
         mockRules = std::make_unique<MockBoardRules>();
         mockSquare = std::make_unique<MockSquare>();
-        mockPlayer1 = std::make_unique<MockPlayer>(MIN_WHITE_HORCRUXE_ID, Color::WHITE);
-        mockPlayer2 = std::make_unique<MockPlayer>(MIN_BLACK_HORCRUXE_ID, Color::BLACK);
+        mockPlayer1 = std::make_unique<MockPlayer>(Color::WHITE);
+        mockPlayer2 = std::make_unique<MockPlayer>(Color::BLACK);
+
 
         ON_CALL(*mockBoard, getSquare(_))
         .WillByDefault(Return(mockSquare.get()));
@@ -43,12 +44,12 @@ protected:
         .WillByDefault(Return(Color::BLACK));
 
         ON_CALL(*mockPlayer1, getHorcruxeID())
-        .WillByDefault(Return(MIN_WHITE_HORCRUXE_ID));
+        .WillByDefault(Return(INVALID_HORCRUXE_ID));
 
         ON_CALL(*mockPlayer2, getHorcruxeID())
-        .WillByDefault(Return(MIN_BLACK_HORCRUXE_ID));
+        .WillByDefault(Return(INVALID_HORCRUXE_ID));
 
-        game = std::make_unique<Game>(*mockPlayer1, *mockPlayer2, mockBoard.get(), mockRules.get());
+        game = std::make_unique<Game>(mockPlayer1.get(), mockPlayer2.get(), mockBoard.get(), mockRules.get());
     }
 };
 
@@ -69,12 +70,12 @@ TEST_F(GameTest, MovePieceMakesAValidMove) {
     EXPECT_CALL(*mockRules, isValidMove(_, _, _)).WillOnce(Return(true));
     EXPECT_CALL(*mockSquare, placePiece(_)).Times(AtLeast(1));
 
-    game->movePiece(someMove);
+    game->movePiece(someMove, mockPlayer1.get());
 }
 
 
 TEST_F(GameTest, GameOverCheck) {
-    bool isOver = game->isGameOver();
+    bool isOver = game->checkGameOver();
 
     EXPECT_TRUE(isOver);
 }
