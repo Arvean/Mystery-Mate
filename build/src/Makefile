@@ -236,6 +236,30 @@ game.cpp.s:
 	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/game.cpp.s
 .PHONY : game.cpp.s
 
+helper.o: helper.cpp.o
+.PHONY : helper.o
+
+# target to build an object file
+helper.cpp.o:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/helper.cpp.o
+.PHONY : helper.cpp.o
+
+helper.i: helper.cpp.i
+.PHONY : helper.i
+
+# target to preprocess a source file
+helper.cpp.i:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/helper.cpp.i
+.PHONY : helper.cpp.i
+
+helper.s: helper.cpp.s
+.PHONY : helper.s
+
+# target to generate assembly for a file
+helper.cpp.s:
+	cd /Users/arveanlabib/Documents/Mystery-Mate/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/chess_srcs.dir/build.make src/CMakeFiles/chess_srcs.dir/helper.cpp.s
+.PHONY : helper.cpp.s
+
 king.o: king.cpp.o
 .PHONY : king.o
 
@@ -426,6 +450,9 @@ help:
 	@echo "... game.o"
 	@echo "... game.i"
 	@echo "... game.s"
+	@echo "... helper.o"
+	@echo "... helper.i"
+	@echo "... helper.s"
 	@echo "... king.o"
 	@echo "... king.i"
 	@echo "... king.s"

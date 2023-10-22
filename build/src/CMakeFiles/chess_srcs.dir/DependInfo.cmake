@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/arveanlabib/Documents/Mystery-Mate/src/board.cpp" "src/CMakeFiles/chess_srcs.dir/board.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/board.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/src/board_rules.cpp" "src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/src/game.cpp" "src/CMakeFiles/chess_srcs.dir/game.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/game.cpp.o.d"
+  "/Users/arveanlabib/Documents/Mystery-Mate/src/helper.cpp" "src/CMakeFiles/chess_srcs.dir/helper.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/helper.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/src/king.cpp" "src/CMakeFiles/chess_srcs.dir/king.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/king.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/src/knight.cpp" "src/CMakeFiles/chess_srcs.dir/knight.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/knight.cpp.o.d"
   "/Users/arveanlabib/Documents/Mystery-Mate/src/main.cpp" "src/CMakeFiles/chess_srcs.dir/main.cpp.o" "gcc" "src/CMakeFiles/chess_srcs.dir/main.cpp.o.d"

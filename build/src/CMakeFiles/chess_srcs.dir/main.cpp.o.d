@@ -193,6 +193,7 @@ src/CMakeFiles/chess_srcs.dir/main.cpp.o: \
   /Users/arveanlabib/Documents/Mystery-Mate/src/../include/player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__tree \
+  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/helper.hpp \
   /Users/arveanlabib/Documents/Mystery-Mate/src/../include/crow.h \
   /Users/arveanlabib/Documents/Mystery-Mate/src/../include/crow/query_string.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
