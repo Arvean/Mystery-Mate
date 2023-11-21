@@ -7,19 +7,16 @@ public:
         : Game(player_1, player_2, board, boardRules) {}
 
     // Mocked methods
-    MOCK_METHOD(void, startGame, (), (override));
-    MOCK_METHOD(void, movePiece, (const Move& move, const Player* pPlayer), (override));
-    MOCK_METHOD(bool, checkGameOver, (), (override));
+    //MOCK_METHOD(void, startGame, (), (override));
+    //MOCK_METHOD(void, movePiece, (const Move& move, const Player* pPlayer), (override));
 
-    MOCK_METHOD(GameState, getGameState, (), (const, override));
-    MOCK_METHOD(Player*, getCurrentPlayer, (), (const, override));
-    MOCK_METHOD(Board*, getBoard, (), (const, override));
+    //MOCK_METHOD(GameState, getGameState, (), (const, override));
+    //MOCK_METHOD(Player*, getCurrentPlayer, (), (const, override));
+    //MOCK_METHOD(Board*, getBoard, (), (const, override));
 
-    MOCK_METHOD(bool, _isHorcruxeCaptured, (const int horcruxeID), (const, override));
-    MOCK_METHOD(bool, _isStalemate, (), (const, override));
-    MOCK_METHOD(bool, _hasInsufficientMaterial, (), (const, override));
-
-    // Uncomment if you eventually make them virtual in the original class.
-    // MOCK_METHOD(void, _isThreefoldRepetition, (), (const, override));
-    // MOCK_METHOD(void, _isFifyMoveRule, (), (const, override));
+    MOCK_METHOD(bool, _isCheckmate, (Color color));
+    MOCK_METHOD(bool, _isHorcruxCaptured, (int horcruxID));
+    MOCK_METHOD(bool, _isStalemate, (), (const));
+    MOCK_METHOD(bool, _hasInsufficientMaterial, (), (const));
+    //MOCK_METHOD(void, _endGame, ());
 };

@@ -1,7 +1,7 @@
 src/CMakeFiles/chess_srcs.dir/queen.cpp.o: \
   /Users/arveanlabib/Documents/Mystery-Mate/src/queen.cpp \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/queen.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/piece.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/queen.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/piece.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/pthread.h \
@@ -174,8 +174,8 @@ src/CMakeFiles/chess_srcs.dir/queen.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__bit_reference \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__split_buffer \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/move.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/position.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/move.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/position.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/string_view \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__string \

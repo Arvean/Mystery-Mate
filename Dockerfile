@@ -1,11 +1,13 @@
+# Use the official image as a parent image
 FROM ubuntu:latest
 
-# Update package list and install dependencies
+# Update package list, install dependencies and LLDB
 RUN apt-get update && \
     apt-get install -y \
     cmake \
     pkg-config \
     g++ \
+    gdb \
     libboost-all-dev \
     libgtest-dev \
     libgmock-dev \
@@ -25,9 +27,10 @@ RUN cmake . && make && cp lib/*.a /usr/lib
 COPY . /build
 WORKDIR /build
 
-# Build your project
-RUN cmake . && make
+# Build your project with debug symbols
+RUN cmake -DCMAKE_BUILD_TYPE=Debug . && make
 
 EXPOSE 8080
 
-CMD ["./ChessProject"]
+CMD ["/bin/bash"]
+#CMD ["./ChessProject"]

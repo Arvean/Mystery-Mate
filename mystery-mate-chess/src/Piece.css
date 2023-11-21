@@ -1,0 +1,31 @@
+/* Styles for the chess pieces */
+.piece {
+    font-size: 32px; /* Or whatever size looks best */
+    line-height: 50px; /* Centers the piece vertically */
+    text-align: center;
+    font-family: "Arial", sans-serif; /* Or another Unicode-supportive font */
+}
+
+/* Chess piece colors */
+.piece.white {
+    color: white;
+}
+
+.piece.black {
+    color: black;
+}
+
+/* Unicode characters for the chess pieces */
+.piece.pawn.black::before { content: '\265F'; }
+.piece.rook.black::before { content: '\265C'; }
+.piece.knight.black::before { content: '\265E'; }
+.piece.bishop.black::before { content: '\265D'; }
+.piece.queen.black::before { content: '\265B'; }
+.piece.king.black::before { content: '\265A'; }
+
+.piece.pawn.white::before { content: '\2659'; }
+.piece.rook.white::before { content: '\2656'; }
+.piece.knight.white::before { content: '\2658'; }
+.piece.bishop.white::before { content: '\2657'; }
+.piece.queen.white::before { content: '\2655'; }
+.piece.king.white::before { content: '\2654'; }

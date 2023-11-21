@@ -24,3 +24,5 @@ void Square::removePiece() {
 }
 
 
+
+

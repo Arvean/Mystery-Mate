@@ -3,7 +3,7 @@
 Board::Board() {
     for(int rank = 1; rank <= GRID_SIZE; ++rank) {
         for(char file = 'a'; file <= 'h'; ++file) {
-            squares[Position(file, rank)] = std::make_unique<Square>(Position(rank, file));
+            squares[Position(file, rank)] = std::make_unique<Square>(Position(file, rank));
         }
     }
 };
@@ -12,7 +12,7 @@ Board::Board() {
 Board::Board(const Board& other) {
     for (int rank = 1; rank <= GRID_SIZE; ++rank) {
         for (char file = 'a'; file <= 'h'; ++file) {
-            Position pos(file, rank);
+            const Position pos(file, rank);
             squares[pos] = std::make_unique<Square>(pos);
             if (other.squares.at(pos)->getPiece()) {
                 IPiece* pClonedPiece = other.squares.at(pos)->getPiece()->clone();
@@ -27,21 +27,15 @@ Board& Board::operator=(const Board& other) {
     // Handle self-assignment
     if (this == &other) {return *this;}
 
-    // Cleanup any existing data/resources if necessary.
-    // Given the existing code, this primarily means clearing your current `squares` map.
     squares.clear();
 
-    // Copy the data/resources from the other board.
     for (int rank = 1; rank <= GRID_SIZE; ++rank) {
         for (char file = 'a'; file <= 'h'; ++file) {
-            Position pos(file, rank);
+            const Position pos(file, rank);
 
-            // Create a new unique Square for this position
             squares[pos] = std::make_unique<Square>(pos);
 
-            // If the other board's square at this position has a piece
             if (other.squares.at(pos)->getPiece()) {
-                // Clone the piece and place it on the current board
                 IPiece* pClonedPiece = other.squares.at(pos)->getPiece()->clone();
                 squares.at(pos)->placePiece(pClonedPiece);
             }
@@ -52,7 +46,7 @@ Board& Board::operator=(const Board& other) {
 }
 
 
-void Board::placePiece(const Position& position, IPiece* piece) {
+void Board::placePiece(const Position& position, const IPiece* piece) {
     auto it = squares.find(position);
     if (it != squares.end()) {
         it->second->placePiece(piece);
@@ -69,6 +63,18 @@ Square* Board::getSquare(const Position& position) const {
     } else {
         return nullptr;
     }
+};
+
+Square* Board::findSquare(int pieceID) const {
+    for (const auto& [position, pSquare] : squares) {
+        const IPiece* foundPiece = pSquare->getPiece();
+        if (foundPiece && pieceID == foundPiece->getID()) {
+            return pSquare.get();
+        }
+    }
+
+    throw std::logic_error("Piece not found.");
+    return nullptr;
 };
 
 void Board::removePiece(Square* pSquare) {
@@ -142,16 +148,16 @@ std::unordered_set<Position> Board::getAttackedPositions_(Color color) const {
 };
 
 
-Position Board::findKing_(Color color) const {
+const Position* Board::findKing(Color color) const {
     for (const auto& [position, pSquare] : squares) {
         const IPiece* piece = pSquare->getPiece();
         if (piece && piece->getColor() == color && piece->getType() == PieceType::KING) {
-            return position;
+            return reinterpret_cast<const Position*>(&position);
         }
     }
 
     throw std::logic_error("No King located.");
-    return Position(); //invalid position returned
+    return nullptr;
 };
 
 

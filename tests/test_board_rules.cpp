@@ -20,7 +20,7 @@ TEST(BoardRules, IsValidMove_Valid) {
     board.placePiece(from, pQueen);
 
     Move move(pQueen, from, to); // Set up a valid move for the given piece and positions
-    EXPECT_TRUE(rules.isValidMove(board, move));
+    EXPECT_TRUE(rules.isValidMove(board, move, Move()));
 }
 
 // Test if a move is not valid
@@ -40,7 +40,7 @@ TEST(BoardRules, IsValidMove_NotValid) {
     board.placePiece(Position('e', 3), pPawn); 
 
     Move move(pQueen, from, to); // Set up a valid move for the given piece and positions
-    EXPECT_FALSE(rules.isValidMove(board, move));
+    EXPECT_FALSE(rules.isValidMove(board, move, Move()));
 }
 
 // Test if a king is in check

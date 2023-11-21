@@ -1,378 +1,418 @@
 #include "game.h"
+#include "helper.hpp"
 #include "crow.h"
+#include "crow/middlewares/cors.h"
+#include "crow/middlewares/cookie_parser.h"
+#include <sstream>
 #include <uuid/uuid.h>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
-
-/* Helper Functions */
-
-static int GameStateToInt(GameState state) {
-    switch (state) {
-        case GameState::WAITING_FOR_OPPONENT:
-            return static_cast<int>(GameState::WAITING_FOR_OPPONENT);
-        case GameState::WHITE_MOVE:
-            return static_cast<int>(GameState::WHITE_MOVE);
-        case GameState::BLACK_MOVE:
-            return static_cast<int>(GameState::BLACK_MOVE);
-        case GameState::ENDED:
-            return static_cast<int>(GameState::ENDED);
-        default:
-            throw std::runtime_error("Can't stringify. Not a valid GameState");
-    }
-};
-
-
-static int GameEndToInt(GameEndType state) {
-    switch (state) {
-        case GameEndType::WHITE_WIN:
-            return static_cast<int>(GameEndType::WHITE_WIN);
-        case GameEndType::BLACK_WIN:
-            return static_cast<int>(GameEndType::BLACK_WIN);
-        case GameEndType::DRAW:
-            return static_cast<int>(GameEndType::DRAW);
-        case GameEndType::STALEMATE:
-            return static_cast<int>(GameEndType::STALEMATE);
-        default:
-            throw std::runtime_error("Can't stringify. Not a valid GameState");
-    }
-};
-
-static std::string uuidToString(const uuid_t& uuid) {
-    char buffer[37];
-    uuid_unparse(uuid, buffer);
-    return std::string(buffer);
-}
-
-
-static void generateUUID(uuid_t& uuid) {
-    uuid_generate_random(uuid);
-}
-
-
-static void StrToUUID(std::string str, uuid_t gameID) {
-    if (uuid_parse(str.c_str(), gameID) != 0) {
-        throw std::runtime_error("Invalid UUID. Could not convert str to UUID");
-    }
-}
-
-
-static std::string UUIDToStr(uuid_t& uuid) {
-    char str[37]; // UUIDs are 36 characters + null terminator
-    uuid_unparse(uuid, str);
-    return std::string(str);
-}
-
-
 int main(int argc, char* argv[]) {
 
-    crow::SimpleApp app;
+    // Enable CORS
+    crow::App<crow::CORSHandler, crow::CookieParser> app;
 
-    std::unordered_map<std::string, std::unique_ptr<Game>> gamesDatabase;
-    std::unordered_map<std::string, std::unique_ptr<Player>> players; 
+    GamesDatabase gamesDatabase;
+    Players players; 
     std::unique_ptr<Game> pGame;
     std::unique_ptr<Board> pBoard;
     std::unique_ptr<BoardRules> pBoardRules;
-    std::unique_ptr<Player> pWhitePlayer;
-    std::unique_ptr<Player> pBlackPlayer;
+    std::shared_ptr<Player> pWhitePlayer;
+    std::shared_ptr<Player> pBlackPlayer;
+
+    // Customize CORS
+    auto& cors = app.get_middleware<crow::CORSHandler>();
+
+    cors.global() // Setting CORS policies for all routes
+        .methods("GET"_method, "POST"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
+        .headers("Content-Type","Upgrade-Insecure-Requests")
+        .origin("http://localhost:3000") // Allowing your frontend's origin
+        .allow_credentials();
+
+    CROW_ROUTE(app, "/")
+    ([]() {
+        return "Check Access-Control-Allow-Methods header";
+    });
+
+    CROW_ROUTE(app, "/cors")
+    ([]() {
+        return "Check Access-Control-Allow-Origin header";
+    });
 
     CROW_ROUTE(app, "/game/startNew")
-    .methods("POST"_method)
-    ([&gamesDatabase, &players, &pWhitePlayer](const crow::request& req) {
+    .methods("GET"_method)
+    ([&app, &gamesDatabase, &players, &pWhitePlayer] (const crow::request& req){
+        crow::response res;
         json status;
 
         try {
-            auto jsonBody = json::parse(req.body);
-
-            uuid_t cookie;
-            generateUUID(cookie);
-            std::string cookieStr = uuidToString(cookie); 
-
-            pWhitePlayer = std::make_unique<Player>(Color::WHITE);
-
-            if (players.find(cookieStr) == players.end()) {
-                players[cookieStr] = std::move(pWhitePlayer);
-            } else {throw std::runtime_error("Error UUID. Player exists");}
-
-            uuid_t gameID;
-            generateUUID(gameID);
-            std::string gameIDStr = uuidToString(gameID);
-
-            if (gamesDatabase.find(gameIDStr) == gamesDatabase.end()) {
-                gamesDatabase[gameIDStr] = nullptr;
-            } else {throw std::runtime_error("Error UUID. Game exists");}
+            std::string cookieStr = generatePlayerToken();
+            std::cout << "Player ID Generated: " << cookieStr << std::endl;
+            createPlayer(players, cookieStr, Color::WHITE, pWhitePlayer);
+            
+            const auto gameIDStr = generateGameID();
+            std::cout << "Game ID Generated: " << gameIDStr << std::endl;
+            createGame(gamesDatabase, gameIDStr);
 
             status["status"] = GameStateToInt(GameState::WAITING_FOR_OPPONENT);
-
-            crow::response response(200, status.dump());
-            response.set_header("Set-Cookie", "gameID=" + gameIDStr + "; Path=/; HttpOnly");
-            response.add_header("Set-Cookie", "PlayerToken=" + cookieStr + "; Path=/; HttpOnly");
-            return response;
             
-        } catch(const json::exception& e) {
-            // Error during JSON parsing
-            return crow::response(400, "Invalid JSON format.");
-        } catch(const std::exception& e) {
-            status["status"] = "Internal server error";
-            status["message"] = e.what();
-            return crow::response(500, status.dump());
+            res.code = 200;
+            res.body = status.dump();
+
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Store cookies with set_cookie
+            ctx.set_cookie("gameID", gameIDStr)
+            .path("/")
+            .httponly();;
+
+            ctx.set_cookie("playerID", cookieStr)
+            .path("/")
+            .httponly();
         }
+        catch (const json::exception&) {
+            res.code = 400;
+            res.body = "Invalid JSON format.";
+        }
+        catch (const std::exception& e) {
+            res.code = 500;
+            res.body = "Internal server error";
+        }
+        res.set_header("Content-type", "application/json");
+        return res;
     });
 
 
     CROW_ROUTE(app, "/game/join")
     .methods("POST"_method)
-    ([&gamesDatabase, &pGame, &pBoard, &pBoardRules, &players, &pWhitePlayer, &pBlackPlayer](const crow::request& req) {
+    ([&app, &gamesDatabase, &pGame, &pBoard, &pBoardRules, &players, &pWhitePlayer, &pBlackPlayer](const crow::request& req) {
         json status;
-
         try {
             auto jsonBody = json::parse(req.body);
+            validateJsonFields(jsonBody, {"gameID"}); // Use a function to validate required fields
 
-            if (!jsonBody.contains("gameID")) {
-                return crow::response(400, "Missing fields in request.");
-            }
-            const std::string gameID = jsonBody["gameID"];
+            auto gameID = jsonBody["gameID"].get<std::string>();
 
-            auto it = gamesDatabase.find(gameID);
-            if (it == gamesDatabase.end() || it->second != nullptr) {
-                return crow::response(400, "Game not found or game is not waiting for an opponent.");
-            }
+            validateGame(gamesDatabase, gameID);
 
-            pBlackPlayer = std::make_unique<Player>(Color::BLACK);
-
-            uuid_t cookie;
-            generateUUID(cookie);
-            std::string cookieStr = uuidToString(cookie); 
-
-            if (players.find(cookieStr) == players.end()) {
-                players[cookieStr] = std::move(pBlackPlayer);
-            } else {throw std::runtime_error("Error UUID. Player exists");}
-
+            const auto player = generatePlayerToken();
+            std::cout << "Second Player Token: " << player << std::endl;
+            createPlayer(players, player, Color::BLACK, pBlackPlayer);
 
             pBoard = std::make_unique<Board>();
             pBoardRules = std::make_unique<BoardRules>();
-            pGame = std::make_unique<Game>(pWhitePlayer.get(), pBlackPlayer.get(), pBoard.get(), pBoardRules.get());
+            pGame = initializeGame(pWhitePlayer.get(), pBlackPlayer.get(), pBoard.get(), pBoardRules.get());
 
-            it->second = std::move(pGame);
+            gamesDatabase[gameID] = std::move(pGame);
 
-            status["status"] = GameStateToInt(it->second->getGameState());
+            auto& retrievedGamePtr = gamesDatabase[gameID]; // gets the unique_ptr from the map
+
+            if (!retrievedGamePtr) {
+                throw std::runtime_error("Failed to retrieve the game from the database.");
+            }
+
+            auto& game = gamesDatabase[gameID];
+
+            status["status"] = GameStateToInt(game->getGameState());
 
             crow::response response(200, status.dump());
-            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-            response.add_header("Set-Cookie", "PlayerToken=" + cookieStr + "; Path=/; HttpOnly");
+
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+
+            ctx.set_cookie("gameID", gameID)
+            .path("/")
+            .httponly();
+
+            ctx.set_cookie("playerID", player)
+            .path("/")
+            .httponly();
+
+            response.set_header("Content-type", "application/json");
             return response;
-            
         } catch(const json::exception& e) {
-            return crow::response(400, "Invalid JSON format.");
+            crow::response response(400, "Invalid JSON format.");
+            response.set_header("Content-type", "application/json");
+            return response;
         } catch(const std::exception& e) {
-            status["status"] = "Internal server error";
-            status["message"] = e.what();
-            return crow::response(500, status.dump());
+            return createErrorResponse(e);
         }
     });
 
-    CROW_ROUTE(app, "/game/select/horcruxe")
+    CROW_ROUTE(app, "/game/player")
+    .methods("GET"_method)
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
+        json status;
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
+            
+            auto player = findPlayer(players, playerID);
+
+            status["playerColor"] = player->getColor();
+
+            crow::response response(200, status.dump());
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const nlohmann::json::exception& e) {
+            crow::response response(400, "Invalid JSON format.");
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
+        }
+    });
+
+    CROW_ROUTE(app, "/game/select/horcrux")
     .methods("POST"_method)
-    ([&gamesDatabase, &players](const crow::request& req) {
-        // Need to consider edge case if horcruxe ID is never received
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
         json status;
 
         try {
-            auto jsonBody = json::parse(req.body);
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
 
-            // Validate required fields
-            if (!jsonBody.contains("horcruxeID") 
-            || !jsonBody.contains("cookie")
-            || !jsonBody.contains("gameID")) {
-                return crow::response(400, "Missing fields in request.");
-            }
-
-            const int horcruxeID = jsonBody["horcruxeID"];
-            const std::string cookie = jsonBody["cookie"];
-            const std::string gameID = jsonBody["gameID"];
-
-            auto p_it = players.find(cookie);
-            if (p_it == players.end()) {
-                return crow::response(400, "Player not found.");
-            }
-
-            Player* pPlayer = p_it->second.get();
-
-            auto it = gamesDatabase.find(gameID);
-            if (it == gamesDatabase.end() || it->second != nullptr) {
-                return crow::response(400, "Game not found or game is not waiting for an opponent.");
-            }
-
-            pPlayer->setHorcruxeID(horcruxeID);
-
-            status["status"] = GameStateToInt(it->second->getGameState());
-
-            crow::response response(200, status.dump());
-            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
-
-            return response;
+            std::cout << "Received request body: " << req.body << std::endl;
             
-        } catch(const json::exception& e) {
-            // Error during JSON parsing
-            return crow::response(400, "Invalid JSON format.");
+            Player* pPlayer = findPlayer(players, playerID); // assuming you've created a function to find a player
+            std::cout << "Player Color: " << int(pPlayer->getColor()) << std::endl;
+
+            Game* pGame = findGame(gamesDatabase, gameID); // assuming you've created a function to find a game
+            
+            auto [file, rank] = parseFileAndRank(req.body);
+            const IPiece* horcrux = pGame->getPieceFromPosition(Position(file, rank));
+            if (horcrux) {
+                int horcruxID = horcrux->getID();
+                status["horcruxID"] = horcruxID;
+                pPlayer->setHorcruxID(horcruxID);
+                pGame->checkHorcruxSet();
+            } else {
+                throw std::runtime_error("Could not find piece on the selected square");
+            }
+
+            status["status"] = GameStateToInt(pGame->getGameState());
+            
+            crow::response response(200, status.dump());
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const nlohmann::json::exception& e) {
+            crow::response response(400, "Parse error: " + std::string(e.what()));
+            response.set_header("Content-type", "application/json");
+            return response;
         } catch(const std::exception& e) {
-            status["status"] = "Internal server error";
-            status["message"] = e.what();
-            return crow::response(500, status.dump());
+            return createErrorResponse(e);
         }
     });
 
 
-    CROW_ROUTE(app, "/game/guess/horcruxe")
+
+
+    CROW_ROUTE(app, "/game/guess/horcrux")
     .methods("POST"_method)
-    ([&gamesDatabase, &pGame, &players](const crow::request& req) {
-        // Need to consider edge case if horcruxe ID is never received
+    ([&app, &gamesDatabase, &pGame, &players](const crow::request& req) {
         json status;
-
         try {
-            auto jsonBody = json::parse(req.body);
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
 
-            // Validate required fields
-            if (!jsonBody.contains("horcruxeID") 
-            || !jsonBody.contains("cookie")
-            || !jsonBody.contains("gameID")) {
-                return crow::response(400, "Missing fields in request.");
+            // Instead of parsing JSON, directly convert the body text to an integer
+            int horcruxID;
+            std::stringstream(req.body) >> horcruxID;
+
+            Player* pPlayer = findPlayer(players, playerID); // Use a function to find a player
+            if (!pPlayer) return crow::response(400, "Player not found.");
+
+            Game* pGame = findGame(gamesDatabase, gameID); // Use a function to find a game
+            if (!pGame) return crow::response(400, "Game not found.");
+
+            // The game state should be checked here according to your logic.
+            if(pGame->getGameState() != GameState::WAITING_FOR_OPPONENT) {
+                return crow::response(400, "Game is not waiting for an opponent.");
             }
 
-            const int horcruxeID = jsonBody["horcruxeID"];
-            const std::string cookie = jsonBody["cookie"];
-            const std::string gameID = jsonBody["gameID"];
-
-            auto p_it = players.find(cookie);
-            if (p_it == players.end()) {
-                return crow::response(400, "Player not found.");
-            }
-
-            Player* pPlayer = p_it->second.get();
-
-            auto it = gamesDatabase.find(gameID);
-            if (it == gamesDatabase.end() || it->second != nullptr) {
-                return crow::response(400, "Game not found or game is not waiting for an opponent.");
-            }
-
-            pGame->horcruxeGuess(horcruxeID, pPlayer);
-            
-            status["status"] = GameStateToInt(it->second->getGameState());
+            // Perform the guess and update the status
+            bool guessCorrect = pGame->horcruxGuess(horcruxID, pPlayer);
+            status["guess"] = guessCorrect;
+            status["status"] = GameStateToInt(pGame->getGameState());
 
             crow::response response(200, status.dump());
-            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
-
+            response.set_header("Content-type", "application/json");
             return response;
-            
-        } catch(const json::exception& e) {
-            // Error during JSON parsing
-            return crow::response(400, "Invalid JSON format.");
+        } catch(const nlohmann::json::exception& e) {
+            crow::response response(400, "Invalid JSON format.");
+            response.set_header("Content-type", "application/json");
+            return response;
         } catch(const std::exception& e) {
-            status["status"] = "Internal server error";
-            status["message"] = e.what();
-            return crow::response(500, status.dump());
+            return createErrorResponse(e);
         }
     });
 
+
+    CROW_ROUTE(app, "/game/get/horcruxStatus")
+    .methods("GET"_method)
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
+        json status;
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
+
+            Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
+            Player* pPlayer = findPlayer(players, playerID); // Use a function to find a player
+
+            if (pPlayer->getHorcruxFound()) {
+                status["hasBeenGuessed"] = true;
+
+                if (pPlayer->getColor() == Color::WHITE) {
+                    status["foundID"] = pGame->blackPlayer->getHorcruxID();
+                } else {
+                    status["foundID"] = pGame->whitePlayer->getHorcruxID();
+                }
+            } else {
+                status["hasBeenGuessed"] = false;
+            }
+            status["horcruxID"] = pPlayer->getHorcruxID();
+
+            crow::response response(200, status.dump());
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
+        }
+    });
 
 
     CROW_ROUTE(app, "/game/move")
     .methods("POST"_method)
-    ([&gamesDatabase, &players](const crow::request& req) {
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
         json status; 
 
         try {
-            auto jsonBody = json::parse(req.body);
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
 
-            if ((!jsonBody.contains("gameID") 
-            || !jsonBody.contains("cookie"))) {
-                return crow::response(400, "Missing fields in request.");
+            // Split the body into 'from' and 'to' parts using semicolon as the delimiter
+            std::string requestBody = req.body;
+            size_t delimiterPos = requestBody.find(';');
+            if (delimiterPos == std::string::npos) {
+                throw std::runtime_error("Invalid move format.");
             }
 
-            const std::string cookie = jsonBody["cookie"];
-            const std::string gameID = jsonBody["gameID"];
+            std::string fromText = requestBody.substr(0, delimiterPos);
+            std::string toText = requestBody.substr(delimiterPos + 1);
 
-            auto p_it = players.find(cookie);
-            if (p_it == players.end()) {
-                return crow::response(400, "Player not found.");
+            // Use the parseFileAndRank function to extract 'from' and 'to' positions
+            auto [fromFile, fromRank] = parseFileAndRank(fromText);
+            auto [toFile, toRank] = parseFileAndRank(toText);
+
+            // Convert to Position objects
+            Position from(fromFile, fromRank);
+            Position to(toFile, toRank);
+
+            Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
+            Player* pPlayer = findPlayer(players, playerID); // Use a function to find a player
+
+            const IPiece* pPiece = pGame->getBoard()->getSquare(from)->getPiece();
+            pGame->movePiece(Move(pPiece, from, to), pPlayer);
+            
+            status["status"] = GameStateToInt(pGame->getGameState());
+            
+            crow::response response(200, status.dump());
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const nlohmann::json::exception& e) {
+            crow::response response(400, "Invalid JSON format.");
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
+        }
+    });
+
+
+    CROW_ROUTE(app, "/game/state")
+    .methods("GET"_method)
+    ([&app, &gamesDatabase](const crow::request& req) {
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
+
+            Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
+
+            json status;
+
+            if (!pGame) { // Game is found (no error thrown) not created yet (Not a full game yet)
+                status["status"] = GameStateToInt(GameState::WAITING_FOR_OPPONENT);
+            } else {
+                status["status"] = GameStateToInt(pGame->getGameState());
             }
+            
+            crow::response response(200, status.dump());
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
+        }
+    });
 
-            Player* pPlayer = p_it->second.get();
 
-            Position from(
-                jsonBody["from"]["file"].get<std::string>()[0],
-                jsonBody["from"]["rank"].get<int>()
-            );
-            Position to(
-                jsonBody["to"]["file"].get<std::string>()[0], 
-                jsonBody["to"]["rank"].get<int>()
-            );
-
-            auto it = gamesDatabase.find(gameID);
-            if (it == gamesDatabase.end() || !it->second) {
-                throw std::runtime_error("Invalid game ID provided.");
-            }
-
-            Game* game = it->second.get();
-
-            const IPiece* pPiece = game->getBoard()->getSquare(from)->getPiece();
-            game->movePiece(Move(pPiece, from, to), pPlayer);
-
-            status["status"] = GameStateToInt(it->second->getGameState());
+    CROW_ROUTE(app, "/game/gameID")
+    .methods("GET"_method)
+    ([&app, &gamesDatabase](const crow::request& req) {
+        json status;
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
+            status["status"] = gameID;
 
             crow::response response(200, status.dump());
-            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
+            response.set_header("Content-type", "application/json");
             return response;
-
-        } catch(const json::exception& e) {
-            return crow::response(400, "Invalid JSON format.");
         } catch(const std::exception& e) {
-            status["status"] = "Internal server error";
-            status["message"] = e.what();
-            return crow::response(500, status.dump());
+            return createErrorResponse(e);
         }
     });
 
 
-    CROW_ROUTE(app, "/game/state/<string>")
-    .methods("GET"_method)
-    ([&gamesDatabase](std::string gameID) {
+CROW_ROUTE(app, "/game/board")
+.methods("GET"_method)
+([&app, &gamesDatabase, &players](const crow::request& req) {
+    try {
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        auto gameID = ctx.get_cookie("gameID");
+        auto playerID = ctx.get_cookie("playerID");
+
+        Game* pGame = findGame(gamesDatabase, gameID);
+        Player* pPlayer = findPlayer(players, playerID); // Using the helper function to find a player
+
         json status;
-
-        auto it = gamesDatabase.find(gameID);
-        if (it == gamesDatabase.end() || !it->second) {
-            return crow::response(400, "Game not found or game is not waiting for an opponent.");
-        }
-
-        status["status"] = GameStateToInt(it->second->getGameState());
-
-        crow::response response(200, status.dump());
-        response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-        return response;
-    });
-
-
-    CROW_ROUTE(app, "/game/board/<string>")
-    .methods("GET"_method)
-    ([&gamesDatabase, &pGame](std::string gameID) {
-        json status;
-
-        auto it = gamesDatabase.find(gameID);
-        if (it == gamesDatabase.end() || !it->second) {
-            return crow::response(400, "Game not found or game is not waiting for an opponent.");
-        }
-
         json squaresJson;
+        bool isBlack = (pPlayer && pPlayer->getColor() == Color::BLACK); // Assuming Color::BLACK is the enum for black
+
         for (const auto& [pos, square] : pGame->getBoard()->squares) {
+            char file = pos.getFile();
+            int rank = pos.getRank();
+
             json squareJson;
-            squareJson["position"] = { {"file", pos.getFile()}, {"rank", pos.getRank()} };
-            
-            if(square->getPiece()) {
-                squareJson["piece_id"] = square->getPiece()->getID();
+            squareJson["position"] = { {"file", std::string(1, file)}, {"rank", rank} };
+
+            if (square->getPiece()) {
+                squareJson["piece"]["id"] = square->getPiece()->getID();
+                squareJson["piece"]["type"] = square->getPiece()->getType();
+                squareJson["piece"]["color"] = square->getPiece()->getColor();
             }
             squaresJson.push_back(squareJson);
         }
@@ -380,130 +420,124 @@ int main(int argc, char* argv[]) {
         status["squares"] = squaresJson;
 
         crow::response response(200, status.dump());
-        response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
+        response.set_header("Content-type", "application/json");
         return response;
-    });
+    } catch(const std::exception& e) {
+        return createErrorResponse(e);
+    }
+});
+
 
 
     CROW_ROUTE(app, "/game/positions")
     .methods("POST"_method)
-    ([&gamesDatabase, &pGame, &players](const crow::request& req) {
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
         json status;
-
         try {
-            auto jsonBody = json::parse(req.body);
-
-            if (!jsonBody.contains("gameID") 
-            || !jsonBody.contains("cookie")) {
-                return crow::response(400, "Missing fields in request.");
-            }
-
-            const std::string gameID = jsonBody["gameID"];
-            const std::string cookie = jsonBody["cookie"];
-
-            auto p_it = players.find(cookie);
-            if (p_it == players.end()) {
-                return crow::response(400, "Player not found.");
-            }
-
-            Player* pPlayer = p_it->second.get();
-
-            auto it = gamesDatabase.find(gameID);
-            if (it == gamesDatabase.end() || !it->second) {
-                return crow::response(400, "Game not found or game is not waiting for an opponent.");
-            }
-
-            int pieceID = jsonBody["pieceID"];
-            const IPiece* pPiece {pGame->getPieceFromID(pieceID)};
-
-            if (pPiece->getColor() != pPlayer->getColor()) {
-                throw std::runtime_error("Player color does not match piece color");
-            }
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
             
-            std::unordered_set<Position> position = it->second->getAvailablePositions(const_cast<IPiece*>(pPiece));
+            Player* pPlayer = findPlayer(players, playerID); // Using the helper function to find a player
+            if (!pPlayer) return crow::response(400, "Player not found.");
+            
+            Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
+
+            auto [file, rank] = parseFileAndRank(req.body);
+            const Position from = Position(file, rank);
+            const IPiece* piece = pGame->getPieceFromPosition(from);
+                        
+            if (!piece || piece->getColor() != pPlayer->getColor()) {
+                throw std::runtime_error("Invalid piece or player color does not match piece color");
+            }
             
             json jsonObjs;
-            for (const auto& pos : position) {
+            for (const auto& pos : pGame->getAvailablePositions(const_cast<IPiece*>(piece), from)) {
                 json jsonObj;
                 jsonObj["rank"] = pos.getRank();
-                jsonObj["file"] = pos.getFile();
+                jsonObj["file"] = std::string(1, pos.getFile());
                 jsonObjs.push_back(jsonObj);
             }
 
             status["possiblePositions"] = jsonObjs;
+            
+            crow::response response(200, status.dump());
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const nlohmann::json::exception& e) {
+            crow::response response(400, "Invalid JSON format.");
+            response.set_header("Content-type", "application/json");
+            return response;
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
+        }
+    });
+
+
+    CROW_ROUTE(app, "/game/result")
+    .methods("GET"_method)
+    ([&app, &gamesDatabase](const crow::request& req) {
+        json status;
+        
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
+            
+            Game* pGame = findGame(gamesDatabase, gameID);
+            
+            status["status"] = GameEndToInt(pGame->getGameResult());
 
             crow::response response(200, status.dump());
-            response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-            response.add_header("Set-Cookie", "PlayerToken=" + cookie + "; Path=/; HttpOnly");
+            response.set_header("Content-type", "application/json");
             return response;
-
-        } catch(const json::exception& e) {
-            return crow::response(400, "Invalid JSON format.");
         } catch(const std::exception& e) {
-            status["status"] = "Internal server error";
-            status["message"] = e.what();
-            return crow::response(500, status.dump());
+            return createErrorResponse(e);
         }
     });
 
-
-    CROW_ROUTE(app, "/game/checkGameOver/<string>")
+    CROW_ROUTE(app, "/game/isGameInProgress")
     .methods("GET"_method)
-    ([&gamesDatabase](std::string gameID) {
-        // Check the game state for the given game_id
-        // Return a JSON or response indicating if the game is over and, if so, the reason and the winner
+    ([&app, &gamesDatabase](const crow::request& req) {
         json status;
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
 
-        auto it = gamesDatabase.find(gameID);
-        if (it == gamesDatabase.end() || !it->second) {
-            return crow::response(400, "Game not found or game is not waiting for an opponent.");
+            /* Expect an error if can't find game */
+            Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
+
+            // Return the game state
+            status["isInProgress"] = true;
+            return crow::response(200, status.dump());
+
+        } catch(const std::exception& e) {
+            status["isInProgress"] = false;
+            return crow::response(200, status.dump());
         }
-
-        status["status"] = GameStateToInt(it->second->getGameState());
-
-        crow::response response(200, status.dump());
-        response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-        return response;
     });
 
 
-    CROW_ROUTE(app, "/game/currentTurn/<string>")
+    CROW_ROUTE(app, "/game/end")
     .methods("GET"_method)
-    ([&gamesDatabase](std::string gameID) {
-        // Return whose turn it is for the given game_id
-        json status;
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
 
-        auto it = gamesDatabase.find(gameID);
-        if (it == gamesDatabase.end() || !it->second) {
-            return crow::response(400, "Game not found or game is not waiting for an opponent.");
+            removePlayer(players, playerID);
+
+            killGame(gamesDatabase, gameID);
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
         }
-
-        status["status"] = GameStateToInt(it->second->getGameState());
-
-        crow::response response(200, status.dump());
-        response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-        return response;
     });
-
-
-    CROW_ROUTE(app, "/game/result/<string>")
-    .methods("GET"_method)
-    ([&gamesDatabase](std::string gameID) {
-        // Return the result (winner, reason for win, etc.) for the given game_id
-        json status;
-
-        auto it = gamesDatabase.find(gameID);
-        if (it == gamesDatabase.end() || !it->second) {
-            return crow::response(400, "Game not found or game is not waiting for an opponent.");
-        }
-
-        status["status"] = GameEndToInt(it->second->getGameResult());
-
-        crow::response response(200, status.dump());
-        response.set_header("Set-Cookie", "gameID=" + gameID + "; Path=/; HttpOnly");
-        return response;
-    });
-
+    
     const char* port_str = std::getenv("PORT");
     int port = port_str ? std::stoi(port_str) : 8080;
     

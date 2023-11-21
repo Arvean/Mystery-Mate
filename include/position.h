@@ -13,12 +13,12 @@ class Position {
             return this->file_ == other.file_ && this->rank_ == other.rank_;
         };
 
-        virtual const int getRank() const {return rank_;}
-        virtual const char getFile() const {return file_;}
+        virtual int getRank() const {return rank_;}
+        virtual char getFile() const {return file_;}
     
     private:
-        const int rank_;
-        const char file_;
+        int rank_;
+        char file_;
 };
 
 

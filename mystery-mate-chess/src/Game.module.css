@@ -1,0 +1,26 @@
+/* Game.module.css */
+.gameContainer {
+    padding: 20px;
+    text-align: center;
+}
+
+.heading {
+    color: #3f51b5;
+    margin-bottom: 15px;
+}
+
+.subHeading {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.customButton {
+    margin-top: 10px;
+    background-color: #f50057;
+    color: white;
+}
+
+.boardContainer {
+    margin: 20px auto;
+    max-width: 500px;
+}

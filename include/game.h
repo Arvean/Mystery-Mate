@@ -7,6 +7,7 @@
 
 enum class GameState {
     WAITING_FOR_OPPONENT,
+    CHOOSING_HORCRUX,
     WHITE_MOVE,
     BLACK_MOVE,
     ENDED
@@ -21,10 +22,13 @@ enum class GameEndType {
 
 class Game {
 public:
-    Game() : whitePlayer(), blackPlayer(), pPreviousMove_(nullptr),
+    Game() : whitePlayer(), blackPlayer(), previousMove_(Move()),
              board_(new Board()), boardRules_(new BoardRules()) {};
     Game(Player* player_1, Player* player_2, Board* board, BoardRules* boardRules);
-    virtual ~Game() = default;
+    virtual ~Game() {  // Destructor of your Game class
+        _cleanupPieces();
+    }
+
 
     virtual void startGame();
     virtual void movePiece(const Move& move, const Player* pPlayer);
@@ -34,33 +38,51 @@ public:
     virtual const Player* getCurrentPlayer() const {return pCurrentPlayer_;}
     virtual Board* getBoard() const {return board_;}
     virtual GameEndType getGameResult();
-    virtual std::unordered_set<Position> getAvailablePositions(IPiece* piece);
+    virtual std::unordered_set<Position> getAvailablePositions(IPiece* piece, const Position& from);
     virtual const IPiece* getPieceFromID(int id) {return pieceMap.at(id);}
-    virtual void horcruxeGuess(const int horcruxeID, const Player* pPlayer);
+    virtual const IPiece* getPieceFromPosition(const Position& position) {
+        return board_->getSquare(position)->getPiece();
+    }
 
-private:
-    std::unordered_map<int, IPiece*> pieceMap;
+    virtual bool horcruxGuess(const int horcruxID, Player* pPlayer);
+    virtual bool checkHorcruxSet();
 
-    const Player* pCurrentPlayer_;
     Player* whitePlayer;
     Player* blackPlayer;
 
-    Move* pPreviousMove_;
-    Board* board_;
-    BoardRules* boardRules_;
-    GameState gameState_;
-    GameEndType gameEndType_;
-
-    void _endGame();
-    void _switchPlayer();
-    void _setupBoard();
-    void _updateGameState();
-    virtual bool _isHorcruxeGuessed(const int horcruxeID, const Player* pPlayer) const;
-    virtual bool _isHorcruxeCaptured(const int horcruxeID) const;
+protected:
+    virtual void _validateMoveForPlayer(const Square* pSquareFrom, const Player* pPlayer) const;
+    virtual void _executeMove(Square* pSquareFrom, Square* pSquareTo, const Move& move);
+    virtual void _endGame();
+    virtual void _switchPlayer();
+    virtual void _setupBoard();
+    virtual void _updateGameState();
+    virtual bool _isCheckmate(Color kingColor);
+    virtual bool _isHorcruxGuessed(const int horcruxID, const Player* pPlayer) const;
+    virtual bool _isHorcruxCaptured(const int horcruxID) const;
     virtual bool _isStalemate() const;
     virtual bool _hasInsufficientMaterial() const;
     //void _isThreefoldRepetition() const;
     //void _isFifyMoveRule() const;
     //std::vector<MoveRecord> moveHistory_;
 
+    void _cleanupPieces() {
+        for (auto& id_piece_pair : pieceMap) {
+            delete id_piece_pair.second;  // delete the piece, which was allocated with new
+            id_piece_pair.second = nullptr;  // set the pointer to nullptr, preventing any future access
+        }
+        pieceMap.clear();  // removes all elements from the map
+    }
+
+
+private:
+    std::unordered_map<int, IPiece*> pieceMap;
+
+    const Player* pCurrentPlayer_;
+
+    Move previousMove_;
+    Board* board_;
+    BoardRules* boardRules_;
+    GameState gameState_;
+    GameEndType gameEndType_;
 };

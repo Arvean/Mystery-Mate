@@ -1,21 +1,30 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
-            "name": "Debug with GDB",
-            "type": "cppdbg",
+            "name": "(lldb) Launch",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/tests/ChessProjectTests",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
+            "preLaunchTask": "",
+            "stopAtEntry": false,
+            "environment": []
+        },
+        {
+            "name": "C++: GDB Remote Attach to Docker",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/build/ChessProject", // Path to your executable inside Docker
+            "args": [], // Arguments to pass to your application
+            "stopAtEntry": false, // Change to true if you want the debugger to stop at the main method
+            "cwd": "/build", // Current working directory inside Docker
+            "environment": [], // Environment variables, if needed
+            "externalConsole": false, // Change to true to use an external console
             "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb", // Path to GDB inside the container
+            "miDebuggerArgs": "--interpreter=mi", // This is where you specify the interpreter argument
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -23,13 +32,16 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "",
-            "miDebuggerPath": "/usr/local/bin/gdb",
-            "miDebuggerArgs": "",
-            "logging": {
-                "trace": true,
-                "traceResponse": true,
-                "engineLogging": true
+            "pipeTransport": {
+                "pipeCwd": "${workspaceFolder}",
+                "pipeProgram": "docker",
+                "pipeArgs": [
+                    "exec", "-i", "debug-mystery-mate", "/usr/bin/gdb", "--interpreter=mi"
+                ],
+                "debuggerPath": ""
+            },
+            "sourceFileMap": {
+                "/build": "${workspaceFolder}/build" // Map the Docker path to your local path
             }
         }
     ]

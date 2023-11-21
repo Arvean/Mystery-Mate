@@ -1,0 +1,33 @@
+.menu {
+    font-family: 'Roboto', sans-serif;  /* Use Roboto font */
+    background-color: #1b1b1b;  /* dark background */
+    height: 100vh;  /* takes full screen height */
+    display: flex;  /* use flexbox to center items */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: background-color 0.3s;  /* smooth transition for any background color change */
+}
+
+.menu a {
+    background-color: #4CAF50; /* game-themed green */
+    color: white;
+    padding: 20px 30px;  /* larger padding for bigger buttons */
+    margin: 10px 0;  /* space between buttons */
+    border-radius: 5px;  /* rounded corners */
+    font-size: 1.5rem;  /* larger text */
+    font-weight: 500;  /* Medium weight for the font */
+    transition: background-color 0.3s, transform 0.3s;  /* smooth hover transitions */
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  /* light shadow for depth */
+}
+
+.menu a:hover {
+    background-color: #45a049;  /* slightly darker green on hover */
+    transform: translateY(-2px);  /* subtle lift on hover */
+}
+
+.menu a:active {
+    transform: translateY(0px);  /* reset position on click */
+}

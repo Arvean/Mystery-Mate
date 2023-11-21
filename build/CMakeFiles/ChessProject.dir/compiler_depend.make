@@ -841,8 +841,14 @@ CMakeFiles/ChessProject.dir/src/main.cpp.o: /Users/arveanlabib/Documents/Mystery
   /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/detail/conversions/to_chars.hpp \
   /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/ordered_map.hpp \
   /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/detail/macro_unscope.hpp \
-  /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/thirdparty/hedley/hedley_undef.hpp
+  /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cors.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cookie_parser.h
 
+
+/Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cookie_parser.h:
+
+/Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cors.h:
 
 /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/thirdparty/hedley/hedley_undef.hpp:
 

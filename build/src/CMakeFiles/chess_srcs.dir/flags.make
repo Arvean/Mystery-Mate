@@ -4,7 +4,7 @@
 # compile CXX with /Library/Developer/CommandLineTools/usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/arveanlabib/Documents/Mystery-Mate/src/../include
+CXX_INCLUDES = -I/Users/arveanlabib/Documents/Mystery-Mate/crow -I/Users/arveanlabib/Documents/Mystery-Mate/include
 
-CXX_FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -std=c++17
+CXX_FLAGS =  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -std=c++17
 

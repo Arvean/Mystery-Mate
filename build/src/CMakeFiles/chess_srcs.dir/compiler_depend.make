@@ -2945,7 +2945,9 @@ src/CMakeFiles/chess_srcs.dir/main.cpp.o: /Users/arveanlabib/Documents/Mystery-M
   /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/detail/conversions/to_chars.hpp \
   /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/ordered_map.hpp \
   /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/detail/macro_unscope.hpp \
-  /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/thirdparty/hedley/hedley_undef.hpp
+  /Users/arveanlabib/Documents/Mystery-Mate/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cors.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cookie_parser.h
 
 src/CMakeFiles/chess_srcs.dir/pawn.cpp.o: /Users/arveanlabib/Documents/Mystery-Mate/src/pawn.cpp \
   /Users/arveanlabib/Documents/Mystery-Mate/include/pawn.h \
@@ -3761,6 +3763,10 @@ src/CMakeFiles/chess_srcs.dir/square.cpp.o: /Users/arveanlabib/Documents/Mystery
 /Users/arveanlabib/Documents/Mystery-Mate/src/queen.cpp:
 
 /Users/arveanlabib/Documents/Mystery-Mate/src/pawn.cpp:
+
+/Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cookie_parser.h:
+
+/Users/arveanlabib/Documents/Mystery-Mate/include/crow/middlewares/cors.h:
 
 /Users/arveanlabib/Documents/Mystery-Mate/src/main.cpp:
 

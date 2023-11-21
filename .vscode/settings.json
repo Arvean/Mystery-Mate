@@ -101,6 +101,8 @@
         "csignal": "cpp",
         "valarray": "cpp",
         "ranges": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "*.ipp": "cpp",
+        "__memory": "cpp"
     }
 }

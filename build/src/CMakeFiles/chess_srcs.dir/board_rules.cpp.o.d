@@ -1,7 +1,7 @@
 src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o: \
   /Users/arveanlabib/Documents/Mystery-Mate/src/board_rules.cpp \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/board_rules.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/piece.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/piece.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/pthread.h \
@@ -174,8 +174,8 @@ src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__bit_reference \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__split_buffer \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/move.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/position.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/move.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/position.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/string_view \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__string \
@@ -186,12 +186,12 @@ src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/player.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/board.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/square.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/board.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/square.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/rook.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/src/../include/king.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/rook.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/ios \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__locale \
