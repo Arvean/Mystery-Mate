@@ -1,6 +1,7 @@
 import './Menu.css'
 import { apiBaseUrl, ErrorStatus, GameState, GameEndType, PieceType, Color, piece, GameStateLookup } from './Data'
 import JoinGame from './JoinGame.js'
+import { Button } from 'semantic-ui-react'
 import Game from './Game.js'
 import React, { useState, useEffect } from 'react';
 
@@ -49,12 +50,12 @@ export default function Menu() {
         <>
             {!isGameInProgress && !isJoining && (
                 <div className="menu">
-                    <button onClick={() => { setIsJoining(false); startNewGame(); }}>Start New Game</button>
-                    <button onClick={() => { setIsJoining(true); }}>Join Game</button>
+                    <Button primary onClick={() => { setIsJoining(false); startNewGame(); }}>Start New Game</Button>
+                    <Button secondary onClick={() => { setIsJoining(true); }}>Join Game</Button>
                 </div>
             )}
-            {isJoining && <JoinGame/>}
-            {isGameInProgress && <Game/>}
+            {isJoining && <JoinGame />}
+            {isGameInProgress && <Game />}
         </>
     );
 }

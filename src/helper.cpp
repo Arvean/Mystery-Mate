@@ -124,13 +124,6 @@ void createGame(GamesDatabase& gamesDatabase, const std::string& gameIDStr) {
         throw std::runtime_error("Error UUID. Game exists");
 }
 
-/*
-void setCookies(crow::response& response, const std::string& gameIDStr, const std::string& playerStr) {
-    response.add_header("Set-Cookie", "gameID=" + gameIDStr + "; Path=/; HttpOnly; SameSite=Lax");
-    response.add_header("Set-Cookie", "playerID=" + playerStr + "; Path=/; HttpOnly; SameSite=Lax");
-}
-*/
-
 void validateGame(const GamesDatabase& gamesDatabase, const std::string& gameID) {
     // Original validation logic
     auto it = gamesDatabase.find(gameID);

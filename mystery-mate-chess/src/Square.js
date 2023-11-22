@@ -1,5 +1,7 @@
 import Piece from './Piece.js'
 import './Board.css'
+import React, { useState, useEffect } from 'react';
+
 
 export default function Square({ highlight, square, onSquareClick }) {
   return (

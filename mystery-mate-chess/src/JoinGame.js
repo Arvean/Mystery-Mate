@@ -1,5 +1,6 @@
 import './JoinGame.css'
 import { apiBaseUrl, ErrorStatus, GameState, GameEndType, PieceType, Color, piece } from './Data'
+import { Button, Form, InputGroup } from 'react-bootstrap'; // Import React Bootstrap components
 import Game from './Game.js'
 import React, { useState, useEffect } from 'react';
 
@@ -41,10 +42,16 @@ export default function JoinGame() {
     
     return (
         joinedGame ? <Game /> : (
-        <div>
-            <input value={gameIdToJoin} onChange={(e) => setGameIdToJoin(e.target.value)} placeholder="Game ID" className="search-bar" />
-            <button onClick={handleJoinButtonClick}>Join</button>
-        </div>
+            <div>
+                <InputGroup className="mb-3">
+                    <Form.Control
+                        placeholder="Game ID"
+                        value={gameIdToJoin}
+                        onChange={(e) => setGameIdToJoin(e.target.value)}
+                    />
+                </InputGroup>
+                <Button onClick={handleJoinButtonClick} variant="primary">Join</Button>
+            </div>
         )
     );
   }

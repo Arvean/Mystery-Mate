@@ -4,7 +4,6 @@ import Menu from './Menu.js'
 import PlayerInfo from './PlayerInfo.js'
 import {whitePlayer, blackPlayer} from './Player.js'
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Typography } from '@mui/material';
 import styles from './Game.module.css';
 
 export default function Game() {

@@ -129,7 +129,6 @@ void Game::movePiece(const Move& move, const Player* pPlayer) {
     if (checkGameOver()) {
         _endGame();
     } else {
-        // Consider using smart pointers for member pointers to avoid manual memory management.
         previousMove_ = move;
         _switchPlayer();
     }
@@ -235,9 +234,6 @@ bool Game::_isCheckmate(Color kingColor) {
 
     return true;  // No moves were found that get the king out of check.
 }
-
-
-// Create a function to get the king piece based on color
 
 bool Game::_isHorcruxGuessed(const int horcruxID, const Player* pPlayer) const {
     if (pieceMap.find(horcruxID) == pieceMap.end()) {
