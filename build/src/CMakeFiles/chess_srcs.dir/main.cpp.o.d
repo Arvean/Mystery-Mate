@@ -190,6 +190,7 @@ src/CMakeFiles/chess_srcs.dir/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__tree \

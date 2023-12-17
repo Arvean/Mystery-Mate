@@ -1,10 +1,10 @@
 import Square from './Square.js'
 import './Board.css'
 import Chessboard from 'chessboardjsx';
-import {PieceSymbolLookup, ColorLookup} from './Data.js'
+import {PieceSymbolLookup, ColorLookup, Color} from './Data.js'
 import React, { useEffect, useState } from 'react';
 
-const Board = ({ board, player, onSquareClick, possiblePositions, horcruxsStatus, whiteHorcruxID, blackHorcruxID }) => {
+const Board = ({ board, player, onSquareClick, possiblePositions, horcruxsStatus, isGuessingHorcrux, onHorcruxClick }) => {
   const [highlightStyles, setHighlightStyles] = useState({});
   // Function to convert your board state to a position string for chessboardjsx
   const getPositionFromBoard = (board) => {
@@ -35,9 +35,15 @@ const Board = ({ board, player, onSquareClick, possiblePositions, horcruxsStatus
         const isPossiblePosition = (possiblePositions || []).some(pos => pos.file === square.file && pos.rank === square.rank);
         const isWhiteHorcrux = square.piece && square.piece.id === horcruxsStatus.WHITE.id;
         const isBlackHorcrux = square.piece && square.piece.id === horcruxsStatus.BLACK.id;
+        const isPlayerHocrux = square.piece && square.piece.id === horcruxsStatus.playerHorcruxID
         const isPlayerPiece = square.piece && (!horcruxsStatus.playerHorcruxID && square.piece.color === player.color);
+        const isHorcruxGuessingOpponentPiece = isGuessingHorcrux && square.piece && (square.piece.color !== player.color);
+
+        const opponentColor = player.color === Color.WHITE ? Color.BLACK : Color.WHITE;
+        const isOpponentHorcruxGuessed = horcruxsStatus[opponentColor].hasBeenGuessed;
+        const isSquarePieceOpponentHorcrux = square.piece && isOpponentHorcruxGuessed && square.piece.id === horcruxsStatus[opponentColor].id;
         
-        if (isPossiblePosition || isWhiteHorcrux || isBlackHorcrux || isPlayerPiece) {
+        if (isPossiblePosition || isWhiteHorcrux || isBlackHorcrux || isPlayerHocrux || isPlayerPiece || isHorcruxGuessingOpponentPiece || isSquarePieceOpponentHorcrux) {
           newHighlightStyles[squareName] = {
             backgroundColor: 'rgba(255, 235, 59, 0.8)',
             boxShadow: 'inset 0 0 0 2px gold',
@@ -47,7 +53,7 @@ const Board = ({ board, player, onSquareClick, possiblePositions, horcruxsStatus
     });
   
     setHighlightStyles(newHighlightStyles);
-  }, [board, player, possiblePositions, horcruxsStatus, whiteHorcruxID, blackHorcruxID]);
+  }, [board, player, possiblePositions, horcruxsStatus]);
   
 
   // chessboardjsx's onSquareClick prop uses square's name (like "e4")
@@ -64,7 +70,11 @@ const Board = ({ board, player, onSquareClick, possiblePositions, horcruxsStatus
   
     // If a piece is present on the square, we pass it along with the file and rank
     // If there's no piece on the square, the piece attribute will be undefined
-    onSquareClick({ file, rank, piece: squareFromBoard?.piece });
+    if (isGuessingHorcrux) {
+      onHorcruxClick({ file, rank, piece: squareFromBoard?.piece });
+    } else {
+      onSquareClick({ file, rank, piece: squareFromBoard?.piece });
+    }
   };
   
 

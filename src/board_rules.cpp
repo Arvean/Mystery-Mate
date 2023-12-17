@@ -25,55 +25,55 @@ bool BoardRules::isValidMove(const Board& board, const Move& move, const Move& p
 
 bool BoardRules::isValidCastling(const Board& board, const Move& kingMove) const {
     const King* king = dynamic_cast<const King*>(kingMove.getPiece());
-    
-    if (king == nullptr) {
-        throw std::logic_error("No king selected for castling");
+
+    // Validate that the piece is a king
+    if (king == nullptr || king->getType() != PieceType::KING) {
+        throw std::logic_error("Invalid piece. King expected for castling.");
     }
 
-    if (king->getType() != PieceType::KING) {
-        throw std::logic_error("Invalid parameter. King expected.");
-    }
-
-    if (king->getHasMoved()) {
-        return false;
-    }
-
-    if (isInCheck(board, kingMove.getPiece()->getColor())) {
+    // Check if the king or rook has moved, or if the king is in check
+    if (king->getHasMoved() || isInCheck(board, king->getColor())) {
         return false;
     }
 
     Position kingTo = kingMove.getTo();
-    Square* rookSquare = nullptr;
+    Position rookFrom, rookTo;
+    bool isKingSide = false;
 
-    // Check if it's a king's side castle
-    if (king->getColor() == Color::WHITE && kingTo == Position('g', 1)) {
-        rookSquare = board.getSquare(Position('h', 1));
-    } else if (king->getColor() == Color::BLACK && kingTo == Position('g', 8)) {
-        rookSquare = board.getSquare(Position('h', 8));
+    // Determine castling type and set rook positions
+    if (king->getColor() == Color::WHITE) {
+        isKingSide = (kingTo == Position('g', 1));
+        rookFrom = isKingSide ? Position('h', 1) : Position('a', 1);
+        rookTo = isKingSide ? Position('f', 1) : Position('d', 1);
+    } else { // Black
+        isKingSide = (kingTo == Position('g', 8));
+        rookFrom = isKingSide ? Position('h', 8) : Position('a', 8);
+        rookTo = isKingSide ? Position('f', 8) : Position('d', 8);
     }
-    // Check if it's a queen's side castle
-    else if (king->getColor() == Color::WHITE && kingTo == Position('c', 1)) {
-        rookSquare = board.getSquare(Position('a', 1));
-    } else if (king->getColor() == Color::BLACK && kingTo == Position('c', 8)) {
-        rookSquare = board.getSquare(Position('a', 8));
-    } else {return false;}
 
-    // Verify the rook's status
-    if (rookSquare == nullptr || rookSquare->getPiece() == nullptr || rookSquare->getPiece()->getType() != PieceType::ROOK) {
+    Square* rookSquare = board.getSquare(rookFrom);
+    if (rookSquare == nullptr || rookSquare->getPiece() == nullptr ||
+        rookSquare->getPiece()->getType() != PieceType::ROOK ||
+        dynamic_cast<const Rook*>(rookSquare->getPiece())->getHasMoved()) {
         return false;
     }
-
-    const Rook* rook = dynamic_cast<const Rook*>(rookSquare->getPiece());
-    if (rook == nullptr || rook->getHasMoved()) {return false;}
 
     // Ensure no pieces are obstructing the path between the king and rook
     if (board.isObstructedBetweenFile_(kingMove.getFrom(), rookSquare->getPosition())) {
         return false;
     }
-    if (isInCheck(board, kingMove.getPiece()->getColor())) {return false;}
+
+    // Check if the squares the king passes through are under attack
+    for (int file = std::min(kingMove.getFrom().getFile(), kingTo.getFile());
+         file <= std::max(kingMove.getFrom().getFile(), kingTo.getFile()); ++file) {
+        Position positionToCheck(static_cast<char>(file), kingMove.getFrom().getRank());
+        if (board.isAttackedPosition(positionToCheck, king->getColor())) {
+            return false;
+        }
+    }
 
     return true;
-};
+}
 
 
 bool BoardRules::isValidPromotion(const Move& move) const {
@@ -114,7 +114,6 @@ bool BoardRules::isValidEnPassant(const Move& previousMove, const Move& move) co
     return true;
 }
 
-
 bool BoardRules::isInCheck(const Board& board, const Color kingColor) const {
     const Position* kingPosition = board.findKing(kingColor);
     if (!kingPosition) {throw std::logic_error("Could not find King");}
@@ -139,9 +138,33 @@ std::unordered_set<Position> BoardRules::generateValidPositions(const Board& boa
     return pos;
 }
 
+void BoardRules::_addKingCastlingPositions(const Board& board, std::unordered_set<Position>& possiblePositions, const King* king, const Position& from) const {
+    // White King Position
+    if (from == Position('e', 1)) {
+        Position whiteLongCastlePosition = Position('c', 1);
+        Position whiteShortCastlePosition = Position('g', 1);
+        if (isValidCastling(board, Move(king, from, whiteLongCastlePosition))) {
+            possiblePositions.insert(whiteLongCastlePosition);
+        }
+        if (isValidCastling(board, Move(king, from, whiteShortCastlePosition))) {
+            possiblePositions.insert(whiteShortCastlePosition);
+        }
+    // Black King Position
+    } else if (from == Position('e', 8)) {
+        Position blackLongCastlePosition = Position('c', 8);
+        Position blackShortCastlePosition = Position('g', 8);
+        if (isValidCastling(board, Move(king, from, blackLongCastlePosition))) {
+            possiblePositions.insert(blackLongCastlePosition);
+        }
+        if (isValidCastling(board, Move(king, from, blackShortCastlePosition))) {
+            possiblePositions.insert(blackShortCastlePosition);
+        }
+    }
+}
 
 void BoardRules::_availablePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from, const Move& previousMove) {
     // Have to add castling, en passant to possible available moves set
+    // TODO: Move to Board class
 
     auto it = board.squares.find(from);
     if (it == board.squares.end()) {
@@ -150,19 +173,24 @@ void BoardRules::_availablePositions(const Board& board, std::unordered_set<Posi
     if (!it->second->isOccupied()) {
         throw std::logic_error("Current square is not occupied");
     }
-
-     const auto pieceType = it->second->getPiece()->getType();
+    
+    const IPiece* piece = it->second->getPiece();
+    const auto pieceType = piece->getType();
 
     if (pieceType == PieceType::PAWN) {
         _addPawnCapturePositions(board, possiblePositions, from, previousMove);
     } // Repeating in range and is occupied checks?}
+
+    if (pieceType == PieceType::KING) {
+        _addKingCastlingPositions(board, possiblePositions, dynamic_cast<const King*>(piece), from);
+    }
 
     std::vector<Position> toRemove;
     std::unordered_set<Position> captures; // Note to send this to the frontend in a future update
 
     for (const auto& pos : possiblePositions) {
         std::cout << "Possible Positions: " << pos.getFile() << pos.getRank() << std::endl;
-        if (pieceType != PieceType::KNIGHT && board.isObstructed_(pos)) {
+        if (pieceType != PieceType::KNIGHT && board.getSquare(pos)->getPiece()) {
             // Find direction from `from` to `pos`
             int deltaX = pos.getFile() - from.getFile();
             int deltaY = pos.getRank() - from.getRank();

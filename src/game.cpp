@@ -108,10 +108,35 @@ void Game::_executeMove(Square* pSquareFrom, Square* pSquareTo, const Move& move
     }
     pSquareTo->placePiece(move.getPiece());
     pSquareFrom->removePiece();
+
+    // Check for castling (king's move of two squares to the right or left)
+    const IPiece* movedPiece = move.getPiece();
+    if (movedPiece->getType() == PieceType::KING) {
+        int moveDistance = pSquareTo->getPosition().getFile() - pSquareFrom->getPosition().getFile();
+        if (std::abs(moveDistance) == 2) {
+            // This is a castling move
+            Square* rookSquareFrom;
+            Square* rookSquareTo;
+
+            if (moveDistance > 0) {
+                // King-side castling
+                rookSquareFrom = board_->getSquare(Position('h', pSquareFrom->getPosition().getRank()));
+                rookSquareTo = board_->getSquare(Position('f', pSquareFrom->getPosition().getRank()));
+            } else {
+                // Queen-side castling
+                rookSquareFrom = board_->getSquare(Position('a', pSquareFrom->getPosition().getRank()));
+                rookSquareTo = board_->getSquare(Position('d', pSquareFrom->getPosition().getRank()));
+            }
+
+            // Move the rook
+            rookSquareTo->placePiece(rookSquareFrom->getPiece());
+            rookSquareFrom->removePiece();
+        }
+    }
 }
 
 // Main function that uses the helper functions
-void Game::movePiece(const Move& move, const Player* pPlayer) {
+void Game::movePiece(const Move& move, Player* pPlayer) {
     Square* pSquareFrom = board_->getSquare(move.getFrom());
     _validateMoveForPlayer(pSquareFrom, pPlayer);
 
@@ -125,6 +150,10 @@ void Game::movePiece(const Move& move, const Player* pPlayer) {
     }
 
     _executeMove(pSquareFrom, pSquareTo, move);
+
+    if (isKingCaptured(pPlayer->getColor())) {
+        pPlayer->setHasKingBeenCaptured();
+    }
 
     if (checkGameOver()) {
         _endGame();
@@ -141,8 +170,24 @@ std::unordered_set<Position> Game::getAvailablePositions(IPiece* piece, const Po
 }
 
 
-bool Game::horcruxGuess(const int horcruxID, Player* pPlayer) {
-    if (_isHorcruxGuessed(horcruxID, pPlayer)) {
+bool Game::horcruxGuess(const int guessedHorcruxID, Player* pPlayer) {
+    if (pPlayer->getHorcruxFound()) {
+        throw std::logic_error("Horcrux is already guessed");
+        return false;
+    }
+    if (pieceMap.find(guessedHorcruxID) == pieceMap.end()) {
+        throw std::logic_error("Invalid horcrux ID");
+        return false;
+    }
+
+    if (pPlayer->getNumberOfHorcruxGuessesLeft() <= 0) {
+        throw std::logic_error("No more Horcrux guesses left");
+        return false;
+    };
+
+    pPlayer->decrementNumberOfHorcruxGuessesleft();
+
+    if (_isHorcruxGuessed(guessedHorcruxID, pPlayer)) {
         pPlayer->setHorcruxFound();
         return true;
     }
@@ -155,30 +200,20 @@ bool Game::checkGameOver() {
         return true;
     }
 
-    if (_isCheckmate(getCurrentPlayer()->getColor())) {
-        _endGame();
-        getCurrentPlayer()->getColor() == Color::WHITE ? gameEndType_ = GameEndType::BLACK_WIN
+    Player* player = const_cast<Player*>(getCurrentPlayer());
+
+    if (_isHorcruxCaptured(player->getHorcruxID())) {
+        player->getColor() == Color::WHITE ? gameEndType_ = GameEndType::BLACK_WIN
                                           : gameEndType_ = GameEndType::WHITE_WIN;
+        player->setHasHorcruxBeenCaptured();
         return true;
     }
 
-    if (_isHorcruxCaptured(whitePlayer->getHorcruxID())) {
-        _endGame();
-        gameEndType_ = GameEndType::BLACK_WIN;
-        return true;
-    }
-    if (_isHorcruxCaptured(blackPlayer->getHorcruxID())) {
-        _endGame();
-        gameEndType_ = GameEndType::WHITE_WIN;
-        return true;
-    }
     if (_isStalemate()) {
-        _endGame();
         gameEndType_ = GameEndType::STALEMATE;
         return true;
     }
     if (_hasInsufficientMaterial()) {
-        _endGame();
         gameEndType_ = GameEndType::DRAW;
         return true;
     }
@@ -207,38 +242,11 @@ void Game::_updateGameState() {
     pCurrentPlayer_->getColor() == Color::WHITE ? gameState_ = GameState::WHITE_MOVE : gameState_ = GameState::BLACK_MOVE;
 }
 
-bool Game::_isCheckmate(Color kingColor) {
-    if (!boardRules_->isInCheck(*board_, kingColor)) {
-        return false;  // If the king isn't in check, it's not checkmate.
-    }
-
-    for (const auto& [position, square] : board_->squares) {  // Assuming getSquares() returns a map of squares.
-        if (!square->isOccupied()) {
-            continue;  // Skip empty squares.
-        }
-
-        const IPiece* piece = square->getPiece(); 
-        if (piece->getColor() != kingColor) {
-            continue;  // Skip pieces of the opposite color.
-        }
-
-        for (const auto& pos : boardRules_->generateValidPositions(*board_, piece, square->getPosition(), previousMove_)) {
-            Board hypotheticalBoard = *board_;  // Make a copy of the current board to test the hypothetical move.
-            hypotheticalBoard.placePiece(pos, piece);  // Move the piece to the hypothetical position.
-
-            if (!boardRules_->isInCheck(hypotheticalBoard, kingColor)) {
-                return false;  // Found a valid move that gets the king out of check.
-            }
-        }
-    }
-
-    return true;  // No moves were found that get the king out of check.
+bool Game::isKingCaptured(Color kingColor) const {
+    return !board_->findKing(kingColor) ? true : false;
 }
 
 bool Game::_isHorcruxGuessed(const int horcruxID, const Player* pPlayer) const {
-    if (pieceMap.find(horcruxID) == pieceMap.end()) {
-        throw std::logic_error("Invalid horcrux ID");
-    }
     if (pPlayer->getHorcruxID() == horcruxID) {
         return true;
     }

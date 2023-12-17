@@ -8,18 +8,25 @@
 #define MIN_BLACK_HORCRUXE_ID 17U
 #define MAX_HORCRUXE_ID 32U
 
+#define NUMBER_OF_HORCRUX_GUESSES 2U
 
 class Player {
     public:
         Player() 
             : horcrux_id_(INVALID_HORCRUXE_ID),
             color_(Color::WHITE),
-            horcruxFound_(false) {}
+            horcruxFound_(false), 
+            horcruxCaptured_(false),
+            hasKingBeenCaptured_(false),
+            horcruxGuessLeft_(NUMBER_OF_HORCRUX_GUESSES){}
 
         explicit Player(Color color) 
             : horcrux_id_(INVALID_HORCRUXE_ID),
             color_(color),
-            horcruxFound_(false) {}
+            horcruxFound_(false),
+            horcruxCaptured_(false),
+            hasKingBeenCaptured_(false),
+            horcruxGuessLeft_(NUMBER_OF_HORCRUX_GUESSES) {}
         
         virtual ~Player() = default;
 
@@ -29,6 +36,30 @@ class Player {
 
         virtual bool getHorcruxFound() const {
             return horcruxFound_;
+        }
+
+        virtual void setHasKingBeenCaptured() {
+            hasKingBeenCaptured_ = true;
+        }
+
+        virtual bool getHasKingBeenCaptured() const {
+            return hasKingBeenCaptured_;
+        }
+
+        virtual void setHasHorcruxBeenCaptured() {
+            horcruxCaptured_ = true;
+        }
+
+        virtual bool hasHorcruxBeenCaptured() const {
+            return horcruxCaptured_;
+        }
+
+        virtual int getNumberOfHorcruxGuessesLeft() const {
+            return horcruxGuessLeft_;
+        }
+
+        virtual void decrementNumberOfHorcruxGuessesleft() {
+            horcruxGuessLeft_--;
         }
 
         virtual Color getColor() const { return color_; }
@@ -69,4 +100,7 @@ class Player {
         bool horcruxFound_;
         int horcrux_id_;
         Color color_;
+        bool hasKingBeenCaptured_;
+        bool horcruxCaptured_;
+        int horcruxGuessLeft_;
     };

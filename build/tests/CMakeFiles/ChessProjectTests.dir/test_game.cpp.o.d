@@ -298,6 +298,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o: \
   /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/position.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/player.h \
   /Users/arveanlabib/Documents/Mystery-Mate/tests/../include/mock_board.h \
   /usr/local/include/gmock/gmock.h \

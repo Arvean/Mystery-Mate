@@ -186,12 +186,12 @@ src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/square.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/rook.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/ios \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__locale \

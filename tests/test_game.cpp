@@ -198,7 +198,7 @@ TEST_F(GameTest, CheckGameOver_ReturnsTrue_WhenCheckmate) {
     // Further checks could be made here depending on the functionality of checkGameOver.
     // For example, if the game state changes or specific players are notified, etc.
 }
-
+/*
 // Test case for checkmate scenario (we already discussed this one)
 TEST_F(GameTest, CheckGameOver_WhenCheckmate) {
     MockGame game(mockPlayer1, mockPlayer2, mockBoard, mockRules);
@@ -211,6 +211,7 @@ TEST_F(GameTest, CheckGameOver_WhenCheckmate) {
     EXPECT_TRUE(isGameOver);
     EXPECT_EQ(game.getGameResult(), GameEndType::BLACK_WIN); // Assuming it's white's turn and it got checkmated.
 }
+*/
 
 // Test case for horcrux capture scenario
 TEST_F(GameTest, CheckGameOver_WhenHorcruxCaptured) {

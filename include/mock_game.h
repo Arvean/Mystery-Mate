@@ -14,7 +14,7 @@ public:
     //MOCK_METHOD(Player*, getCurrentPlayer, (), (const, override));
     //MOCK_METHOD(Board*, getBoard, (), (const, override));
 
-    MOCK_METHOD(bool, _isCheckmate, (Color color));
+    // OBE: MOCK_METHOD(bool, _isCheckmate, (Color color));
     MOCK_METHOD(bool, _isHorcruxCaptured, (int horcruxID));
     MOCK_METHOD(bool, _isStalemate, (), (const));
     MOCK_METHOD(bool, _hasInsufficientMaterial, (), (const));

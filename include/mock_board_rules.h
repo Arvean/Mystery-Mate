@@ -10,4 +10,5 @@ public:
     MOCK_METHOD(bool, isValidPromotion, (const Move& move), (const, override));
 
     MOCK_METHOD(std::unordered_set<Position>, generateValidPositions, (const Board& board, const IPiece* piece, const Position& from, const Move& previousMove), (override));
+
 };

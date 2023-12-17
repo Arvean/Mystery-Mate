@@ -1,6 +1,6 @@
 import './JoinGame.css'
 import { apiBaseUrl, ErrorStatus, GameState, GameEndType, PieceType, Color, piece } from './Data'
-import { Button, Form, InputGroup } from 'react-bootstrap'; // Import React Bootstrap components
+import { Button, Input, Form } from 'semantic-ui-react';
 import Game from './Game.js'
 import React, { useState, useEffect } from 'react';
 
@@ -43,14 +43,17 @@ export default function JoinGame() {
     return (
         joinedGame ? <Game /> : (
             <div>
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        placeholder="Game ID"
-                        value={gameIdToJoin}
-                        onChange={(e) => setGameIdToJoin(e.target.value)}
-                    />
-                </InputGroup>
-                <Button onClick={handleJoinButtonClick} variant="primary">Join</Button>
+                <Form>
+                    <Form.Field>
+                        <label>Game ID</label>
+                        <Input
+                            placeholder="Enter Game ID"
+                            value={gameIdToJoin}
+                            onChange={(e) => setGameIdToJoin(e.target.value)}
+                        />
+                    </Form.Field>
+                    <Button onClick={handleJoinButtonClick} primary>Join</Button>
+                </Form>
             </div>
         )
     );

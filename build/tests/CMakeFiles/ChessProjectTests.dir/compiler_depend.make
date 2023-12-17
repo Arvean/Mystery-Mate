@@ -1181,9 +1181,9 @@ tests/CMakeFiles/ChessProjectTests.dir/test_board_rules.cpp.o: /Users/arveanlabi
   /Users/arveanlabib/Documents/Mystery-Mate/include/position.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/mock_piece.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/queen.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/rook.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/pawn.h
@@ -1487,6 +1487,7 @@ tests/CMakeFiles/ChessProjectTests.dir/test_game.cpp.o: /Users/arveanlabib/Docum
   /Users/arveanlabib/Documents/Mystery-Mate/include/position.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/mock_board.h \
   /usr/local/include/gmock/gmock.h \

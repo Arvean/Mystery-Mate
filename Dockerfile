@@ -1,5 +1,6 @@
 # Use the official image as a parent image
-FROM ubuntu:latest
+#FROM ubuntu:latest
+FROM mystery-mate:latest
 
 # Update package list, install dependencies and LLDB
 RUN apt-get update && \

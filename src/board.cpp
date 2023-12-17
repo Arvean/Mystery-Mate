@@ -91,11 +91,23 @@ bool Board::isInsideBoard_(const Position& position) const {
 }
 
 
-bool Board::isObstructed_(const Position& position) const {
-    const Square* pSquare = getSquare(position);
-
-    return pSquare->getPiece() != nullptr;
-};
+bool Board::isObstructed(const Position& from, const Position& to, PieceType pieceType) const {
+    if (pieceType == PieceType::KNIGHT) {
+        return false;
+    }
+    // If the move is horizontal
+    if (from.getRank() == to.getRank()) {
+        return isObstructedBetweenFile_(from, to);
+    }
+    // If the move is vertical
+    else if (from.getFile() == to.getFile()) {
+        return isObstructedBetweenRank_(from, to);
+    }
+    // If the move is diagonal (implement a similar method for diagonal obstructions)
+    else {
+        return isObstructedDiagonally_(from, to);
+    }
+}
 
 
 bool Board::isObstructedBetweenRank_(const Position& from, const Position& to) const {
@@ -106,7 +118,7 @@ bool Board::isObstructedBetweenRank_(const Position& from, const Position& to) c
     int step = (fromRank < toRank) ? 1 : -1;
 
     for (int rank = fromRank + step; rank != toRank; rank += step) {
-        auto it = squares.find(Position(rank, file));
+        auto it = squares.find(Position(file, rank));
         if (it != squares.end() && it->second->isOccupied()) {
             return true; // If a square is occupied, then there's an obstruction
         }
@@ -123,7 +135,7 @@ bool Board::isObstructedBetweenFile_(const Position& from, const Position& to) c
     int step = (fromFile < toFile) ? 1 : -1;
 
     for (char file = fromFile + step; file != toFile; file += step) {
-        auto it = squares.find(Position(rank, file));
+        auto it = squares.find(Position(file, rank));
         if (it != squares.end() && it->second->isOccupied()) {
             return true; // If a square is occupied, then there's an obstruction
         }
@@ -131,6 +143,38 @@ bool Board::isObstructedBetweenFile_(const Position& from, const Position& to) c
     return false;
 };
 
+bool Board::isObstructedDiagonally_(const Position& from, const Position& to) const {
+    int fromRank = from.getRank();
+    int toRank = to.getRank();
+    char fromFile = from.getFile();
+    char toFile = to.getFile();
+
+    // Determine the step direction for both file and rank
+    int fileStep = (fromFile < toFile) ? 1 : -1;
+    int rankStep = (fromRank < toRank) ? 1 : -1;
+
+    // Start from the next square to avoid checking the square where the piece currently is
+    char file = fromFile + fileStep;
+    int rank = fromRank + rankStep;
+
+    while (file != toFile && rank != toRank) {
+        auto it = squares.find(Position(file, rank));
+        if (it != squares.end() && it->second->isOccupied()) {
+            return true; // If a square is occupied, then there's an obstruction
+        }
+
+        file += fileStep;
+        rank += rankStep;
+    }
+    return false;
+}
+
+bool Board::isAttackedPosition(const Position& position, const Color playerColor) const {
+    Color opponentColor = (playerColor == Color::WHITE) ? Color::BLACK : Color::WHITE;
+    std::unordered_set<Position> attackedPositions = getAttackedPositions_(opponentColor);
+
+    return attackedPositions.find(position) != attackedPositions.end();
+}
 
 std::unordered_set<Position> Board::getAttackedPositions_(Color color) const {
     std::unordered_set<Position> attackedPositions;
@@ -140,12 +184,15 @@ std::unordered_set<Position> Board::getAttackedPositions_(Color color) const {
         if (piece && piece->getColor() == color) {
             std::unordered_set<Position> possiblePositions = piece->getPossiblePositions(position);
             for (const Position& pos : possiblePositions) {
-                attackedPositions.insert(pos);
+                // Check for obstructions
+                if (!isObstructed(position, pos, piece->getType())) {
+                    attackedPositions.insert(pos);
+                }
             }
         }
     }
     return attackedPositions;
-};
+}
 
 
 const Position* Board::findKing(Color color) const {
@@ -156,7 +203,6 @@ const Position* Board::findKing(Color color) const {
         }
     }
 
-    throw std::logic_error("No King located.");
     return nullptr;
 };
 

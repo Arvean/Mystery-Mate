@@ -1,6 +1,7 @@
 #pragma once
 
 #include "piece.h"
+#include "king.h"
 #include "player.h"
 #include "board.h"
 #include <unordered_set>
@@ -21,6 +22,7 @@ class BoardRules {
 
     private:
         void _availablePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& position, const Move& previousMove);
+        void _addKingCastlingPositions(const Board& board, std::unordered_set<Position>& possiblePositions, const King* king, const Position& from) const;
         void _addPawnCapturePositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from, const Move& previousMove) const;
         void _removeKingInCheckPositions(const Board& board, std::unordered_set<Position>& possiblePositions, const Position& from); 
 };

@@ -566,12 +566,12 @@ src/CMakeFiles/chess_srcs.dir/board_rules.cpp.o: /Users/arveanlabib/Documents/My
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/square.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/rook.h \
-  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/ios \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__locale \
@@ -820,10 +820,10 @@ src/CMakeFiles/chess_srcs.dir/game.cpp.o: /Users/arveanlabib/Documents/Mystery-M
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__tree \
-  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/bishop.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/knight.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/queen.h \
@@ -1079,6 +1079,7 @@ src/CMakeFiles/chess_srcs.dir/helper.cpp.o: /Users/arveanlabib/Documents/Mystery
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__tree \
@@ -2296,6 +2297,7 @@ src/CMakeFiles/chess_srcs.dir/main.cpp.o: /Users/arveanlabib/Documents/Mystery-M
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/_types/_wctrans_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Users/arveanlabib/Documents/Mystery-Mate/include/board_rules.h \
+  /Users/arveanlabib/Documents/Mystery-Mate/include/king.h \
   /Users/arveanlabib/Documents/Mystery-Mate/include/player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__tree \

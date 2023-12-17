@@ -31,7 +31,7 @@ public:
 
 
     virtual void startGame();
-    virtual void movePiece(const Move& move, const Player* pPlayer);
+    virtual void movePiece(const Move& move, Player* pPlayer);
     virtual bool checkGameOver();
 
     virtual GameState getGameState() const {return gameState_;}
@@ -43,6 +43,7 @@ public:
     virtual const IPiece* getPieceFromPosition(const Position& position) {
         return board_->getSquare(position)->getPiece();
     }
+    virtual bool isKingCaptured(Color kingColor) const;
 
     virtual bool horcruxGuess(const int horcruxID, Player* pPlayer);
     virtual bool checkHorcruxSet();
@@ -57,7 +58,6 @@ protected:
     virtual void _switchPlayer();
     virtual void _setupBoard();
     virtual void _updateGameState();
-    virtual bool _isCheckmate(Color kingColor);
     virtual bool _isHorcruxGuessed(const int horcruxID, const Player* pPlayer) const;
     virtual bool _isHorcruxCaptured(const int horcruxID) const;
     virtual bool _isStalemate() const;

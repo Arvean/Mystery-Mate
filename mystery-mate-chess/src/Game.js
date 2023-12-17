@@ -3,12 +3,12 @@ import Board from './Board.js'
 import Menu from './Menu.js'
 import PlayerInfo from './PlayerInfo.js'
 import {whitePlayer, blackPlayer} from './Player.js'
-import React, { useState, useEffect } from 'react';
-import styles from './Game.module.css';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Input, Form } from 'semantic-ui-react';
+
 
 export default function Game() {
     const [fromSquare, setFromSquare] = useState(null);
-    const [toSquare, setToSquare] = useState(null);
     const [gameID, setGameID] = useState(null);
     const [board, setBoard] = useState(null);
     const [player, setPlayer] = useState(whitePlayer);
@@ -26,10 +26,12 @@ export default function Game() {
         },
         playerHorcruxID: null // Set during choose horcrux inital turn
       });
-
-    const [guessLeft, setGuessLeft] = useState(0);
-    const [guessHorcruxState, setGuessHorcruxState] = useState(false);
+    
+    const [isGuessingHorcrux, setIsGuessingHorcrux] = useState(false);
+    const [horcruxGuessesLeft, setHorcruxGuessLeft] = useState(0);
     const [home, setHome] = useState(false);
+
+    const intervalRef = useRef();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,13 +42,20 @@ export default function Game() {
                 setHome(false);
                 await fetchPlayer();
                 await fetchBoard();
+                await fetchNumberOfHorcruxGuessesLeft()
                 await fetchHorcruxStatus();
             }
         };
         
-        const intervalId = setInterval(fetchData, 2000); // Poll every 2 seconds
+        intervalRef.current = setInterval(fetchData, 2000); // Poll every 2 seconds
+
+        if (gameState === GameState.ENDED) {
+            checkGameOver();
+            killGame();
+            clearInterval(intervalRef.current);
+        }
     
-        return () => clearInterval(intervalId); // Cleanup on component unmount
+        return () => clearInterval(intervalRef.current); // Cleanup on component unmount
     }, [gameState]);
     
     const transformBoard = (squaresJson) => {
@@ -67,7 +76,6 @@ export default function Game() {
         return board;
     };
     
-
     const updateGame = async ()  => {
         await fetchBoard();
         const gameState = await fetchGameState();
@@ -79,7 +87,7 @@ export default function Game() {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) console.log('Network response was not ok');
         const data = await response.json();
         const transformedBoard = transformBoard(data.squares);
         setBoard(transformedBoard);
@@ -91,7 +99,7 @@ export default function Game() {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) console.log('Network response was not ok');
         const data = await response.json();
         const color = ColorLookup[data.playerColor];
         color === Color.WHITE ? 
@@ -104,23 +112,20 @@ export default function Game() {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error("Network response was not ok");
+        if (!response.ok) console.log("Network response was not ok");
         const data = await response.json();
-        
-        let updatedStatus = { ...horcruxsStatus, playerHorcruxID: data.horcruxID };
-        
-        if (data.hasBeenGuessed) {
-            updatedStatus[player.color] = {
-                hasBeenGuessed: true,
-                id: data.foundID
-            };
-        }
-
-        updatedStatus[player.color] = {
-            id: data.horcruxID
-        }
-
-        setHorcruxsStatus(updatedStatus);
+                
+        setHorcruxsStatus({
+            WHITE: {
+                hasBeenGuessed: data.whiteHasBeenGuessed,
+                id: data.whiteHasBeenGuessed ? data.whiteFoundID : null
+            },
+            BLACK: {
+                hasBeenGuessed: data.blackHasBeenGuessed,
+                id: data.blackHasBeenGuessed ? data.blackFoundID : null
+            },
+            playerHorcruxID: data.horcruxID
+        });
     }
     
     const fetchGameState = async () => {
@@ -128,7 +133,7 @@ export default function Game() {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) console.log('Network response was not ok');
         const data = await response.json();
         if (gameState !== GameStateLookup[data.status]) {
             setGameState(GameStateLookup[data.status]);
@@ -141,7 +146,7 @@ export default function Game() {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) console.log('Network response was not ok');
         const data = await response.json();
         setGameID(data.status);
     }
@@ -156,7 +161,7 @@ export default function Game() {
             },
             body: bodyText,
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) console.log('Network response was not ok');
         const positionsData = await response.json(); // This is an object that contains the array
         
         if (positionsData && Array.isArray(positionsData.possiblePositions)) {
@@ -168,38 +173,40 @@ export default function Game() {
         }
     }
 
-    const guessHorcrux = async (pieceID) => {
+    const guessHorcrux = async (square) => {
+        const bodyText = square.file + ',' + square.rank; // Comma-separated values
+
         const res = await fetch(apiBaseUrl + '/guess/horcrux', {
             method: 'POST',
             credentials: 'include',
             headers: {
               'Content-Type': 'text/plain',
             },
-            body: pieceID
+            body: bodyText
         });
 
-        if (!res.ok) throw new Error('Network response was not ok');
+        if (!res.ok) console.log('Network response was not ok');
         const data = await res.json();
         if (data.status === ErrorStatus) console.error('Error:', data.message);
-
-
-        if (data.guess) {
-            setHorcruxsStatus({
-                ...horcruxsStatus,
-                [player.color]: {
-                  hasBeenGuessed: true,
-                  id: data.id
-                }
-            });
-        }
     }
 
-    const returnGameResult = async () => {
+    const fetchNumberOfHorcruxGuessesLeft = async () => {
+        const response = await fetch(apiBaseUrl + '/numberOfHorcruxGuessesLeft', {
+            method: 'GET', 
+            credentials: 'include',
+        });
+        if (!response.ok) console.log('Network response was not ok');
+        const data = await response.json();
+        setHorcruxGuessLeft(data.horcruxGuessesLeft);
+        return data.horcruxGuessesLeft;
+    }
+
+    const fetchGameResult = async () => {
         const response = await fetch(apiBaseUrl + '/result', {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) console.log('Network response was not ok');
         const data = await response.json();
         return GameEndTypeLookup[data.status];
     }
@@ -226,17 +233,12 @@ export default function Game() {
         return true;
     }
 
-    const cleanUpGame = async () => {
+    const killGame = async () => {
         const response = await fetch(apiBaseUrl + '/end', {
             method: 'GET', 
             credentials: 'include',
         });
-        if (!response.ok) throw new Error('Network response was not ok');
-    }
-
-    const endGame = async () => {
-        await setGameResult(returnGameResult());
-        await cleanUpGame();
+        if (!response.ok) console.log('Network response was not ok');
     }
 
     const disablePossiblePosHighlight = () => {
@@ -245,11 +247,6 @@ export default function Game() {
 
     const handleSquareClick = async (square) => {
         if (square && gameState === player.moveType) {
-            if (guessHorcruxState) {
-                guessHorcrux(square.piece.id);
-                fetchHorcruxStatus();
-                setGuessHorcruxState(false);
-            }
             if (square.piece && square.piece.color === player.color) {
                 setFromSquare(square);
                 disablePossiblePosHighlight();
@@ -257,7 +254,6 @@ export default function Game() {
             } else if (fromSquare) {
                 await sendMove(fromSquare, square);
                 disablePossiblePosHighlight();
-                setToSquare(square);
 
                 await updateGame();
 
@@ -267,14 +263,23 @@ export default function Game() {
     }
 
     const checkGameOver = async (gameState) => {
-        if (gameState == GameState.ENDED) {endGame();}
+        if (gameState == GameState.ENDED) {
+            await setGameResult(fetchGameResult());
+        }
     }
 
-    const handleGuesshorcruxClick = async () => {
-        if (gameState === player.moveType && guessLeft > 0) {
-            setGuessHorcruxState(true);
-            setGuessLeft(prevGuess => prevGuess - 1);
+    const handleGuessHorcruxButton = () => {
+        const guessesLeft = fetchNumberOfHorcruxGuessesLeft();
+        if (guessesLeft) {
+            setIsGuessingHorcrux(true);
+        } else {
+            console.log("No more horcrux guesses left");
         }
+    }
+
+    const handleOnHorcruxClick = async (square) => {
+        await guessHorcrux(square);
+        setIsGuessingHorcrux(false);
     }
 
     const getGameResultMessage = (result) =>  {
@@ -298,12 +303,21 @@ export default function Game() {
             body: bodyText,
         });
 
-        if (!res.ok) throw new Error('Network response was not ok');
+        if (!res.ok) console.log('Network response was not ok');
         const data = await res.json();
         if (data.status === ErrorStatus) console.error('Error:', data.message);
 
         fetchGameState();
     };
+
+    const handleQuitGame = async () => {
+        killGame(); // Check why we can't make 'await'
+        clearInterval(intervalRef.current);
+        setHome(true);
+    }
+
+    const opponentColor = player.color === Color.WHITE ? Color.BLACK : Color.WHITE;
+    const isOpponentHorcruxGuessed = horcruxsStatus[opponentColor].hasBeenGuessed;
 
     return (
         home ? <Menu/> :
@@ -324,31 +338,38 @@ export default function Game() {
                        possiblePositions={highlightSquares} 
                        horcruxsStatus={horcruxsStatus}
                 />
-                <PlayerInfo guesses={guessLeft} color={player.color}/>
+                <PlayerInfo guesses={horcruxGuessesLeft} color={player.color}/>
                 </>
             )}
             
             {(gameState === GameState.WHITE_MOVE || gameState === GameState.BLACK_MOVE) && (
                 <>
                 <h1>{gameState === GameState.WHITE_MOVE ? "White's" : "Black's"} Turn</h1>
-                <h1>Number of horcrux Guesses Left: {guessLeft}</h1>
-                <button onClick={() => handleGuesshorcruxClick()}>Guess horcrux</button>
+                {!isOpponentHorcruxGuessed && (
+                    <Button onClick={() => handleGuessHorcruxButton()}>Guess horcrux</Button>
+                )}
                 <Board board={board} 
                         player={player}
                         onSquareClick={handleSquareClick}
                         possiblePositions={highlightSquares}
                         horcruxsStatus={horcruxsStatus}
+                        isGuessingHorcrux={isGuessingHorcrux}
+                        onHorcruxClick={handleOnHorcruxClick}
                 />
-                <PlayerInfo name="Voldemort" guesses={guessLeft} />
+                <PlayerInfo name="Voldemort" guesses={horcruxGuessesLeft} />
                 </>
             )}
             
             {gameState === GameState.ENDED && (
                 <>
                 <h1>Game Ended - {getGameResultMessage(gameResult)}</h1>
-                <button onClick={() => setHome(true)}>Home </button> 
                 </>
             )}
+
+            <>
+                <Button onClick={() => handleQuitGame()}>Quit Game</Button>
+            </>
+
             </div>
         );
 };

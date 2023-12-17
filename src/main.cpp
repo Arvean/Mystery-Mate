@@ -208,9 +208,6 @@ int main(int argc, char* argv[]) {
         }
     });
 
-
-
-
     CROW_ROUTE(app, "/game/guess/horcrux")
     .methods("POST"_method)
     ([&app, &gamesDatabase, &pGame, &players](const crow::request& req) {
@@ -221,23 +218,25 @@ int main(int argc, char* argv[]) {
             auto gameID = ctx.get_cookie("gameID");
             auto playerID = ctx.get_cookie("playerID");
 
-            // Instead of parsing JSON, directly convert the body text to an integer
-            int horcruxID;
-            std::stringstream(req.body) >> horcruxID;
+            // Split the body into 'from' and 'to' parts using semicolon as the delimiter
+            std::string requestBody = req.body;
 
+            // Use the parseFileAndRank function to extract 'from' and 'to' positions
+            auto [squareFile, squareRank] = parseFileAndRank(requestBody);
+
+            // Convert to Position objects
+            Position from(squareFile, squareRank);
+
+            Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
             Player* pPlayer = findPlayer(players, playerID); // Use a function to find a player
-            if (!pPlayer) return crow::response(400, "Player not found.");
 
-            Game* pGame = findGame(gamesDatabase, gameID); // Use a function to find a game
-            if (!pGame) return crow::response(400, "Game not found.");
-
-            // The game state should be checked here according to your logic.
-            if(pGame->getGameState() != GameState::WAITING_FOR_OPPONENT) {
-                return crow::response(400, "Game is not waiting for an opponent.");
-            }
+            const IPiece* pPiece = pGame->getBoard()->getSquare(from)->getPiece();
 
             // Perform the guess and update the status
-            bool guessCorrect = pGame->horcruxGuess(horcruxID, pPlayer);
+            Player* pPlayerToCheck;
+            pPlayer->getColor() == Color::WHITE ? pPlayerToCheck = pGame->blackPlayer : pPlayerToCheck = pGame->whitePlayer;
+            bool guessCorrect = pGame->horcruxGuess(pPiece->getID(), pPlayerToCheck);
+
             status["guess"] = guessCorrect;
             status["status"] = GameStateToInt(pGame->getGameState());
 
@@ -267,17 +266,20 @@ int main(int argc, char* argv[]) {
             Game* pGame = findGame(gamesDatabase, gameID); // Using the helper function to find a game
             Player* pPlayer = findPlayer(players, playerID); // Use a function to find a player
 
-            if (pPlayer->getHorcruxFound()) {
-                status["hasBeenGuessed"] = true;
-
-                if (pPlayer->getColor() == Color::WHITE) {
-                    status["foundID"] = pGame->blackPlayer->getHorcruxID();
-                } else {
-                    status["foundID"] = pGame->whitePlayer->getHorcruxID();
-                }
+            if (pGame->whitePlayer->getHorcruxFound() || pGame->whitePlayer->getHasKingBeenCaptured()) {
+                status["whiteHasBeenGuessed"] = true;
+                status["whiteFoundID"] = pGame->blackPlayer->getHorcruxID();
             } else {
-                status["hasBeenGuessed"] = false;
+                status["whiteHasBeenGuessed"] = false;
             }
+
+            if (pGame->blackPlayer->getHorcruxFound() || pGame->blackPlayer->getHasKingBeenCaptured()) {
+                status["blackHasBeenGuessed"] = true;
+                status["blackFoundID"] = pGame->blackPlayer->getHorcruxID();
+            } else {
+                status["blackHasBeenGuessed"] = false;
+            }
+
             status["horcruxID"] = pPlayer->getHorcruxID();
 
             crow::response response(200, status.dump());
@@ -520,6 +522,25 @@ CROW_ROUTE(app, "/game/board")
         }
     });
 
+    CROW_ROUTE(app, "/game/numberOfHorcruxGuessesLeft")
+    .methods("GET"_method)
+    ([&app, &gamesDatabase, &players](const crow::request& req) {
+        json status;
+        try {
+            auto& ctx = app.get_context<crow::CookieParser>(req);
+            // Read cookies with get_cookie
+            auto gameID = ctx.get_cookie("gameID");
+            auto playerID = ctx.get_cookie("playerID");
+
+            Player* pPlayer = findPlayer(players, playerID); // Using the helper function to find a player
+
+            status["horcruxGuessesLeft"] = pPlayer->getNumberOfHorcruxGuessesLeft();
+
+            return crow::response(200, status.dump());
+        } catch(const std::exception& e) {
+            return createErrorResponse(e);
+        }
+    });
 
     CROW_ROUTE(app, "/game/end")
     .methods("GET"_method)
@@ -533,6 +554,8 @@ CROW_ROUTE(app, "/game/board")
             removePlayer(players, playerID);
 
             killGame(gamesDatabase, gameID);
+
+            return crow::response(200);
         } catch(const std::exception& e) {
             return createErrorResponse(e);
         }

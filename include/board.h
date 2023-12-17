@@ -27,14 +27,17 @@ class Board {
 
         virtual const Position* findKing(Color color) const;
 
+        virtual bool isAttackedPosition(const Position& position, const Color playerColor) const;
+
         /* TODO: Move this to private*/
         std::unordered_map<Position, std::unique_ptr<Square>> squares;
 
     private:
 
-        bool isObstructed_(const Position& position) const;
+        bool isObstructed(const Position& from, const Position& to, PieceType pieceType) const;
         bool isObstructedBetweenRank_(const Position& from, const Position& to) const;
         bool isObstructedBetweenFile_(const Position& from, const Position& to) const;
+        bool isObstructedDiagonally_(const Position& from, const Position& to) const;
         
         bool isInsideBoard_(const Position& position) const;
         std::unordered_set<Position> getAttackedPositions_(Color color) const;
