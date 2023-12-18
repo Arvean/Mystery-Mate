@@ -10,7 +10,7 @@ import { Button, Input, Form } from 'semantic-ui-react';
 export default function Game() {
     const [fromSquare, setFromSquare] = useState(null);
     const [gameID, setGameID] = useState(null);
-    const [board, setBoard] = useState(null);
+    const [board, setBoard] = useState([]);
     const [player, setPlayer] = useState(whitePlayer);
     const [gameState, setGameState] = useState(null);
     const [gameResult, setGameResult] = useState(null);
@@ -40,8 +40,8 @@ export default function Game() {
             console.log("GameState" + fetchedGameState);
             if (fetchedGameState !== GameState.WAITING_FOR_OPPONENT) {
                 setHome(false);
-                await fetchPlayer();
                 await fetchBoard();
+                await fetchPlayer();
                 await fetchNumberOfHorcruxGuessesLeft()
                 await fetchHorcruxStatus();
             }

@@ -272,17 +272,19 @@ bool Game::_isStalemate() const {
 
         for (const auto& it : pieceMap) {
             if (it.second->getColor() == playerColor) {
-                const Position* pPiecePosition;
+                Position* pPiecePosition = nullptr;
                 for (const auto& pair : board_->squares) {
                     const IPiece* piece = pair.second->getPiece();  // Getting the piece
                     if (piece != nullptr && piece->getID() == it.first) {  // Check if piece is not nullptr before accessing it
-                        pPiecePosition = &pair.first;
+                        pPiecePosition = const_cast<Position*>(&pair.first);
                         break;
                     }
                 }
-                auto possiblePos = it.second->getPossiblePositions(*pPiecePosition);
-                for (const Position& pos : possiblePos) {
-                    if (boardRules_->isValidMove(*board_, Move(it.second, *pPiecePosition, pos), previousMove_)) {return false;}
+                if (pPiecePosition) {
+                    auto possiblePos = it.second->getPossiblePositions(*pPiecePosition);
+                    for (const Position& pos : possiblePos) {
+                        if (boardRules_->isValidMove(*board_, Move(it.second, *pPiecePosition, pos), previousMove_)) {return false;}
+                    }
                 }
             }
         }

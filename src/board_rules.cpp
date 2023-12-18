@@ -116,7 +116,7 @@ bool BoardRules::isValidEnPassant(const Move& previousMove, const Move& move) co
 
 bool BoardRules::isInCheck(const Board& board, const Color kingColor) const {
     const Position* kingPosition = board.findKing(kingColor);
-    if (!kingPosition) {throw std::logic_error("Could not find King");}
+    if (!kingPosition) {return false;}
 
     Color opponentColor = (kingColor == Color::WHITE) ? Color::BLACK : Color::WHITE;
     std::unordered_set<Position> attackedPositions = board.getAttackedPositions_(opponentColor);
