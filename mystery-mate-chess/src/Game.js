@@ -4,7 +4,8 @@ import Menu from './Menu.js'
 import PlayerInfo from './PlayerInfo.js'
 import {whitePlayer, blackPlayer} from './Player.js'
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Input, Form } from 'semantic-ui-react';
+import { Container, Grid, Button, Loader, Modal, Header} from 'semantic-ui-react';
+import './Background.css';
 
 
 export default function Game() {
@@ -320,56 +321,95 @@ export default function Game() {
     const isOpponentHorcruxGuessed = horcruxsStatus[opponentColor].hasBeenGuessed;
 
     return (
-        home ? <Menu/> :
-            <div className="game">
-            {gameState === GameState.WAITING_FOR_OPPONENT && (
-                <>
-                    <h1>Waiting for Opponent...</h1>
-                    <p>Game ID: {gameID}</p>
-                </>
-            )}
-            {gameState === GameState.CHOOSING_HORCRUX && board && (
-                <>
-                <h1>Select Your Horcrux</h1>
-                <p>Click on one of your pieces to set it as your horcrux!</p>
-                <Board board={board}
-                       player={player}
-                       onSquareClick={handleHorcruxChoice}
-                       possiblePositions={highlightSquares} 
-                       horcruxsStatus={horcruxsStatus}
-                />
-                <PlayerInfo guesses={horcruxGuessesLeft} color={player.color}/>
-                </>
-            )}
-            
-            {(gameState === GameState.WHITE_MOVE || gameState === GameState.BLACK_MOVE) && (
-                <>
-                <h1>{gameState === GameState.WHITE_MOVE ? "White's" : "Black's"} Turn</h1>
-                {!isOpponentHorcruxGuessed && (
-                    <Button onClick={() => handleGuessHorcruxButton()}>Guess horcrux</Button>
-                )}
-                <Board board={board} 
-                        player={player}
-                        onSquareClick={handleSquareClick}
-                        possiblePositions={highlightSquares}
-                        horcruxsStatus={horcruxsStatus}
-                        isGuessingHorcrux={isGuessingHorcrux}
-                        onHorcruxClick={handleOnHorcruxClick}
-                />
-                <PlayerInfo name="Voldemort" guesses={horcruxGuessesLeft} />
-                </>
-            )}
-            
-            {gameState === GameState.ENDED && (
-                <>
-                <h1>Game Ended - {getGameResultMessage(gameResult)}</h1>
-                </>
-            )}
+        home ? <Menu /> :
+            <div className="harry-potter-background">
+                <Container>
+                    <Grid>
+                        <Grid.Row centered>
+                            <Grid.Column>
 
-            <>
-                <Button onClick={() => handleQuitGame()}>Quit Game</Button>
-            </>
+                                {gameState === GameState.WAITING_FOR_OPPONENT && (
+                                    <>
+                                        <Loader active inline='centered'>Waiting for Opponent...</Loader>
+                                        <p>Game ID: {gameID}</p>
+                                    </>
+                                )}
 
+                                {gameState === GameState.CHOOSING_HORCRUX && board && (
+                                    <Modal 
+                                    open={true} 
+                                    centered={true}
+                                    style={{ background: 'rgba(255, 255, 255, 0.8)', width: '60%' }}
+                                    >
+                                        <Header>Select Your Horcrux</Header>
+                                        <Modal.Content>
+                                            <p>Click on one of your pieces to set it as your horcrux!</p>
+                                            <Board board={board}
+                                                player={player}
+                                                onSquareClick={handleHorcruxChoice}
+                                                possiblePositions={highlightSquares} 
+                                                horcruxsStatus={horcruxsStatus}
+                                            />
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                            <PlayerInfo guesses={horcruxGuessesLeft} color={player.color}/>
+                                        </Modal.Actions>
+                                    </Modal>
+                                )}
+
+                                {(gameState === GameState.WHITE_MOVE || gameState === GameState.BLACK_MOVE) && (
+                                    <Modal 
+                                    className="my-custom-modal"
+                                    open={true} 
+                                    centered={true}
+                                    dimmer={true}
+                                    style={{ background: 'rgba(128, 0, 128, 0.8)', width: '40%' }}
+                                  >
+                                    <Modal.Content>
+                                        <Header as='h1' style={{ color: '#4a4a4a', fontFamily: 'YourCustomFont, sans-serif' }}>
+                                            {gameState === GameState.WHITE_MOVE ? "White's" : "Black's"} Turn
+                                        </Header>
+                                        <Board board={board} 
+                                                player={player}
+                                                onSquareClick={handleSquareClick}
+                                                possiblePositions={highlightSquares}
+                                                horcruxsStatus={horcruxsStatus}
+                                                isGuessingHorcrux={isGuessingHorcrux}
+                                                onHorcruxClick={handleOnHorcruxClick}
+                                        />
+                                        <Grid>
+                                        <div style={{ marginTop: '10px' }}> {/* Add spacing between the buttons */}
+                                        </div>
+                                            <Grid.Row>
+                                                <Grid.Column width={5} verticalAlign="middle">
+                                                    <PlayerInfo name="Voldemort" guesses={horcruxGuessesLeft} />
+                                                </Grid.Column>
+                                                <Grid.Column width={6} textAlign="center">
+                                                    {!isOpponentHorcruxGuessed && (
+                                                    <Button color='blue' onClick={() => handleGuessHorcruxButton()}>Guess Horcrux</Button>
+                                                    )}
+                                                </Grid.Column>
+                                                <Grid.Column width={5} textAlign="right">
+                                                    {!isOpponentHorcruxGuessed && (
+                                                    <Button color='red' onClick={() => handleQuitGame()}>Quit Game</Button>
+                                                    )}
+                                                </Grid.Column>
+                                            </Grid.Row>
+                                        </Grid>
+                                        </Modal.Content>
+                                    </Modal>
+                                )}
+
+                                {gameState === GameState.ENDED && (
+                                    <div> {/* Enclosing the elements in a div */}
+                                    <Header as='h1'>Game Ended - {getGameResultMessage(gameResult)}</Header>
+                                    <Button color='red' onClick={() => handleQuitGame()}>Quit Game</Button>
+                                    </div>
+                                )}
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </Container>
             </div>
-        );
+    );
 };

@@ -235,7 +235,7 @@ int main(int argc, char* argv[]) {
             // Perform the guess and update the status
             Player* pPlayerToCheck;
             pPlayer->getColor() == Color::WHITE ? pPlayerToCheck = pGame->blackPlayer : pPlayerToCheck = pGame->whitePlayer;
-            bool guessCorrect = pGame->horcruxGuess(pPiece->getID(), pPlayerToCheck);
+            bool guessCorrect = pGame->horcruxGuess(pPiece->getID(), pPlayer, pPlayerToCheck);
 
             status["guess"] = guessCorrect;
             status["status"] = GameStateToInt(pGame->getGameState());
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
 
             if (pGame->whitePlayer->getHorcruxFound() || pGame->whitePlayer->getHasKingBeenCaptured()) {
                 status["whiteHasBeenGuessed"] = true;
-                status["whiteFoundID"] = pGame->blackPlayer->getHorcruxID();
+                status["whiteFoundID"] = pGame->whitePlayer->getHorcruxID();
             } else {
                 status["whiteHasBeenGuessed"] = false;
             }

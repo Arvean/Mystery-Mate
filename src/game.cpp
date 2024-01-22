@@ -170,8 +170,8 @@ std::unordered_set<Position> Game::getAvailablePositions(IPiece* piece, const Po
 }
 
 
-bool Game::horcruxGuess(const int guessedHorcruxID, Player* pPlayer) {
-    if (pPlayer->getHorcruxFound()) {
+bool Game::horcruxGuess(const int guessedHorcruxID, Player* guessingPlayer, Player* playerToCheck) {
+    if (playerToCheck->getHorcruxFound()) {
         throw std::logic_error("Horcrux is already guessed");
         return false;
     }
@@ -180,15 +180,15 @@ bool Game::horcruxGuess(const int guessedHorcruxID, Player* pPlayer) {
         return false;
     }
 
-    if (pPlayer->getNumberOfHorcruxGuessesLeft() <= 0) {
+    if (guessingPlayer->getNumberOfHorcruxGuessesLeft() <= 0) {
         throw std::logic_error("No more Horcrux guesses left");
         return false;
     };
 
-    pPlayer->decrementNumberOfHorcruxGuessesleft();
+    guessingPlayer->decrementNumberOfHorcruxGuessesleft();
 
-    if (_isHorcruxGuessed(guessedHorcruxID, pPlayer)) {
-        pPlayer->setHorcruxFound();
+    if (_isHorcruxGuessed(guessedHorcruxID, playerToCheck)) {
+        playerToCheck->setHorcruxFound();
         return true;
     }
     return false;

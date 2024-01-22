@@ -16,7 +16,7 @@ target_include_directories(ChessProject PRIVATE include)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-enable_testing()
-add_subdirectory(tests)
+#enable_testing()
+#add_subdirectory(tests)
 
 

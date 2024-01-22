@@ -45,7 +45,7 @@ public:
     }
     virtual bool isKingCaptured(Color kingColor) const;
 
-    virtual bool horcruxGuess(const int horcruxID, Player* pPlayer);
+    virtual bool horcruxGuess(const int guessedHorcruxID, Player* guessingPlayer, Player* playerToCheck);
     virtual bool checkHorcruxSet();
 
     Player* whitePlayer;

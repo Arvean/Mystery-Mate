@@ -79,15 +79,13 @@ const Board = ({ board, player, onSquareClick, possiblePositions, horcruxsStatus
   
 
   return (
-    <div className="board-wrapper"> {/* wrapper class, add your styles as needed */}
-      <Chessboard
-        position={getPositionFromBoard(board)}
-        onSquareClick={handleSquareClick}
-        squareStyles={highlightStyles}
-        orientation={player.color.toLowerCase()}
-        // pass other props as needed, e.g., boardStyle for size, orientation, etc.
-      />
-    </div>
+    <Chessboard
+      position={getPositionFromBoard(board)}
+      onSquareClick={handleSquareClick}
+      squareStyles={highlightStyles}
+      orientation={player.color.toLowerCase()}
+      width={700}
+    />
   );
 };
 

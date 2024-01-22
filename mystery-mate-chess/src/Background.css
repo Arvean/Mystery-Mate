@@ -1,0 +1,14 @@
+.harry-potter-background {
+    background-image: url('/Harry-Potter-Hogwarts-Cartoon.jpeg');
+    background-size: cover;
+    background-position: center;
+    color: #f4f4f4;
+    min-height: 100vh; /* 100% of the viewport height */
+    /* Additional styles */
+}
+
+.my-custom-modal .ui.modal .header {
+    font-family: 'YourCustomFont', sans-serif; /* Replace with your chosen font */
+    color: #4a4a4a; /* Or any color that fits your theme */
+    /* Additional styling */
+}
