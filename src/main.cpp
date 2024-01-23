@@ -402,6 +402,7 @@ CROW_ROUTE(app, "/game/board")
 
         json status;
         json squaresJson;
+
         bool isBlack = (pPlayer && pPlayer->getColor() == Color::BLACK); // Assuming Color::BLACK is the enum for black
 
         for (const auto& [pos, square] : pGame->getBoard()->squares) {

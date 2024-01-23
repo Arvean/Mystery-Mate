@@ -52,7 +52,7 @@ public:
     Player* blackPlayer;
 
 protected:
-    virtual void _validateMoveForPlayer(const Square* pSquareFrom, const Player* pPlayer) const;
+    virtual bool _validateMoveForPlayer(const Square* pSquareFrom, const Player* pPlayer) const;
     virtual void _executeMove(Square* pSquareFrom, Square* pSquareTo, const Move& move);
     virtual void _endGame();
     virtual void _switchPlayer();

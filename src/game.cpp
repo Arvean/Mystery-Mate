@@ -91,14 +91,17 @@ bool Game::checkHorcruxSet() {
 };
 
 // Validate the move based on the player's color and piece occupancy
-void Game::_validateMoveForPlayer(const Square* pSquareFrom, const Player* pPlayer) const {
+bool Game::_validateMoveForPlayer(const Square* pSquareFrom, const Player* pPlayer) const {
     if (!pSquareFrom->isOccupied()) {
         throw std::logic_error("The current move is not valid. From Square not occupied.");
+        return false;
     }
 
     if (pPlayer->getColor() != pSquareFrom->getPiece()->getColor()) {
         throw std::logic_error("Invalid move. Player color does not match piece color");
+        return false;
     }
+    return true;
 }
 
 // Execute the move and handle the captured piece if present
@@ -138,14 +141,14 @@ void Game::_executeMove(Square* pSquareFrom, Square* pSquareTo, const Move& move
 // Main function that uses the helper functions
 void Game::movePiece(const Move& move, Player* pPlayer) {
     Square* pSquareFrom = board_->getSquare(move.getFrom());
-    _validateMoveForPlayer(pSquareFrom, pPlayer);
-
     Square* pSquareTo = board_->getSquare(move.getTo());
-    if (pSquareTo == nullptr) {
+
+    if (pSquareFrom == nullptr || pSquareTo == nullptr) {
         throw std::logic_error("Invalid move. Not a valid square");
     }
 
-    if (!boardRules_->isValidMove(*board_, move, previousMove_)) {
+    if (!_validateMoveForPlayer(pSquareFrom, pPlayer) || 
+        !boardRules_->isValidMove(*board_, move, previousMove_)) {
         throw std::logic_error("Invalid Move. Please try another move.");
     }
 
@@ -163,10 +166,13 @@ void Game::movePiece(const Move& move, Player* pPlayer) {
     }
 }
 
+
 std::unordered_set<Position> Game::getAvailablePositions(IPiece* piece, const Position& from) {
     if (piece) {
         return boardRules_->generateValidPositions(*board_, piece, from, previousMove_);
-    } else {throw std::logic_error("Piece is nullptr. No available moves.");}
+    } else {
+        throw std::logic_error("Piece is nullptr. No available moves.");
+    }
 }
 
 
@@ -200,12 +206,15 @@ bool Game::checkGameOver() {
         return true;
     }
 
-    Player* player = const_cast<Player*>(getCurrentPlayer());
+    Player* opponentPlayer;
 
-    if (_isHorcruxCaptured(player->getHorcruxID())) {
-        player->getColor() == Color::WHITE ? gameEndType_ = GameEndType::BLACK_WIN
+    getCurrentPlayer()->getColor() == Color::WHITE ? opponentPlayer = blackPlayer 
+                                                   : opponentPlayer = whitePlayer;
+
+    if (_isHorcruxCaptured(opponentPlayer->getHorcruxID())) {
+        opponentPlayer->getColor() == Color::WHITE ? gameEndType_ = GameEndType::BLACK_WIN
                                           : gameEndType_ = GameEndType::WHITE_WIN;
-        player->setHasHorcruxBeenCaptured();
+        opponentPlayer->setHasHorcruxBeenCaptured();
         return true;
     }
 

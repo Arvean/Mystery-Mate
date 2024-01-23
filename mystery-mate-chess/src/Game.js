@@ -38,26 +38,33 @@ export default function Game() {
         const fetchData = async () => {
             await fetchGameID();
             const fetchedGameState = await fetchGameState();
-            console.log("GameState" + fetchedGameState);
-            if (fetchedGameState !== GameState.WAITING_FOR_OPPONENT) {
+            console.log("GameState: " + fetchedGameState);
+            if (fetchedGameState !== GameState.WAITING_FOR_OPPONENT && fetchedGameState !== GameState.ENDED) {
                 setHome(false);
                 await fetchBoard();
                 await fetchPlayer();
-                await fetchNumberOfHorcruxGuessesLeft()
+                await fetchNumberOfHorcruxGuessesLeft();
                 await fetchHorcruxStatus();
             }
         };
-        
+    
         intervalRef.current = setInterval(fetchData, 2000); // Poll every 2 seconds
-
+    
+        let timeoutRef;
         if (gameState === GameState.ENDED) {
             checkGameOver();
-            killGame();
             clearInterval(intervalRef.current);
+            timeoutRef = setTimeout(killGame, 10000); // Delay killGame for 10 seconds
         }
     
-        return () => clearInterval(intervalRef.current); // Cleanup on component unmount
+        return () => {
+            clearInterval(intervalRef.current); // Cleanup interval
+            if (timeoutRef) {
+                clearTimeout(timeoutRef); // Cleanup timeout
+            }
+        };
     }, [gameState]);
+    
     
     const transformBoard = (squaresJson) => {
         const board = Array(8).fill(null).map(() => Array(8).fill(null));
