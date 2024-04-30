@@ -25,7 +25,7 @@ WORKDIR /usr/src/googletest/googlemock
 RUN cmake . && make && cp lib/*.a /usr/lib
 
 # Copy command is commented out for development use with mounted volumes
-# COPY . /build
+COPY . /build
 WORKDIR /build
 
 # Build command is commented out; you will run it manually inside the container
