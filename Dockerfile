@@ -24,14 +24,14 @@ RUN cmake . && make && cp lib/*.a /usr/lib
 WORKDIR /usr/src/googletest/googlemock
 RUN cmake . && make && cp lib/*.a /usr/lib
 
-# Copy your project's source code to the container
-COPY . /build
+# Copy command is commented out for development use with mounted volumes
+# COPY . /build
 WORKDIR /build
 
-# Build your project with debug symbols
+# Build command is commented out; you will run it manually inside the container
 RUN cmake -DCMAKE_BUILD_TYPE=Debug . && make
 
 EXPOSE 8080
 
-CMD ["/bin/bash"]
-#CMD ["./ChessProject"]
+#CMD ["/bin/bash"]
+CMD ["./ChessProject"]

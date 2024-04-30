@@ -3,12 +3,38 @@
     background-size: cover;
     background-position: center;
     color: #f4f4f4;
-    min-height: 100vh; /* 100% of the viewport height */
-    /* Additional styles */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-status-box {
+    font-size: 24px;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    border-radius: 10px;
+    padding: 20px; /* Increased padding for better spacing */
+    max-width: 800px; /* Max width of the box */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center; /* Center vertically inside the box */
+    align-items: center; /* Center horizontally inside the box */
+    gap: 20px; /* Space between children elements */
+    text-align: center;
+    /* Centering the box on the screen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .my-custom-modal .ui.modal .header {
-    font-family: 'YourCustomFont', sans-serif; /* Replace with your chosen font */
-    color: #4a4a4a; /* Or any color that fits your theme */
-    /* Additional styling */
+    font-family: 'YourCustomFont', sans-serif;
+    color: #4a4a4a;
+}
+
+.custom-loader {
+    margin-bottom: 20px;
 }

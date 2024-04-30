@@ -42,19 +42,19 @@ export default function JoinGame() {
     
     return (
         joinedGame ? <Game /> : (
-            <div>
-                <Form>
-                    <Form.Field>
-                        <label>Game ID</label>
-                        <Input
-                            placeholder="Enter Game ID"
-                            value={gameIdToJoin}
-                            onChange={(e) => setGameIdToJoin(e.target.value)}
-                        />
-                    </Form.Field>
-                    <Button onClick={handleJoinButtonClick} primary>Join</Button>
-                </Form>
-            </div>
+          <div className="main-container">
+            <Form>
+              <Form.Field className="form-field">
+                <Input
+                  className="game-id-input"
+                  placeholder="Enter Game ID"
+                  value={gameIdToJoin}
+                  onChange={(e) => setGameIdToJoin(e.target.value)}
+                />
+              </Form.Field>
+              <Button className="join-button" onClick={handleJoinButtonClick} primary>Join</Button>
+            </Form>
+          </div>
         )
-    );
+      );
   }

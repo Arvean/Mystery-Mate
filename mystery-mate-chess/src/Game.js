@@ -334,47 +334,59 @@ export default function Game() {
                     <Grid>
                         <Grid.Row centered>
                             <Grid.Column>
-
                                 {gameState === GameState.WAITING_FOR_OPPONENT && (
-                                    <>
-                                        <Loader active inline='centered'>Waiting for Opponent...</Loader>
-                                        <p>Game ID: {gameID}</p>
-                                    </>
+                                    <div className="game-status-box">
+                                        <div className="custom-loader">
+                                            <Loader active inline='centered'>Waiting for Opponent...</Loader>
+                                        </div>
+                                            <div style={{ textAlign: 'center', marginBottom: '2px' }}>Game ID:</div>
+                                            <div style={{ textAlign: 'center' }}>{gameID}</div>
+                                        </div>
                                 )}
-
                                 {gameState === GameState.CHOOSING_HORCRUX && board && (
                                     <Modal 
                                     open={true} 
                                     centered={true}
-                                    style={{ background: 'rgba(255, 255, 255, 0.8)', width: '60%' }}
+                                    style={{ background: 'rgba(0, 0, 0, 0.9)', width: '38.7%' }} // Darker background
                                     >
-                                        <Header>Select Your Horcrux</Header>
-                                        <Modal.Content>
-                                            <p>Click on one of your pieces to set it as your horcrux!</p>
-                                            <Board board={board}
-                                                player={player}
-                                                onSquareClick={handleHorcruxChoice}
-                                                possiblePositions={highlightSquares} 
-                                                horcruxsStatus={horcruxsStatus}
-                                            />
+                                    <Modal.Content>
+                                        <Header as='h1' style={{ 
+                                            color: '#4a4a4a', 
+                                            fontFamily: 'YourCustomFont, sans-serif', 
+                                            textAlign: 'center' 
+                                            }}>
+                                            Select Your Horcrux
+                                            </Header>
+                                                <Board board={board}
+                                                    player={player}
+                                                    onSquareClick={handleHorcruxChoice}
+                                                    possiblePositions={highlightSquares} 
+                                                    horcruxsStatus={horcruxsStatus}
+                                                />
                                         </Modal.Content>
-                                        <Modal.Actions>
-                                            <PlayerInfo guesses={horcruxGuessesLeft} color={player.color}/>
-                                        </Modal.Actions>
                                     </Modal>
                                 )}
 
                                 {(gameState === GameState.WHITE_MOVE || gameState === GameState.BLACK_MOVE) && (
                                     <Modal 
-                                    className="my-custom-modal"
                                     open={true} 
                                     centered={true}
                                     dimmer={true}
-                                    style={{ background: 'rgba(128, 0, 128, 0.8)', width: '40%' }}
-                                  >
+                                    style={{ background: 'rgba(0, 0, 0, 0.9)', width: '38.7%' }} // Darker background
+                                    >
                                     <Modal.Content>
-                                        <Header as='h1' style={{ color: '#4a4a4a', fontFamily: 'YourCustomFont, sans-serif' }}>
-                                            {gameState === GameState.WHITE_MOVE ? "White's" : "Black's"} Turn
+                                    <Header as='h1' style={{ 
+                                        color: '#4a4a4a', 
+                                        fontFamily: 'YourCustomFont, sans-serif', 
+                                        textAlign: 'center' 
+                                        }}>
+                                        {gameState === GameState.WHITE_MOVE ? "White" : "Black"} Move
+                                        <span style={{ 
+                                            fontSize: '2em',  // Adjust the size as needed
+                                            marginLeft: '10px',  // Adjust the space to the right as needed
+                                        }}>
+                                            {gameState === GameState.WHITE_MOVE ? '♘' : '♞'}
+                                        </span>
                                         </Header>
                                         <Board board={board} 
                                                 player={player}
@@ -391,7 +403,7 @@ export default function Game() {
                                                 <Grid.Column width={5} verticalAlign="middle">
                                                     <PlayerInfo name="Voldemort" guesses={horcruxGuessesLeft} />
                                                 </Grid.Column>
-                                                <Grid.Column width={6} textAlign="center">
+                                                <Grid.Column width={5} textAlign="center">
                                                     {!isOpponentHorcruxGuessed && (
                                                     <Button color='blue' onClick={() => handleGuessHorcruxButton()}>Guess Horcrux</Button>
                                                     )}

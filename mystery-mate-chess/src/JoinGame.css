@@ -1,8 +1,43 @@
-.search-bar {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 15px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1b1b1b;  /* dark background */  
 }
+  
+  .form-field {
+    width: 100%;
+    max-width: 300px; /* Adjust the width of the input to your preference */
+    margin-bottom: 20px;
+  }
+  
+  .input-label {
+    color: #ffffff; /* Or any color that fits your theme */
+  }
+  
+  .game-id-input .input {
+    width: 400px; /* Increased width */
+    padding: 15px 20px; /* Larger padding for taller input */
+    font-size: 18px; /* Larger font size for better visibility */
+    color: #ffffff;
+    background-color: #0A0A0A; /* Or any color that fits your theme */
+    border: 2px solid #0D47A1; /* Or any color that fits your theme */
+    border-radius: 5px;
+  }
+  
+  .join-button {
+    padding: 15px 25px; /* Larger padding for a taller and wider button */
+    font-size: 18px; /* Larger font size for better visibility */
+    background-color: #0D47A1; /* Or any color that fits your theme */
+    color: #ffffff;
+    border-radius: 5px;
+    box-shadow: none; /* Removes the default Semantic UI shadow if desired */
+    transition: background-color 0.3s ease;
+  }
+  
+  .join-button:hover {
+    background-color: #1565C0; /* Or any color that fits your theme */
+  }
+  
