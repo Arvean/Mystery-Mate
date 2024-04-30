@@ -31,6 +31,9 @@ WORKDIR /build
 # Build command is commented out; you will run it manually inside the container
 RUN cmake -DCMAKE_BUILD_TYPE=Debug . && make
 
+# After building the binary, set execute permissions
+RUN chmod +x ./ChessProject
+
 EXPOSE 8080
 
 #CMD ["/bin/bash"]
