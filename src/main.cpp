@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 
     try {
         driver = sql::mysql::get_mysql_driver_instance();
-        con.reset(driver->connect("tcp://127.0.0.1:3306", "root", "password"));
+        con.reset(driver->connect("tcp://127.0.0.1:3306", "root", "my_secret_pw"));
         con->setSchema("mystery_mate_database");
     } catch (sql::SQLException& e) {
         std::cerr << "Error connecting to MySQL: " << e.what() << std::endl;
